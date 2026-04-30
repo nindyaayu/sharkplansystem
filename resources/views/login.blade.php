@@ -205,8 +205,8 @@ body {
             <label class="label">Password</label>
             <div class="input-group">
                 <span>🔒</span>
-                <input type="password" name="password" placeholder="Masukkan password">
-                <div class="eye">👁</div>
+                <input type="password" id="password" name="password" placeholder="Masukkan password">
+                <div class="eye" onclick="togglePassword()">👁</div>
             </div>
 
             <div class="options">
@@ -225,6 +225,19 @@ body {
 </div>
 
 </div>
+<script>
+function togglePassword() {
+    const password = document.getElementById("password");
+    const eye = document.querySelector(".eye");
 
+    if (password.type === "password") {
+        password.type = "text";
+        eye.innerHTML = "🙈";
+    } else {
+        password.type = "password";
+        eye.innerHTML = "👁";
+    }
+}
+</script>
 </body>
 </html>
