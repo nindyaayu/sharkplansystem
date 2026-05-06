@@ -30,7 +30,7 @@ body {
     margin-bottom:20px;
 }
 
-/* INPUT & SELECT */
+/* INPUT */
 .input {
     background: #111827;
     border:1px solid rgba(255,255,255,0.1);
@@ -40,7 +40,7 @@ body {
     min-width:200px;
 }
 
-/* FIX DROPDOWN */
+/* SELECT */
 select.input {
     appearance: none;
     background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 20 20' width='20'><path d='M5 7l5 5 5-5H5z'/></svg>");
@@ -69,7 +69,7 @@ select.input option {
     box-shadow:0 0 12px rgba(99,102,241,0.6);
 }
 
-/* ===== TABLE BOX ===== */
+/* ===== TABLE ===== */
 .table-box {
     background: rgba(17,24,39,0.7);
     backdrop-filter: blur(10px);
@@ -78,7 +78,6 @@ select.input option {
     border:1px solid rgba(255,255,255,0.05);
 }
 
-/* TABLE */
 table {
     width:100%;
     border-collapse:collapse;
@@ -100,12 +99,11 @@ tbody td {
     border-top:1px solid rgba(255,255,255,0.05);
 }
 
-/* hover */
 tbody tr:hover {
     background: rgba(99,102,241,0.05);
 }
 
-/* ACTION BUTTON */
+/* ACTION */
 .action-btn {
     background: rgba(255,255,255,0.05);
     border:none;
@@ -137,94 +135,188 @@ tbody tr:hover {
 
 <!-- ===== HEADER ===== -->
 <div class="page-header">
+
     <h2>BOM</h2>
 
     <div class="admin">
         👤 Admin
     </div>
+
 </div>
 
 <!-- ===== FORM ===== -->
+<form action="{{ route('bom.store') }}" method="POST">
+
+@csrf
+
 <div class="form-box">
-    <select class="input">
-        <option>Pilih Produk</option>
-        <option>P001 - Meja Produksi</option>
-        <option>P002 - Rak Penyimpanan</option>
+
+    <!-- PRODUK -->
+    <select 
+        name="produk_id"
+        class="input"
+        required>
+
+        <option value="">
+            Pilih Produk
+        </option>
+
+        @foreach($produk as $item)
+
+        <option value="{{ $item->id }}">
+
+            {{ $item->kode }} - {{ $item->nama }}
+
+        </option>
+
+        @endforeach
+
     </select>
 
-    <input type="date" class="input">
+    <!-- BAHAN -->
+    <select 
+        name="barang_id"
+        class="input"
+        required>
 
-    <button class="btn-primary">+ Tambah BOM</button>
+        <option value="">
+            Pilih Bahan
+        </option>
+
+        @foreach($barang as $item)
+
+        <option value="{{ $item->id }}">
+
+            {{ $item->kode }} - {{ $item->nama }}
+
+        </option>
+
+        @endforeach
+
+    </select>
+
+    <!-- QTY -->
+    <input 
+        type="number"
+        name="qty"
+        class="input"
+        placeholder="Jumlah"
+        required>
+
+    <!-- TANGGAL -->
+    <input 
+        type="date"
+        name="tanggal"
+        class="input"
+        required>
+
+    <button class="btn-primary">
+        + Tambah BOM
+    </button>
+
 </div>
+
+</form>
 
 <!-- ===== TABLE ===== -->
 <div class="table-box">
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Kode Bahan</th>
-                <th>Nama Bahan</th>
-                <th>Satuan</th>
-                <th>Jumlah</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
 
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>BB001</td>
-                <td>Besi Hollow 4x4</td>
-                <td>Kg</td>
-                <td>20</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
+<table>
 
-            <tr>
-                <td>2</td>
-                <td>BB002</td>
-                <td>Plat Besi 2mm</td>
-                <td>Lembar</td>
-                <td>4</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
+<thead>
+<tr>
+<th>No</th>
+<th>Produk</th>
+<th>Kode Bahan</th>
+<th>Nama Bahan</th>
+<th>Satuan</th>
+<th>Jumlah</th>
+<th>Tanggal</th>
+<th>Aksi</th>
+</tr>
+</thead>
 
-            <tr>
-                <td>3</td>
-                <td>BB003</td>
-                <td>Baut M10</td>
-                <td>Pcs</td>
-                <td>16</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
+<tbody>
 
-            <tr>
-                <td>4</td>
-                <td>BB004</td>
-                <td>Cat Hitam</td>
-                <td>Liter</td>
-                <td>1</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+@forelse($bom as $index => $item)
 
-    <div class="total-box">
-        Total Komponen: <span>4</span>
-    </div>
+    @foreach($item->details as $detail)
+
+    <tr>
+
+        <td>{{ $index + 1 }}</td>
+
+        <td>
+            {{ $item->produk->nama }}
+        </td>
+
+        <td>
+            {{ $detail->barang->kode }}
+        </td>
+
+        <td>
+            {{ $detail->barang->nama }}
+        </td>
+
+        <td>
+            {{ $detail->barang->satuan }}
+        </td>
+
+        <td>
+            {{ $detail->qty }}
+        </td>
+
+        <td>
+            {{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}
+        </td>
+
+        <td style="display:flex; gap:8px;">
+
+            <!-- EDIT -->
+            <button class="action-btn">
+                ✏️
+            </button>
+
+            <!-- HAPUS -->
+            <button class="action-btn">
+                🗑
+            </button>
+
+        </td>
+
+    </tr>
+
+    @endforeach
+
+@empty
+
+<tr>
+
+    <td colspan="8" style="text-align:center;">
+
+        Data BOM masih kosong
+
+    </td>
+
+</tr>
+
+@endforelse
+
+</tbody>
+
+</table>
+
+<div class="total-box">
+
+    Total Komponen:
+    <span>
+
+        {{ $bom->count() }}
+
+    </span>
+
+</div>
+
 </div>
 
 @endsection

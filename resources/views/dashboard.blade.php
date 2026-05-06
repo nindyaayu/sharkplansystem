@@ -3,6 +3,9 @@
 @section('content')
 
 <style>
+    html {
+    scroll-behavior: smooth;
+}
 
 /* ===== GLOBAL ===== */
 body {
@@ -43,6 +46,10 @@ body {
 }
 
 .card-box {
+    text-decoration: none; /* penting */
+    color: inherit;
+    display: block;
+
     background: rgba(17,24,39,0.7);
     backdrop-filter: blur(10px);
     border-radius:16px;
@@ -69,7 +76,7 @@ body {
     right:-60px;
 }
 
-/* isi card */
+/* isi */
 .card-box h4 {
     font-size:14px;
     color:#94a3b8;
@@ -86,7 +93,7 @@ body {
     color:#6b7280;
 }
 
-/* beda warna tiap card */
+/* warna glow */
 .card-box:nth-child(1)::before {
     background: radial-gradient(circle, rgba(34,197,94,0.2), transparent);
 }
@@ -100,7 +107,7 @@ body {
     background: radial-gradient(circle, rgba(239,68,68,0.2), transparent);
 }
 
-/* ===== CHART BOX ===== */
+/* ===== CHART ===== */
 .chart-box {
     background: rgba(17,24,39,0.7);
     backdrop-filter: blur(10px);
@@ -116,16 +123,11 @@ body {
 }
 
 /* ===== RESPONSIVE ===== */
-@media(max-width: 1000px){
-    .cards {
-        grid-template-columns: repeat(2,1fr);
-    }
+@media(max-width:1000px){
+    .cards { grid-template-columns: repeat(2,1fr); }
 }
-
-@media(max-width: 600px){
-    .cards {
-        grid-template-columns: 1fr;
-    }
+@media(max-width:600px){
+    .cards { grid-template-columns: 1fr; }
 }
 
 </style>
@@ -142,35 +144,42 @@ body {
     </div>
 </div>
 
-<!-- ===== CARDS ===== -->
+<!-- ===== CARDS (SUDAH BISA DIKLIK) ===== -->
 <div class="cards">
-    <div class="card-box">
-        <h4>Bahan Baku</h4>
-        <h1>24</h1>
-        <p style="color:#22c55e;">▲ +5 data baru</p>
-    </div>
 
-    <div class="card-box">
+    <a href="/bahan" class="card-box">
+        <h4>Bahan Baku</h4>
+        <h1>{{ $totalBahan }}</h1>
+
+@if($bahanBaru > 0)
+    <p style="color:#22c55e;">▲ +{{ $bahanBaru }} data baru</p>
+@else
+    <p style="color:#64748b;">Tidak ada data baru</p>
+@endif
+    </a>
+
+    <a href="/produk" class="card-box">
         <h4>Produk</h4>
         <h1>15</h1>
         <p style="color:#6366f1;">Aktif</p>
-    </div>
+    </a>
 
-    <div class="card-box">
+    <a href="/laporan" class="card-box">
         <h4>Stok Bahan</h4>
         <h1>1.250</h1>
         <p style="color:#f59e0b;">⚠ Hampir habis</p>
-    </div>
+    </a>
 
-    <div class="card-box">
+    <a href="#grafik" class="card-box">
         <h4>Transaksi</h4>
         <h1>58</h1>
         <p style="color:#ef4444;">▼ -2% dari minggu lalu</p>
-    </div>
+    </a>
+
 </div>
 
 <!-- ===== CHART ===== -->
-<div class="chart-box">
+<div class="chart-box" id="grafik">
     <div class="chart-title">
         Grafik Transaksi (Barang Masuk & Keluar)
     </div>
@@ -181,10 +190,8 @@ body {
 <!-- ===== CHART JS ===== -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-
 const ctx = document.getElementById('chart').getContext('2d');
 
-/* gradient */
 const gradient1 = ctx.createLinearGradient(0,0,0,300);
 gradient1.addColorStop(0, "rgba(99,102,241,0.5)");
 gradient1.addColorStop(1, "rgba(99,102,241,0)");
@@ -204,8 +211,7 @@ new Chart(ctx, {
                 borderColor: '#6366f1',
                 backgroundColor: gradient1,
                 fill: true,
-                tension: 0.4,
-                pointBackgroundColor: '#6366f1'
+                tension: 0.4
             },
             {
                 label: 'Keluar',
@@ -214,17 +220,14 @@ new Chart(ctx, {
                 backgroundColor: gradient2,
                 fill: true,
                 borderDash: [6,6],
-                tension: 0.4,
-                pointBackgroundColor: '#94a3b8'
+                tension: 0.4
             }
         ]
     },
     options: {
         plugins: {
             legend: {
-                labels: {
-                    color: "#cbd5f5"
-                },
+                labels: { color: "#cbd5f5" },
                 position: 'bottom'
             }
         },

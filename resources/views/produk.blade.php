@@ -10,19 +10,16 @@ body {
     color: #e5e7eb;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .page-header {
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin-bottom:20px;
 }
+.page-header h2 { color:white; }
 
-.page-header h2 {
-    color:white;
-}
-
-/* ===== ACTION BAR ===== */
+/* ACTION */
 .action-bar {
     display:flex;
     justify-content:space-between;
@@ -38,60 +35,36 @@ body {
     border-radius:10px;
     color:white;
     cursor:pointer;
-    transition:0.3s;
 }
 
-.btn-primary:hover {
-    box-shadow:0 0 12px rgba(99,102,241,0.6);
-}
-
-/* SEARCH */
-.search-box {
-    background: rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.1);
-    padding:8px 12px;
-    border-radius:10px;
-    color:white;
-}
-
-/* ===== TABLE BOX ===== */
+/* TABLE */
 .table-box {
     background: rgba(17,24,39,0.7);
-    backdrop-filter: blur(10px);
     border-radius:16px;
     padding:15px;
-    border:1px solid rgba(255,255,255,0.05);
 }
 
-/* ===== TABLE ===== */
+/* TABLE */
 table {
     width:100%;
     border-collapse:collapse;
 }
 
-thead {
-    background: rgba(255,255,255,0.03);
-}
-
 thead th {
     padding:12px;
-    text-align:left;
-    font-size:13px;
     color:#94a3b8;
 }
 
 tbody td {
     padding:12px;
     border-top:1px solid rgba(255,255,255,0.05);
-    font-size:14px;
 }
 
-/* hover row */
 tbody tr:hover {
     background: rgba(99,102,241,0.05);
 }
 
-/* ===== ACTION BUTTON ===== */
+/* ACTION BTN */
 .action-btn {
     background: rgba(255,255,255,0.05);
     border:none;
@@ -99,128 +72,212 @@ tbody tr:hover {
     border-radius:8px;
     cursor:pointer;
     color:white;
+}
+
+/* DELETE */
+.btn-delete {
+    background:rgba(239,68,68,0.2);
+    color:#ef4444;
+}
+
+/* MODAL */
+.modal {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px);
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.modal-content {
+    background: linear-gradient(180deg,#0f172a,#020617);
+    padding:25px;
+    border-radius:16px;
+    width:320px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    border:1px solid rgba(255,255,255,0.05);
+    box-shadow:0 20px 40px rgba(0,0,0,0.5);
+    animation:fadeIn 0.2s ease;
+}
+
+.modal-content h3 {
+    margin:0;
+    color:white;
+    font-size:18px;
+}
+
+/* INPUT DARK */
+.modal-content input {
+    padding:12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    color:white;
+    outline:none;
+}
+
+.modal-content input:focus {
+    border:1px solid #6366f1;
+}
+
+/* BUTTON GROUP */
+.modal-actions {
+    display:flex;
+    justify-content:space-between;
+    margin-top:10px;
+}
+
+/* SAVE */
+.btn-save {
+    background: linear-gradient(90deg,#6366f1,#8b5cf6);
+    border:none;
+    padding:10px 16px;
+    border-radius:10px;
+    color:white;
+    cursor:pointer;
     transition:0.2s;
 }
 
-.action-btn:hover {
-    background: rgba(99,102,241,0.3);
+.btn-save:hover {
+    box-shadow:0 0 10px rgba(99,102,241,0.6);
 }
 
-/* ===== PAGINATION ===== */
-.pagination {
-    margin-top:20px;
-    display:flex;
-    justify-content:center;
-    gap:8px;
-}
-
-.page-item {
-    padding:6px 10px;
-    border-radius:8px;
+/* CANCEL */
+.btn-cancel {
     background: rgba(255,255,255,0.05);
+    border:none;
+    padding:10px 16px;
+    border-radius:10px;
+    color:#94a3b8;
     cursor:pointer;
 }
 
-.page-item.active {
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+.btn-cancel:hover {
+    background: rgba(255,255,255,0.1);
 }
 
+/* ANIMATION */
+@keyframes fadeIn {
+    from { transform:scale(0.9); opacity:0; }
+    to { transform:scale(1); opacity:1; }
+}
+/* ===== FIX TABLE PRODUK ===== */
+table th, 
+table td {
+    text-align:left;
+}
+
+th:nth-child(1),
+td:nth-child(1){
+    width:60px;
+    text-align:center;
+}
+
+th:nth-child(2),
+td:nth-child(2){
+    width:140px;
+}
+
+th:nth-child(3),
+td:nth-child(3){
+    width:40%;
+}
+
+th:nth-child(4),
+td:nth-child(4){
+    width:120px;
+    text-align:center;
+}
+
+th:nth-child(5),
+td:nth-child(5){
+    width:120px;
+    text-align:center;
+}
 </style>
 
-<!-- ===== HEADER ===== -->
+<!-- HEADER -->
 <div class="page-header">
     <h2>Produk</h2>
+    <div class="admin">👤 Admin</div>
+</div>
 
-    <div class="admin">
-        👤 Admin
+<!-- ACTION -->
+<div class="action-bar">
+    <button class="btn-primary" onclick="openModal()">+ Tambah Produk</button>
+</div>
+
+<!-- TABLE -->
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>Kode</th>
+<th>Nama</th>
+<th>Satuan</th>
+<th>Aksi</th>
+</tr>
+</thead>
+
+<tbody>
+@foreach($data as $d)
+<tr>
+<td>{{ $loop->iteration }}</td>
+<td>{{ $d->kode }}</td>
+<td>{{ $d->nama }}</td>
+<td>{{ $d->satuan }}</td>
+<td>
+<form action="/produk/{{ $d->id }}" method="POST">
+@csrf
+@method('DELETE')
+<button class="action-btn btn-delete">🗑</button>
+</form>
+</td>
+</tr>
+@endforeach
+</tbody>
+
+</table>
+</div>
+
+<!-- MODAL -->
+<!-- MODAL -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+
+        <h3>Tambah Produk</h3>
+
+        <form method="POST" action="/produk">
+            @csrf
+
+            <input name="kode" placeholder="Kode Produk">
+            <input name="nama" placeholder="Nama Produk">
+            <input name="satuan" placeholder="Satuan (Unit/Pcs)">
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
+                <button type="submit" class="btn-save">Simpan</button>
+            </div>
+
+        </form>
+
     </div>
 </div>
 
-<!-- ===== ACTION ===== -->
-<div class="action-bar">
-    <button class="btn-primary">+ Tambah Produk</button>
-
-    <input type="text" class="search-box" placeholder="Cari produk...">
-</div>
-
-<!-- ===== TABLE ===== -->
-<div class="table-box">
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Kode Produk</th>
-                <th>Nama Produk</th>
-                <th>Satuan</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>P001</td>
-                <td>Meja Produksi</td>
-                <td>Unit</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>2</td>
-                <td>P002</td>
-                <td>Rak Penyimpanan</td>
-                <td>Unit</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>3</td>
-                <td>P003</td>
-                <td>Gerobak Dorong</td>
-                <td>Unit</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>4</td>
-                <td>P004</td>
-                <td>Rak Besi 4 Tingkat</td>
-                <td>Unit</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>5</td>
-                <td>P005</td>
-                <td>Meja Kerja</td>
-                <td>Unit</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- ===== PAGINATION ===== -->
-<div class="pagination">
-    <div class="page-item">‹</div>
-    <div class="page-item active">1</div>
-    <div class="page-item">2</div>
-    <div class="page-item">›</div>
-</div>
+<script>
+function openModal(){
+    document.getElementById('modal').style.display='flex';
+}
+function closeModal(){
+    document.getElementById('modal').style.display='none';
+}
+</script>
 
 @endsection

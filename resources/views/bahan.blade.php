@@ -3,258 +3,263 @@
 @section('content')
 
 <style>
+body { background:#0f172a; color:#e5e7eb; }
 
-/* ===== GLOBAL ===== */
-body {
-    background: #0f172a;
-    color: #e5e7eb;
-}
-
-/* ===== HEADER ===== */
+/* HEADER */
 .page-header {
-    display:flex;
-    justify-content:space-between;
+    display:flex; 
+    justify-content:space-between; 
     align-items:center;
     margin-bottom:20px;
 }
+.page-header h2 { color:white; }
 
-.page-header h2 {
+/* ACTION */
+.action-bar {
+    display:flex; 
+    justify-content:space-between; 
+    margin-bottom:15px;
+}
+.btn-primary {
+    background: linear-gradient(90deg,#6366f1,#8b5cf6);
+    border:none; 
+    padding:10px 16px; 
+    border-radius:10px; 
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+.btn-primary:hover {
+    box-shadow:0 0 10px rgba(99,102,241,0.6);
+}
+
+/* TABLE */
+.table-box {
+    background:rgba(17,24,39,0.7);
+    border-radius:16px; 
+    padding:15px;
+}
+
+table { 
+    width:100%; 
+    border-collapse:collapse; 
+}
+
+/* HEADER TABLE */
+thead th {
+    padding:12px;
+    color:#94a3b8;
+    text-align:left;
+}
+
+/* BODY */
+tbody td {
+    padding:12px;
+    border-top:1px solid rgba(255,255,255,0.05);
+}
+
+/* HOVER */
+tbody tr:hover {
+    background: rgba(99,102,241,0.05);
+}
+
+/* ===== ALIGNMENT FIX ===== */
+
+/* No */
+th:nth-child(1), td:nth-child(1){
+    width:60px;
+    text-align:center;
+}
+
+/* Kode */
+th:nth-child(2), td:nth-child(2){
+    width:120px;
+}
+
+/* Nama */
+th:nth-child(3), td:nth-child(3){
+    width:40%;
+}
+
+/* Satuan */
+th:nth-child(4), td:nth-child(4){
+    width:120px;
+    text-align:center;
+}
+
+/* Stok */
+th:nth-child(5), td:nth-child(5){
+    width:100px;
+    text-align:center;
+}
+
+/* Aksi */
+th:nth-child(6), td:nth-child(6){
+    width:120px;
+    text-align:center;
+}
+
+/* DELETE BTN */
+.btn-delete {
+    background:rgba(239,68,68,0.2);
+    color:#ef4444;
+    border:none;
+    padding:6px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.2s;
+}
+.btn-delete:hover {
+    background:rgba(239,68,68,0.4);
+}
+
+/* ===== MODAL ===== */
+.modal {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content {
+    background: linear-gradient(180deg,#0f172a,#020617);
+    padding:25px;
+    border-radius:16px;
+    width:320px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    border:1px solid rgba(255,255,255,0.05);
+    box-shadow:0 20px 40px rgba(0,0,0,0.5);
+}
+
+.modal-content h3 {
+    margin:0;
     color:white;
 }
 
-/* ===== ACTION BAR ===== */
-.action-bar {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
+/* INPUT */
+.modal-content input {
+    padding:12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    color:white;
 }
 
-.btn-primary {
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+.modal-content input::placeholder {
+    color:#64748b;
+}
+
+/* BUTTON GROUP */
+.modal-actions {
+    display:flex;
+    justify-content:space-between;
+    margin-top:10px;
+}
+
+.btn-save {
+    background: linear-gradient(90deg,#6366f1,#8b5cf6);
     border:none;
     padding:10px 16px;
     border-radius:10px;
     color:white;
     cursor:pointer;
-    transition:0.3s;
 }
 
-.btn-primary:hover {
-    box-shadow:0 0 12px rgba(99,102,241,0.6);
-}
-
-/* SEARCH */
-.search-box {
-    background: rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.1);
-    padding:8px 12px;
-    border-radius:10px;
-    color:white;
-}
-
-/* ===== TABLE CONTAINER ===== */
-.table-box {
-    background: rgba(17,24,39,0.7);
-    backdrop-filter: blur(10px);
-    border-radius:16px;
-    padding:15px;
-    border:1px solid rgba(255,255,255,0.05);
-}
-
-/* ===== TABLE ===== */
-table {
-    width:100%;
-    border-collapse:collapse;
-}
-
-thead {
-    background: rgba(255,255,255,0.03);
-}
-
-thead th {
-    padding:12px;
-    text-align:left;
-    font-size:13px;
-    color:#94a3b8;
-}
-
-tbody td {
-    padding:12px;
-    border-top:1px solid rgba(255,255,255,0.05);
-    font-size:14px;
-}
-
-/* hover row */
-tbody tr:hover {
-    background: rgba(99,102,241,0.05);
-}
-
-/* ===== BADGE STOK ===== */
-.badge {
-    padding:4px 10px;
-    border-radius:8px;
-    font-size:12px;
-}
-
-.badge-safe {
-    background: rgba(34,197,94,0.2);
-    color:#22c55e;
-}
-
-.badge-low {
-    background: rgba(245,158,11,0.2);
-    color:#f59e0b;
-}
-
-.badge-danger {
-    background: rgba(239,68,68,0.2);
-    color:#ef4444;
-}
-
-/* ===== ACTION BUTTON ===== */
-.action-btn {
+.btn-cancel {
     background: rgba(255,255,255,0.05);
     border:none;
-    padding:6px 10px;
-    border-radius:8px;
-    cursor:pointer;
-    color:white;
-    transition:0.2s;
-}
-
-.action-btn:hover {
-    background: rgba(99,102,241,0.3);
-}
-
-/* ===== PAGINATION ===== */
-.pagination {
-    margin-top:20px;
-    display:flex;
-    justify-content:center;
-    gap:8px;
-}
-
-.page-item {
-    padding:6px 10px;
-    border-radius:8px;
-    background: rgba(255,255,255,0.05);
+    padding:10px 16px;
+    border-radius:10px;
+    color:#94a3b8;
     cursor:pointer;
 }
-
-.page-item.active {
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+.btn-cancel:hover {
+    background: rgba(255,255,255,0.1);
 }
-
 </style>
 
-<!-- ===== HEADER ===== -->
+<!-- HEADER -->
 <div class="page-header">
     <h2>Bahan Baku</h2>
+</div>
 
-    <div class="admin">
-        👤 Admin
+<!-- ACTION -->
+<div class="action-bar">
+    <button class="btn-primary" onclick="openModal()">+ Tambah Bahan</button>
+</div>
+
+<!-- TABLE -->
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>Kode</th>
+<th>Nama</th>
+<th>Satuan</th>
+<th>Stok</th>
+<th>Aksi</th>
+</tr>
+</thead>
+
+<tbody>
+@foreach($data as $d)
+<tr>
+<td>{{ $loop->iteration }}</td>
+<td>{{ $d->kode }}</td>
+<td>{{ $d->nama }}</td>
+<td>{{ $d->satuan }}</td>
+<td>{{ $d->stok }}</td>
+<td>
+<form action="/bahan/{{ $d->id }}" method="POST">
+@csrf
+@method('DELETE')
+<button class="btn-delete">Hapus</button>
+</form>
+</td>
+</tr>
+@endforeach
+</tbody>
+
+</table>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+
+        <h3>Tambah Bahan</h3>
+
+        <form method="POST" action="/bahan">
+            @csrf
+
+            <input name="kode" placeholder="Kode Bahan">
+            <input name="nama" placeholder="Nama Bahan">
+            <input name="satuan" placeholder="Satuan (Kg/Pcs)">
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
+                <button type="submit" class="btn-save">Simpan</button>
+            </div>
+
+        </form>
+
     </div>
 </div>
 
-<!-- ===== ACTION ===== -->
-<div class="action-bar">
-    <button class="btn-primary">+ Tambah Bahan</button>
-
-    <input type="text" class="search-box" placeholder="Cari bahan...">
-</div>
-
-<!-- ===== TABLE ===== -->
-<div class="table-box">
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Kode</th>
-                <th>Nama</th>
-                <th>Satuan</th>
-                <th>Stok</th>
-                <th>Min</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>BB001</td>
-                <td>Besi Hollow 4x4</td>
-                <td>Kg</td>
-                <td><span class="badge badge-safe">350</span></td>
-                <td>50</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>2</td>
-                <td>BB002</td>
-                <td>Plat Besi 2mm</td>
-                <td>Lembar</td>
-                <td><span class="badge badge-safe">200</span></td>
-                <td>30</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>3</td>
-                <td>BB003</td>
-                <td>Baut M10</td>
-                <td>Pcs</td>
-                <td><span class="badge badge-safe">1000</span></td>
-                <td>100</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>4</td>
-                <td>BB004</td>
-                <td>Cat Hitam</td>
-                <td>Liter</td>
-                <td><span class="badge badge-low">50</span></td>
-                <td>10</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>5</td>
-                <td>BB005</td>
-                <td>Amplas</td>
-                <td>Lembar</td>
-                <td><span class="badge badge-danger">120</span></td>
-                <td>200</td>
-                <td>
-                    <button class="action-btn">✏</button>
-                    <button class="action-btn">🗑</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- ===== PAGINATION ===== -->
-<div class="pagination">
-    <div class="page-item">‹</div>
-    <div class="page-item active">1</div>
-    <div class="page-item">2</div>
-    <div class="page-item">3</div>
-    <div class="page-item">›</div>
-</div>
+<script>
+function openModal(){
+    document.getElementById('modal').style.display='flex';
+}
+function closeModal(){
+    document.getElementById('modal').style.display='none';
+}
+</script>
 
 @endsection

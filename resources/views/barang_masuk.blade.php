@@ -4,18 +4,17 @@
 
 <style>
 
-/* ===== HEADER ===== */
 .page-header {
     display:flex;
     justify-content:space-between;
     margin-bottom:25px;
 }
+
 .page-header h2 { 
     color:white;
     font-weight:600;
 }
 
-/* ===== FILTER ===== */
 .filter-bar {
     display:flex;
     gap:15px;
@@ -24,33 +23,14 @@
     flex-wrap:wrap;
 }
 
-.filter-group {
-    display:flex;
-    flex-direction:column;
-    gap:5px;
-}
-
-.filter-group label {
-    font-size:12px;
-    color:#94a3b8;
-}
-
-/* INPUT */
 .input {
     background:#111827;
     border:1px solid rgba(255,255,255,0.1);
     padding:10px 12px;
     border-radius:10px;
     color:#e5e7eb;
-    min-width:160px;
 }
 
-/* date icon */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-}
-
-/* BUTTON */
 .btn-primary {
     background: linear-gradient(90deg,#6366f1,#8b5cf6);
     border:none;
@@ -59,14 +39,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color:white;
     font-weight:500;
     cursor:pointer;
-    transition:0.3s;
 }
 
-.btn-primary:hover {
-    box-shadow:0 0 12px rgba(99,102,241,0.6);
-}
-
-/* ===== TABLE BOX ===== */
 .table-box {
     background:rgba(17,24,39,0.7);
     backdrop-filter: blur(10px);
@@ -75,13 +49,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border:1px solid rgba(255,255,255,0.05);
 }
 
-/* TABLE */
 table {
     width:100%;
     border-collapse:collapse;
 }
 
-/* HEADER */
 thead {
     background: rgba(255,255,255,0.03);
 }
@@ -91,42 +63,27 @@ thead th {
     text-align:left;
     font-size:13px;
     color:#e2e8f0;
-    font-weight:600;
     border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
-/* BODY */
 tbody td {
     padding:14px;
     color:#f1f5f9;
     font-size:14px;
 }
 
-/* ROW */
 tbody tr {
     border-top:1px solid rgba(255,255,255,0.05);
-    transition:0.2s;
 }
 
-tbody tr:nth-child(even) {
-    background: rgba(255,255,255,0.02);
-}
-
-tbody tr:hover {
-    background: rgba(99,102,241,0.08);
-}
-
-/* BADGE */
 .badge-in {
     background:rgba(34,197,94,0.2);
     color:#22c55e;
     padding:5px 10px;
     border-radius:8px;
     font-size:13px;
-    font-weight:500;
 }
 
-/* ACTION */
 .action-btn {
     background:rgba(255,255,255,0.05);
     border:none;
@@ -134,46 +91,79 @@ tbody tr:hover {
     border-radius:8px;
     color:#e5e7eb;
     cursor:pointer;
-    transition:0.2s;
 }
 
-.action-btn:hover {
-    background: rgba(99,102,241,0.4);
+.modal {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.modal-content {
+    background:#111827;
+    padding:25px;
+    border-radius:16px;
+    width:400px;
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.modal-content h3 {
+    color:white;
+    margin-bottom:20px;
+}
+
+.form-group {
+    margin-bottom:15px;
+}
+
+.form-group label {
+    color:#cbd5e1;
+    display:block;
+    margin-bottom:6px;
+}
+
+.form-actions {
+    display:flex;
+    justify-content:end;
+    gap:10px;
+    margin-top:20px;
 }
 
 </style>
 
-<!-- ===== HEADER ===== -->
 <div class="page-header">
     <h2>Barang Masuk</h2>
 </div>
 
-<!-- ===== FILTER ===== -->
 <div class="filter-bar">
 
-    <button class="btn-primary">+ Input Barang</button>
+    <button 
+        class="btn-primary"
+        onclick="document.getElementById('modalInput').style.display='flex'">
 
-    <div class="filter-group">
-        <label>Dari</label>
-        <input type="date" class="input">
-    </div>
-
-    <div class="filter-group">
-        <label>Sampai</label>
-        <input type="date" class="input">
-    </div>
+        + Input Barang
+    </button>
 
 </div>
 
-<!-- ===== TABLE ===== -->
 <div class="table-box">
+
 <table>
+
 <thead>
 <tr>
 <th>No</th>
 <th>Tanggal</th>
 <th>Kode</th>
 <th>Nama</th>
+<th>Supplier</th>
 <th>Jumlah</th>
 <th>Satuan</th>
 <th>Aksi</th>
@@ -181,34 +171,265 @@ tbody tr:hover {
 </thead>
 
 <tbody>
-<tr>
-<td>1</td>
-<td>22/05/2024</td>
-<td>BB001</td>
-<td>Besi Hollow</td>
-<td><span class="badge-in">100</span></td>
-<td>Kg</td>
-<td>
-<button class="action-btn">👁</button>
-<button class="action-btn">🗑</button>
-</td>
-</tr>
+
+@foreach($barangMasuks as $index => $item)
 
 <tr>
-<td>2</td>
-<td>21/05/2024</td>
-<td>BB002</td>
-<td>Plat Besi</td>
-<td><span class="badge-in">50</span></td>
-<td>Lembar</td>
+
+<td>{{ $index + 1 }}</td>
+
 <td>
-<button class="action-btn">👁</button>
-<button class="action-btn">🗑</button>
+{{ \Carbon\Carbon::parse($item->tanggal_masuk)->format('d/m/Y') }}
 </td>
+
+<td>{{ $item->barang->kode }}</td>
+
+<td>{{ $item->barang->nama }}</td>
+
+<td>{{ $item->supplier }}</td>
+
+<td>
+<span class="badge-in">
+{{ $item->jumlah }}
+</span>
+</td>
+
+<td>{{ $item->barang->satuan }}</td>
+
+<td style="display:flex; gap:8px;">
+
+<!-- EDIT -->
+<button 
+    class="action-btn"
+    onclick="document.getElementById('editModal{{ $item->id }}').style.display='flex'">
+
+    ✏️
+</button>
+
+<!-- HAPUS -->
+<form 
+    action="{{ route('barang-masuk.destroy', $item->id) }}"
+    method="POST">
+
+    @csrf
+    @method('DELETE')
+
+    <button class="action-btn">
+        🗑
+    </button>
+
+</form>
+
+</td>
+
 </tr>
+
+@endforeach
 
 </tbody>
+
 </table>
+
+</div>
+
+<!-- ================= MODAL EDIT ================= -->
+
+@foreach($barangMasuks as $item)
+
+<div id="editModal{{ $item->id }}" class="modal">
+
+<div class="modal-content">
+
+<h3>Edit Barang Masuk</h3>
+
+<form 
+    action="{{ route('barang-masuk.update', $item->id) }}"
+    method="POST">
+
+@csrf
+@method('PUT')
+
+<div class="form-group">
+
+<label>Barang</label>
+
+<select 
+    name="barang_id"
+    class="input"
+    style="width:100%;">
+
+    @foreach($barangs as $barang)
+
+    <option 
+        value="{{ $barang->id }}"
+        {{ $barang->id == $item->barang_id ? 'selected' : '' }}>
+
+        {{ $barang->kode }} - {{ $barang->nama }}
+
+    </option>
+
+    @endforeach
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Supplier</label>
+
+<input 
+    type="text"
+    name="supplier"
+    value="{{ $item->supplier }}"
+    class="input"
+    style="width:100%;"
+    required>
+
+</div>
+
+<div class="form-group">
+
+<label>Jumlah</label>
+
+<input 
+    type="number"
+    name="jumlah"
+    value="{{ $item->jumlah }}"
+    class="input"
+    style="width:100%;"
+    required>
+
+</div>
+
+<div class="form-group">
+
+<label>Tanggal Masuk</label>
+
+<input 
+    type="date"
+    name="tanggal_masuk"
+    value="{{ $item->tanggal_masuk }}"
+    class="input"
+    style="width:100%;"
+    required>
+
+</div>
+
+<div class="form-actions">
+
+<button 
+    type="button"
+    class="action-btn"
+    onclick="document.getElementById('editModal{{ $item->id }}').style.display='none'">
+
+    Batal
+</button>
+
+<button type="submit" class="btn-primary">
+    Update
+</button>
+
+</div>
+
+</form>
+
+</div>
+</div>
+
+@endforeach
+
+<!-- ================= MODAL INPUT ================= -->
+
+<div id="modalInput" class="modal">
+
+<div class="modal-content">
+
+<h3>Input Barang Masuk</h3>
+
+<form action="{{ route('barang-masuk.store') }}" method="POST">
+
+@csrf
+
+<div class="form-group">
+
+<label>Barang</label>
+
+<select 
+    name="barang_id"
+    class="input"
+    style="width:100%;">
+
+    @foreach($barangs as $barang)
+
+    <option value="{{ $barang->id }}">
+        {{ $barang->kode }} - {{ $barang->nama }}
+    </option>
+
+    @endforeach
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Supplier</label>
+
+<input 
+    type="text"
+    name="supplier"
+    class="input"
+    style="width:100%;"
+    required>
+
+</div>
+
+<div class="form-group">
+
+<label>Jumlah</label>
+
+<input 
+    type="number"
+    name="jumlah"
+    class="input"
+    style="width:100%;"
+    required>
+
+</div>
+
+<div class="form-group">
+
+<label>Tanggal Masuk</label>
+
+<input 
+    type="date"
+    name="tanggal_masuk"
+    class="input"
+    style="width:100%;"
+    required>
+
+</div>
+
+<div class="form-actions">
+
+<button 
+    type="button"
+    class="action-btn"
+    onclick="document.getElementById('modalInput').style.display='none'">
+
+    Batal
+</button>
+
+<button type="submit" class="btn-primary">
+    Simpan
+</button>
+
+</div>
+
+</form>
+
+</div>
 </div>
 
 @endsection
