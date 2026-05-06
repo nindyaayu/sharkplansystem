@@ -4,59 +4,57 @@
 
 <style>
 
-/* ===== GLOBAL ===== */
-body {
-    background: #0f172a;
-    color: #e5e7eb;
+body{
+    background:#0f172a;
+    color:#e5e7eb;
 }
 
-/* ===== HEADER ===== */
-.page-header {
+.page-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:20px;
+    margin-bottom:25px;
 }
 
-.page-header h2 {
+.page-header h2{
     color:white;
 }
 
-/* ===== FORM BOX ===== */
-.form-box {
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
+/* ================= FORM ================= */
+
+.form-box{
+    background:rgba(17,24,39,0.7);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.05);
+    border-radius:16px;
+    padding:20px;
     margin-bottom:20px;
 }
 
-/* INPUT */
-.input {
-    background: #111827;
+.form-row{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    align-items:center;
+}
+
+.input{
+    background:#111827;
     border:1px solid rgba(255,255,255,0.1);
     padding:10px 12px;
     border-radius:10px;
     color:white;
-    min-width:200px;
+    min-width:180px;
 }
 
-/* SELECT */
-select.input {
-    appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 20 20' width='20'><path d='M5 7l5 5 5-5H5z'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
+select.input option{
+    background:#111827;
 }
 
-select.input option {
-    background: #111827;
-    color: #ffffff;
-}
+/* ================= BUTTON ================= */
 
-/* BUTTON */
-.btn-primary {
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+.btn-primary{
+    background:linear-gradient(90deg,#6366f1,#8b5cf6);
     border:none;
     padding:10px 16px;
     border-radius:10px;
@@ -65,91 +63,170 @@ select.input option {
     transition:0.3s;
 }
 
-.btn-primary:hover {
+.btn-primary:hover{
     box-shadow:0 0 12px rgba(99,102,241,0.6);
 }
 
-/* ===== TABLE ===== */
-.table-box {
-    background: rgba(17,24,39,0.7);
-    backdrop-filter: blur(10px);
-    border-radius:16px;
-    padding:15px;
-    border:1px solid rgba(255,255,255,0.05);
+.action-btn{
+    background:rgba(255,255,255,0.05);
+    border:none;
+    padding:6px 10px;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+    transition:0.2s;
 }
 
-table {
+.action-btn:hover{
+    background:rgba(99,102,241,0.3);
+}
+
+.btn-delete{
+    background:rgba(239,68,68,0.15);
+    color:#ef4444;
+    border:none;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+/* ================= TABLE ================= */
+
+.table-box{
+    background:rgba(17,24,39,0.7);
+    backdrop-filter:blur(10px);
+    border-radius:16px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,0.05);
+    margin-bottom:20px;
+}
+
+table{
     width:100%;
     border-collapse:collapse;
 }
 
-thead {
-    background: rgba(255,255,255,0.03);
+thead{
+    background:rgba(255,255,255,0.03);
 }
 
-thead th {
-    padding:12px;
+thead th{
+    padding:14px;
     text-align:left;
     font-size:13px;
     color:#94a3b8;
 }
 
-tbody td {
-    padding:12px;
+tbody td{
+    padding:14px;
     border-top:1px solid rgba(255,255,255,0.05);
 }
 
-tbody tr:hover {
-    background: rgba(99,102,241,0.05);
+tbody tr:hover{
+    background:rgba(99,102,241,0.05);
 }
 
-/* ACTION */
-.action-btn {
-    background: rgba(255,255,255,0.05);
-    border:none;
-    padding:6px 10px;
+.badge{
+    background:rgba(99,102,241,0.15);
+    color:#a5b4fc;
+    padding:5px 10px;
     border-radius:8px;
-    cursor:pointer;
-    color:white;
-    transition:0.2s;
+    font-size:13px;
 }
 
-.action-btn:hover {
-    background: rgba(99,102,241,0.3);
-}
-
-/* TOTAL */
-.total-box {
-    margin-top:15px;
-    text-align:right;
-    color:#94a3b8;
-    font-size:14px;
-}
-
-.total-box span {
-    color:white;
+.title-section{
+    margin-bottom:15px;
+    font-size:16px;
     font-weight:600;
+    color:white;
+}
+
+.component-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.component-title{
+    font-size:18px;
+    font-weight:600;
+    margin-bottom:5px;
+}
+
+.component-subtitle{
+    color:#94a3b8;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(5px);
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.modal-content{
+    background:#111827;
+    padding:25px;
+    border-radius:16px;
+    width:400px;
+    border:1px solid rgba(255,255,255,0.05);
+}
+
+.modal-title{
+    font-size:18px;
+    margin-bottom:20px;
+    color:white;
+}
+
+.modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
 }
 
 </style>
 
-<!-- ===== HEADER ===== -->
+<!-- ================= HEADER ================= -->
+
 <div class="page-header">
 
-    <h2>BOM</h2>
+    <h2>Master BOM</h2>
 
-    <div class="admin">
+    <div>
         👤 Admin
     </div>
 
 </div>
 
-<!-- ===== FORM ===== -->
-<form action="{{ route('bom.store') }}" method="POST">
+<!-- ================================================= -->
+<!-- FORM TAMBAH KOMPONEN -->
+<!-- ================================================= -->
+
+<div class="form-box">
+
+<div class="title-section">
+
+    Tambah Komponen
+
+</div>
+
+<form action="{{ route('master-bom.store') }}" method="POST">
 
 @csrf
 
-<div class="form-box">
+<div class="form-row">
 
     <!-- PRODUK -->
     <select 
@@ -173,6 +250,100 @@ tbody tr:hover {
 
     </select>
 
+    <!-- NAMA KOMPONEN -->
+    <input 
+        type="text"
+        name="nama_komponen"
+        class="input"
+        placeholder="Nama Komponen"
+        required>
+
+    <!-- TANGGAL -->
+    <input 
+        type="date"
+        name="tanggal"
+        class="input"
+        required>
+
+    <button 
+        type="submit"
+        class="btn-primary">
+
+        + Buat Komponen
+
+    </button>
+
+</div>
+
+</form>
+
+</div>
+
+<!-- ================================================= -->
+<!-- LIST KOMPONEN -->
+<!-- ================================================= -->
+
+@foreach($bom as $item)
+
+<div class="table-box">
+
+<!-- ================= HEADER KOMPONEN ================= -->
+
+<div class="component-header">
+
+    <div>
+
+        <div class="component-title">
+
+            {{ $item->produk->nama }}
+
+        </div>
+
+        <div class="component-subtitle">
+
+            Komponen:
+            {{ $item->nama_komponen }}
+
+        </div>
+
+    </div>
+
+    <!-- HAPUS KOMPONEN -->
+    <form 
+        action="{{ route('master-bom.destroy', $item->id) }}"
+        method="POST">
+
+        @csrf
+        @method('DELETE')
+
+        <button 
+            type="submit"
+            class="btn-delete"
+            onclick="return confirm('Hapus komponen ini?')">
+
+            🗑 Hapus Komponen
+
+        </button>
+
+    </form>
+
+</div>
+
+<!-- ================= FORM TAMBAH BAHAN ================= -->
+
+<div style="padding:20px;">
+
+<form action="{{ route('bom-detail.store') }}" method="POST">
+
+@csrf
+
+<input 
+    type="hidden"
+    name="bom_id"
+    value="{{ $item->id }}">
+
+<div class="form-row">
+
     <!-- BAHAN -->
     <select 
         name="barang_id"
@@ -183,11 +354,11 @@ tbody tr:hover {
             Pilih Bahan
         </option>
 
-        @foreach($barang as $item)
+        @foreach($barang as $bahan)
 
-        <option value="{{ $item->id }}">
+        <option value="{{ $bahan->id }}">
 
-            {{ $item->kode }} - {{ $item->nama }}
+            {{ $bahan->kode }} - {{ $bahan->nama }}
 
         </option>
 
@@ -198,105 +369,175 @@ tbody tr:hover {
     <!-- QTY -->
     <input 
         type="number"
+        step="0.01"
         name="qty"
         class="input"
-        placeholder="Jumlah"
+        placeholder="Qty per 1 pcs"
         required>
 
-    <!-- TANGGAL -->
-    <input 
-        type="date"
-        name="tanggal"
+    <!-- SATUAN PAKAI -->
+    <select 
+        name="satuan_pakai"
         class="input"
         required>
 
-    <button class="btn-primary">
-        + Tambah BOM
+        <option value="">
+            Satuan Pakai
+        </option>
+
+        <option value="CM">
+            CM
+        </option>
+
+        <option value="METER">
+            METER
+        </option>
+
+        <option value="PCS">
+            PCS
+        </option>
+
+        <option value="ROLL">
+            ROLL
+        </option>
+
+    </select>
+
+    <button 
+        type="submit"
+        class="btn-primary">
+
+        + Tambah Bahan
+
     </button>
 
 </div>
 
 </form>
 
-<!-- ===== TABLE ===== -->
-<div class="table-box">
+</div>
+
+<!-- ================= TABLE DETAIL ================= -->
 
 <table>
 
 <thead>
+
 <tr>
+
 <th>No</th>
-<th>Produk</th>
-<th>Kode Bahan</th>
+<th>Kode</th>
 <th>Nama Bahan</th>
-<th>Satuan</th>
-<th>Jumlah</th>
-<th>Tanggal</th>
+<th>Satuan Gudang</th>
+<th>Qty / pcs</th>
+<th>Satuan Pakai</th>
 <th>Aksi</th>
+
 </tr>
+
 </thead>
 
 <tbody>
 
-@forelse($bom as $index => $item)
+@forelse($item->details as $index => $detail)
 
-    @foreach($item->details as $detail)
+<tr>
 
-    <tr>
+<td>
 
-        <td>{{ $index + 1 }}</td>
+    {{ $index + 1 }}
 
-        <td>
-            {{ $item->produk->nama }}
-        </td>
+</td>
 
-        <td>
-            {{ $detail->barang->kode }}
-        </td>
+<td>
 
-        <td>
-            {{ $detail->barang->nama }}
-        </td>
+    {{ $detail->barang->kode }}
 
-        <td>
-            {{ $detail->barang->satuan }}
-        </td>
+</td>
 
-        <td>
-            {{ $detail->qty }}
-        </td>
+<td>
 
-        <td>
-            {{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}
-        </td>
+    {{ $detail->barang->nama }}
 
-        <td style="display:flex; gap:8px;">
+</td>
 
-            <!-- EDIT -->
-            <button class="action-btn">
-                ✏️
-            </button>
+<td>
 
-            <!-- HAPUS -->
-            <button class="action-btn">
-                🗑
-            </button>
+    {{ $detail->barang->satuan }}
 
-        </td>
+</td>
 
-    </tr>
+<td>
 
-    @endforeach
+    {{ number_format($detail->qty,2) }}
+
+</td>
+
+<td>
+
+    <span class="badge">
+
+        {{ $detail->satuan_pakai }}
+
+    </span>
+
+</td>
+
+<!-- ================= AKSI ================= -->
+
+<td style="display:flex; gap:8px;">
+
+    <!-- EDIT -->
+    <button 
+        type="button"
+        class="action-btn"
+
+        onclick="openEditModal(
+
+            '{{ $detail->id }}',
+
+            '{{ $detail->qty }}',
+
+            '{{ $detail->satuan_pakai }}'
+
+        )">
+
+        ✏️
+
+    </button>
+
+    <!-- HAPUS -->
+    <form 
+        action="{{ route('bom-detail.destroy', $detail->id) }}"
+        method="POST">
+
+        @csrf
+        @method('DELETE')
+
+        <button 
+            type="submit"
+            class="action-btn"
+            onclick="return confirm('Hapus bahan ini?')">
+
+            🗑️
+
+        </button>
+
+    </form>
+
+</td>
+
+</tr>
 
 @empty
 
 <tr>
 
-    <td colspan="8" style="text-align:center;">
+<td colspan="7" style="text-align:center;">
 
-        Data BOM masih kosong
+    Belum ada bahan
 
-    </td>
+</td>
 
 </tr>
 
@@ -306,17 +547,113 @@ tbody tr:hover {
 
 </table>
 
-<div class="total-box">
+</div>
 
-    Total Komponen:
-    <span>
+@endforeach
 
-        {{ $bom->count() }}
+<!-- ================= MODAL EDIT ================= -->
 
-    </span>
+<div class="modal" id="editModal">
+
+    <div class="modal-content">
+
+        <div class="modal-title">
+
+            Edit BOM Detail
+
+        </div>
+
+        <form 
+            method="POST"
+            id="editForm">
+
+            @csrf
+            @method('PUT')
+
+            <!-- QTY -->
+            <input 
+                type="number"
+                step="0.01"
+                name="qty"
+                id="editQty"
+                class="input"
+                placeholder="Qty"
+                required>
+
+            <br><br>
+
+            <!-- SATUAN -->
+            <select 
+                name="satuan_pakai"
+                id="editSatuan"
+                class="input"
+                required>
+
+                <option value="CM">CM</option>
+
+                <option value="METER">METER</option>
+
+                <option value="PCS">PCS</option>
+
+                <option value="ROLL">ROLL</option>
+
+            </select>
+
+            <div class="modal-actions">
+
+                <button 
+                    type="button"
+                    class="action-btn"
+                    onclick="closeEditModal()">
+
+                    Batal
+
+                </button>
+
+                <button 
+                    type="submit"
+                    class="btn-primary">
+
+                    Update
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 
-</div>
+<script>
+
+function openEditModal(id, qty, satuan){
+
+    document
+        .getElementById('editModal')
+        .style.display = 'flex';
+
+    document
+        .getElementById('editQty')
+        .value = qty;
+
+    document
+        .getElementById('editSatuan')
+        .value = satuan;
+
+    document
+        .getElementById('editForm')
+        .action = '/bom-detail/' + id;
+}
+
+function closeEditModal(){
+
+    document
+        .getElementById('editModal')
+        .style.display = 'none';
+}
+
+</script>
 
 @endsection

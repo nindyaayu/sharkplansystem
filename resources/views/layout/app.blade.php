@@ -6,43 +6,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
+
+body{
     margin:0;
     font-family:'Segoe UI', sans-serif;
     background:#0f172a;
 }
 
-/* LAYOUT */
-.wrapper {
+/* ================= LAYOUT ================= */
+
+.wrapper{
     display:flex;
 }
 
-/* SIDEBAR */
-.sidebar {
+/* ================= SIDEBAR ================= */
+
+.sidebar{
     width:240px;
     height:100vh;
-    background:linear-gradient(180deg, #020617, #0f172a);
+    background:linear-gradient(180deg,#020617,#0f172a);
     color:white;
     padding:20px;
     position:fixed;
+    overflow-y:auto;
 }
 
-/* CONTENT */
-.main {
+/* ================= CONTENT ================= */
+
+.main{
     margin-left:260px;
     padding:40px;
     width:100%;
 }
 
-/* LOGO */
-.logo {
+/* ================= LOGO ================= */
+
+.logo{
     font-size:18px;
     font-weight:bold;
     margin-bottom:30px;
 }
 
-/* MENU */
-.menu a {
+/* ================= MENU ================= */
+
+.menu a{
     display:flex;
     align-items:center;
     gap:10px;
@@ -55,26 +62,32 @@ body {
     transition:0.2s;
 }
 
-/* HOVER */
-.menu a:hover {
+/* ================= HOVER ================= */
+
+.menu a:hover{
     background:rgba(99,102,241,0.1);
     color:white;
 }
 
-/* ACTIVE */
-.menu a.active {
-    background:linear-gradient(90deg, #6366f1, #8b5cf6);
+/* ================= ACTIVE ================= */
+
+.menu a.active{
+    background:linear-gradient(90deg,#6366f1,#8b5cf6);
     color:white;
     font-weight:600;
 }
 
-/* SUBMENU */
-.menu-item {
+/* ================= MENU ITEM ================= */
+
+.menu-item{
     display:flex;
     flex-direction:column;
+    margin-bottom:5px;
 }
 
-.menu-link {
+/* ================= MENU LINK ================= */
+
+.menu-link{
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -82,46 +95,61 @@ body {
     padding:12px;
     border-radius:10px;
     color:#94a3b8;
+    transition:0.2s;
 }
 
-.menu-link:hover {
+.menu-link:hover{
     background:rgba(99,102,241,0.1);
     color:white;
 }
 
-.arrow {
+/* ================= ARROW ================= */
+
+.arrow{
     font-size:12px;
+    transition:0.2s;
 }
 
-/* SUBMENU */
-.submenu {
+.menu-item.open .arrow{
+    transform:rotate(180deg);
+}
+
+/* ================= SUBMENU ================= */
+
+.submenu{
     display:none;
     flex-direction:column;
     margin-left:15px;
     margin-top:5px;
 }
 
-.menu-item.open .submenu {
+.menu-item.open .submenu{
     display:flex;
 }
 
-.submenu a {
+/* ================= SUBMENU LINK ================= */
+
+.submenu a{
     padding:10px;
     font-size:13px;
     color:#94a3b8;
     border-radius:8px;
+    text-decoration:none;
+    transition:0.2s;
 }
 
-.submenu a:hover {
+.submenu a:hover{
     background:rgba(99,102,241,0.1);
     color:white;
 }
 
-/* DIVIDER */
-.divider {
+/* ================= DIVIDER ================= */
+
+.divider{
     margin:15px 0;
     border-top:1px solid rgba(255,255,255,0.1);
 }
+
 </style>
 </head>
 
@@ -129,61 +157,198 @@ body {
 
 <div class="wrapper">
 
-    <!-- SIDEBAR -->
+    <!-- ================= SIDEBAR ================= -->
+
     <div class="sidebar">
 
-        <div class="logo">SHARKPLAN</div>
+        <div class="logo">
+
+            SHARKPLAN
+
+        </div>
 
         <div class="menu">
 
-            <a href="/dashboard">🏠 Dashboard</a>
+            <!-- DASHBOARD -->
+            <a href="/dashboard">
 
-            <a href="/bahan">📦 Bahan Baku</a>
+                🏠 Dashboard
 
-            <a href="/produk">📁 Produk</a>
+            </a>
 
-            <a href="/bom">🔗 BOM</a>
+            <!-- BAHAN -->
+            <a href="/bahan">
 
-            <!-- INVENTORI -->
+                📦 Bahan Baku
+
+            </a>
+
+            <!-- PRODUK -->
+            <a href="/produk">
+
+                📁 Produk
+
+            </a>
+
+            <!-- ================= BOM ================= -->
+
             <div class="menu-item">
+
                 <div class="menu-link" onclick="toggleMenu(this)">
-                    📊 Inventori
-                    <span class="arrow">▼</span>
+
+                    🔗 BOM
+
+                    <span class="arrow">
+
+                        ▼
+
+                    </span>
+
                 </div>
 
                 <div class="submenu">
-                    <a href="/barang-masuk">Barang Masuk</a>
-                    <a href="/barang-keluar">Barang Keluar</a>
+
+                    <!-- MASTER BOM -->
+                    <a href="/master-bom">
+
+                        Master BOM
+
+                    </a>
+
+                    <!-- PERHITUNGAN BOM -->
+                    <a href="/perhitungan-bom">
+
+                        Perhitungan BOM
+
+                    </a>
+
                 </div>
+
+            </div>
+
+            <!-- ================= INVENTORI ================= -->
+
+            <div class="menu-item">
+
+                <div class="menu-link" onclick="toggleMenu(this)">
+
+                    📊 Inventori
+
+                    <span class="arrow">
+
+                        ▼
+
+                    </span>
+
+                </div>
+
+                <div class="submenu">
+
+                    <a href="/barang-masuk">
+
+                        Barang Masuk
+
+                    </a>
+
+                    <a href="/barang-keluar">
+
+                        Barang Keluar
+
+                    </a>
+
+                </div>
+
             </div>
 
             <div class="divider"></div>
 
-            <a href="/laporan">📄 Laporan</a>
+            <!-- LAPORAN -->
+            <a href="/laporan">
 
-            <a href="/pengguna">👤 Pengguna</a>
+                📄 Laporan
 
-            <a href="/pengaturan">⚙️ Pengaturan</a>
+            </a>
+
+            <!-- PENGGUNA -->
+            <a href="/pengguna">
+
+                👤 Pengguna
+
+            </a>
+
+            <!-- PENGATURAN -->
+            <a href="/pengaturan">
+
+                ⚙️ Pengaturan
+
+            </a>
 
             <div class="divider"></div>
 
-            <a href="/logout">🚪 Logout</a>
+            <!-- LOGOUT -->
+            <a href="/logout">
+
+                🚪 Logout
+
+            </a>
 
         </div>
 
     </div>
 
-    <!-- CONTENT -->
+    <!-- ================= CONTENT ================= -->
+
     <div class="main">
+
         @yield('content')
+
     </div>
 
 </div>
 
 <script>
-function toggleMenu(el) {
+
+// =========================
+// TOGGLE DROPDOWN
+// =========================
+function toggleMenu(el){
+
     el.parentElement.classList.toggle('open');
+
 }
+
+// =========================
+// AUTO OPEN MENU
+// =========================
+
+window.onload = function(){
+
+    const currentUrl = window.location.pathname;
+
+    // ================= BOM =================
+    if(
+        currentUrl.includes('master-bom') ||
+        currentUrl.includes('perhitungan-bom')
+    ){
+
+        document.querySelectorAll('.menu-item')[0]
+            .classList.add('open');
+
+    }
+
+    // ================= INVENTORI =================
+    if(
+        currentUrl.includes('barang-masuk') ||
+        currentUrl.includes('barang-keluar')
+    ){
+
+        document.querySelectorAll('.menu-item')[1]
+            .classList.add('open');
+
+    }
+
+}
+
 </script>
 
 </body>

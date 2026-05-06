@@ -7,18 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 class BomDetail extends Model
 {
     protected $fillable = [
+
         'bom_id',
+
         'barang_id',
-        'qty'
+
+        'qty',
+
+        // TAMBAHAN BARU
+        'satuan_pakai'
+
     ];
 
-    // relasi ke bom
+    // =========================
+    // RELASI KE BOM
+    // =========================
     public function bom()
     {
         return $this->belongsTo(Bom::class);
     }
 
-    // relasi ke barang
+    // =========================
+    // RELASI KE BARANG
+    // =========================
     public function barang()
     {
         return $this->belongsTo(Barang::class);

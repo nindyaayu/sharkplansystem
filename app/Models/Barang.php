@@ -7,19 +7,35 @@ use Illuminate\Database\Eloquent\Model;
 class Barang extends Model
 {
     protected $fillable = [
+
         'kode',
+
         'nama',
+
+        'warna',
+
         'satuan',
-        'stok'
+
+        'stok',
+
+        // TAMBAHAN BARU
+        'isi_per_satuan',
+
+        'satuan_konversi'
+
     ];
 
-    // relasi ke barang masuk
+    // =========================
+    // RELASI BARANG MASUK
+    // =========================
     public function barangMasuk()
     {
         return $this->hasMany(BarangMasuk::class);
     }
 
-    // relasi ke barang keluar
+    // =========================
+    // RELASI BARANG KELUAR
+    // =========================
     public function barangKeluar()
     {
         return $this->hasMany(BarangKeluar::class);

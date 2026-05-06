@@ -37,11 +37,17 @@ class BarangMasukController extends Controller
 
         // simpan transaksi barang masuk
         BarangMasuk::create([
-            'barang_id' => $request->barang_id,
-            'jumlah' => $request->jumlah,
-            'tanggal_masuk' => $request->tanggal_masuk,
-            'supplier' => $request->supplier,
-        ]);
+
+    'barang_id' => $request->barang_id,
+
+    'jumlah' => $request->jumlah,
+
+    'tanggal_masuk' => $request->tanggal_masuk,
+
+    // TAMBAHAN
+    'supplier' => $request->supplier,
+
+]);
 
         // update stok barang
         $barang = Barang::find($request->barang_id);

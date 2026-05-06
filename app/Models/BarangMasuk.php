@@ -7,10 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class BarangMasuk extends Model
 {
     protected $fillable = [
+
         'barang_id',
+
         'jumlah',
+
         'tanggal_masuk',
-        'supplier'
+
+        'supplier',
+
+        // TAMBAHAN
+        'asal'
+
     ];
 
     public function barang()
