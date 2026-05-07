@@ -10,6 +10,11 @@ class Produksi extends Model
 
         'produk_id',
 
+        // TAMBAHAN
+        'mode_produksi',
+
+        'nama_komponen',
+
         'qty_produksi',
 
         'tanggal',

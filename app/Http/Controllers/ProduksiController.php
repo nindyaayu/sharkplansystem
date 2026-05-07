@@ -29,6 +29,21 @@ class ProduksiController extends Controller
     }
 
     // =========================
+    // LAPORAN PRODUKSI
+    // =========================
+    public function laporan()
+    {
+        $produksi = Produksi::with('produk')
+            ->latest()
+            ->get();
+
+        return view(
+            'laporan_produksi',
+            compact('produksi')
+        );
+    }
+
+    // =========================
     // SIMPAN PRODUKSI
     // =========================
     public function store(Request $request)
@@ -69,7 +84,7 @@ class ProduksiController extends Controller
         ]);
 
         return redirect()
-            ->back()
+            ->route('laporan-produksi')
             ->with(
                 'success',
                 'Produksi berhasil dibuat'
@@ -82,6 +97,17 @@ class ProduksiController extends Controller
     public function proses($id)
     {
         $produksi = Produksi::findOrFail($id);
+
+        // cegah proses double
+        if ($produksi->status == 'Diproduksi') {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Produksi sudah diproses'
+                );
+        }
 
         // ambil bom produk
         $bom = Bom::with('details.barang')
@@ -133,7 +159,7 @@ class ProduksiController extends Controller
                     $totalKeluar = $qty;
                 }
 
-                // konversi ke roll
+                // KONVERSI KE ROLL
                 if (
                     $detail->satuan_pakai != 'PCS'
                     &&
@@ -167,7 +193,7 @@ class ProduksiController extends Controller
                 $barang->save();
 
                 // =========================
-                // SIMPAN BARANG KELUAR
+                // BARANG KELUAR
                 // =========================
 
                 BarangKeluar::create([

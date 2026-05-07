@@ -453,97 +453,6 @@ tbody tr:hover{
 
 </div>
 
-<br><br>
-
-<!-- ================= RIWAYAT PRODUKSI ================= -->
-
-<div class="table-box">
-
-<div style="padding:20px; font-size:18px; font-weight:600;">
-
-    Riwayat Produksi
-
-</div>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>No</th>
-<th>Produk</th>
-<th>Qty</th>
-<th>Tanggal</th>
-<th>Jenis</th>
-<th>Pelaksana</th>
-<th>Status</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-@forelse(\App\Models\Produksi::latest()->get() as $index => $produksi)
-
-<tr>
-
-<td>{{ $index + 1 }}</td>
-
-<td>{{ $produksi->produk->nama }}</td>
-
-<td>{{ $produksi->qty_produksi }}</td>
-
-<td>{{ $produksi->tanggal }}</td>
-
-<td>{{ $produksi->jenis_produksi }}</td>
-
-<td>{{ $produksi->pelaksana }}</td>
-
-<td>
-
-    @if($produksi->status == 'Draft')
-
-        <span class="badge-warning">
-
-            Draft
-
-        </span>
-
-    @else
-
-        <span class="badge-success">
-
-            Diproduksi
-
-        </span>
-
-    @endif
-
-</td>
-
-</tr>
-
-@empty
-
-<tr>
-
-<td colspan="7" style="text-align:center;">
-
-    Belum ada riwayat produksi
-
-</td>
-
-</tr>
-
-@endforelse
-
-</tbody>
-
-</table>
-
-</div>
 
 <!-- ================= MODAL PRODUKSI ================= -->
 
@@ -569,11 +478,46 @@ tbody tr:hover{
                 name="produk_id"
                 value="{{ request('produk_id') }}">
 
+            <!-- MODE PRODUKSI -->
+            <input 
+                type="hidden"
+                name="mode_produksi"
+                value="{{ request('mode') }}">
+
+            <!-- NAMA KOMPONEN -->
+            <input 
+                type="hidden"
+                name="nama_komponen"
+                value="{{ request('komponen') }}">
+
             <!-- QTY -->
             <input 
                 type="hidden"
                 name="qty_produksi"
                 value="{{ request('qty_produksi') }}">
+
+            <!-- INFO -->
+            <div 
+                style="
+                    background:rgba(99,102,241,0.1);
+                    padding:12px;
+                    border-radius:10px;
+                    margin-bottom:15px;
+                    font-size:14px;
+                ">
+
+                @if(request('mode') == 'komponen')
+
+                    Produksi Komponen:
+                    <b>{{ request('komponen') }}</b>
+
+                @else
+
+                    Produksi Full Set
+
+                @endif
+
+            </div>
 
             <!-- TANGGAL -->
             <label>Tanggal</label>
@@ -656,6 +600,12 @@ tbody tr:hover{
                 </button>
 
             </div>
+
+        </form>
+
+    </div>
+
+</div>
 
         </form>
 

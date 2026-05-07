@@ -174,7 +174,14 @@ Route::middleware('auth')->group(function () {
     // export pdf
     Route::get('/laporan/pdf', [LaporanController::class, 'exportPdf'])
         ->name('laporan.pdf');
+// =========================
+// LAPORAN PRODUKSI
+// =========================
 
+Route::get(
+    '/laporan-produksi',
+    [ProduksiController::class, 'laporan']
+)->name('laporan-produksi');
     // =========================
     // MENU LAIN
     // =========================

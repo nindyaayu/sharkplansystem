@@ -266,7 +266,11 @@ body{
             <a href="/laporan">
 
                 📄 Laporan
+                <a href="/laporan-produksi">
 
+    🏭 Laporan Produksi
+
+</a>
             </a>
 
             <!-- PENGGUNA -->
