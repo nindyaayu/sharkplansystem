@@ -8,14 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('barangs', function (Blueprint $table) {
+        if (!Schema::hasColumn('barangs', 'kategori')) {
 
-            $table->enum(
-                'kategori',
-                ['Kain', 'Aksesoris']
-            )->after('nama');
+            Schema::table('barangs', function (Blueprint $table) {
 
-        });
+                $table->enum(
+                    'kategori',
+                    ['Kain', 'Aksesoris']
+                )->after('nama');
+
+            });
+
+        }
     }
 
     public function down(): void
