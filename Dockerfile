@@ -1,14 +1,20 @@
-FROM dunglas/frankenphp
+FROM php:8.2-cli
 
-RUN install-php-extensions \
-    pdo_mysql \
-    zip
+RUN apt-get update && apt-get install -y \
+    unzip \
+    git \
+    curl \
+    libzip-dev \
+    zip \
+    default-mysql-client
+
+RUN docker-php-ext-install pdo pdo_mysql zip
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
 COPY . .
-
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN composer install --no-dev --optimize-autoloader
 
@@ -16,4 +22,4 @@ RUN php artisan key:generate || true
 
 EXPOSE 8000
 
-CMD php artisan migrate --force && php artisan octane:start --server=frankenphp --host=0.0.0.0 --port=8000
+CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
