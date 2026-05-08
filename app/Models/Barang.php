@@ -12,13 +12,15 @@ class Barang extends Model
 
         'nama',
 
+        // TAMBAHAN BARU
+        'kategori',
+
         'warna',
 
         'satuan',
 
         'stok',
 
-        // TAMBAHAN BARU
         'isi_per_satuan',
 
         'satuan_konversi'

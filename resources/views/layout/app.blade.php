@@ -169,127 +169,280 @@ body{
 
         <div class="menu">
 
-            <!-- DASHBOARD -->
-            <a href="/dashboard">
+            <!-- ================= ADMIN ================= -->
 
-                🏠 Dashboard
+            @if(auth()->user()->role == 'admin')
 
-            </a>
+                <!-- DASHBOARD -->
 
-            <!-- BAHAN -->
-            <a href="/bahan">
+                <a href="/dashboard">
 
-                📦 Bahan Baku
+                    🏠 Dashboard
 
-            </a>
+                </a>
 
-            <!-- PRODUK -->
-            <a href="/produk">
+                <!-- BAHAN BAKU -->
 
-                📁 Produk
+                <div class="menu-item">
 
-            </a>
+                    <div class="menu-link" onclick="toggleMenu(this)">
 
-            <!-- ================= BOM ================= -->
+                        📦 Bahan Baku
 
-            <div class="menu-item">
+                        <span class="arrow">
 
-                <div class="menu-link" onclick="toggleMenu(this)">
+                            ▼
 
-                    🔗 BOM
+                        </span>
 
-                    <span class="arrow">
+                    </div>
 
-                        ▼
+                    <div class="submenu">
 
-                    </span>
+                        <a href="/material-utama">
 
-                </div>
+                            Material Utama
 
-                <div class="submenu">
+                        </a>
 
-                    <!-- MASTER BOM -->
-                    <a href="/master-bom">
+                        <a href="/material-pendukung">
 
-                        Master BOM
+                            Material Pendukung
 
-                    </a>
+                        </a>
 
-                    <!-- PERHITUNGAN BOM -->
-                    <a href="/perhitungan-bom">
-
-                        Perhitungan BOM
-
-                    </a>
+                    </div>
 
                 </div>
 
-            </div>
+                <!-- PRODUK -->
 
-            <!-- ================= INVENTORI ================= -->
+                <a href="/produk">
 
-            <div class="menu-item">
+                    📁 Produk
 
-                <div class="menu-link" onclick="toggleMenu(this)">
+                </a>
 
-                    📊 Inventori
+                <!-- BOM -->
 
-                    <span class="arrow">
+                <div class="menu-item">
 
-                        ▼
+                    <div class="menu-link" onclick="toggleMenu(this)">
 
-                    </span>
+                        🔗 BOM
+
+                        <span class="arrow">
+
+                            ▼
+
+                        </span>
+
+                    </div>
+
+                    <div class="submenu">
+
+                        <a href="/master-bom">
+
+                            Master BOM
+
+                        </a>
+
+                        <a href="/perhitungan-bom">
+
+                            Perhitungan BOM
+
+                        </a>
+
+                    </div>
 
                 </div>
 
-                <div class="submenu">
+                <!-- INVENTORI -->
 
-                    <a href="/barang-masuk">
+                <div class="menu-item">
 
-                        Barang Masuk
+                    <div class="menu-link" onclick="toggleMenu(this)">
 
-                    </a>
+                        📊 Inventori
 
-                    <a href="/barang-keluar">
+                        <span class="arrow">
 
-                        Barang Keluar
+                            ▼
 
-                    </a>
+                        </span>
+
+                    </div>
+
+                    <div class="submenu">
+
+                        <a href="/barang-masuk">
+
+                            Barang Masuk
+
+                        </a>
+
+                        <a href="/barang-keluar">
+
+                            Barang Keluar
+
+                        </a>
+
+                    </div>
 
                 </div>
 
-            </div>
+                <div class="divider"></div>
 
-            <div class="divider"></div>
+                <!-- LAPORAN -->
 
-            <!-- LAPORAN -->
-            <a href="/laporan">
+                <a href="/laporan">
 
-                📄 Laporan
+                    📄 Laporan
+
+                </a>
+
                 <a href="/laporan-produksi">
 
-    🏭 Laporan Produksi
+                    🏭 Laporan Produksi
 
-</a>
-            </a>
+                </a>
 
-            <!-- PENGGUNA -->
-            <a href="/pengguna">
+            @endif
 
-                👤 Pengguna
 
-            </a>
+            <!-- ================= GUDANG ================= -->
 
-            <!-- PENGATURAN -->
-            <a href="/pengaturan">
+            @if(auth()->user()->role == 'gudang')
 
-                ⚙️ Pengaturan
+                <!-- DASHBOARD -->
 
-            </a>
+                <a href="/dashboard">
+
+                    🏠 Dashboard
+
+                </a>
+
+                <!-- BAHAN BAKU -->
+
+                <div class="menu-item">
+
+                    <div class="menu-link" onclick="toggleMenu(this)">
+
+                        📦 Bahan Baku
+
+                        <span class="arrow">
+
+                            ▼
+
+                        </span>
+
+                    </div>
+
+                    <div class="submenu">
+
+                        <a href="/material-utama">
+
+                            Material Utama
+
+                        </a>
+
+                        <a href="/material-pendukung">
+
+                            Material Pendukung
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <!-- INVENTORI -->
+
+                <div class="menu-item">
+
+                    <div class="menu-link" onclick="toggleMenu(this)">
+
+                        📊 Inventori
+
+                        <span class="arrow">
+
+                            ▼
+
+                        </span>
+
+                    </div>
+
+                    <div class="submenu">
+
+                        <a href="/barang-masuk">
+
+                            Barang Masuk
+
+                        </a>
+
+                        <a href="/barang-keluar">
+
+                            Barang Keluar
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <!-- BOM -->
+
+                <a href="/perhitungan-bom">
+
+                    🔗 Perhitungan BOM
+
+                </a>
+
+                <!-- LAPORAN -->
+
+                <a href="/laporan">
+
+                    📄 Laporan
+
+                </a>
+
+            @endif
+
+
+            <!-- ================= PKT ================= -->
+
+            @if(auth()->user()->role == 'pkt')
+
+                <!-- DASHBOARD -->
+
+                <a href="/dashboard">
+
+                    🏠 Dashboard
+
+                </a>
+
+                <!-- BOM -->
+
+                <a href="/perhitungan-bom">
+
+                    🔗 Perhitungan BOM
+
+                </a>
+
+                <!-- PRODUKSI -->
+
+                <a href="/laporan-produksi">
+
+                    🏭 Produksi
+
+                </a>
+
+            @endif
 
             <div class="divider"></div>
 
             <!-- LOGOUT -->
+
             <a href="/logout">
 
                 🚪 Logout
@@ -315,6 +468,7 @@ body{
 // =========================
 // TOGGLE DROPDOWN
 // =========================
+
 function toggleMenu(el){
 
     el.parentElement.classList.toggle('open');
@@ -329,26 +483,49 @@ window.onload = function(){
 
     const currentUrl = window.location.pathname;
 
+    const menu =
+        document.querySelectorAll('.menu-item');
+
+    // ================= BAHAN =================
+
+    if(
+        currentUrl.includes('material-utama') ||
+        currentUrl.includes('material-pendukung')
+    ){
+
+        if(menu[0]){
+
+            menu[0].classList.add('open');
+
+        }
+    }
+
     // ================= BOM =================
+
     if(
         currentUrl.includes('master-bom') ||
         currentUrl.includes('perhitungan-bom')
     ){
 
-        document.querySelectorAll('.menu-item')[0]
-            .classList.add('open');
+        if(menu[1]){
 
+            menu[1].classList.add('open');
+
+        }
     }
 
     // ================= INVENTORI =================
+
     if(
         currentUrl.includes('barang-masuk') ||
         currentUrl.includes('barang-keluar')
     ){
 
-        document.querySelectorAll('.menu-item')[1]
-            .classList.add('open');
+        if(menu[2]){
 
+            menu[2].classList.add('open');
+
+        }
     }
 
 }

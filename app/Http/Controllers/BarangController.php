@@ -22,17 +22,70 @@ class BarangController extends Controller
     // =========================
     public function store(Request $request)
     {
+        // =========================
+        // PREFIX KODE
+        // =========================
+
+        $prefix =
+            $request->kategori == 'Kain'
+            ? 'MU-'
+            : 'MP-';
+
+        // =========================
+        // AMBIL DATA TERAKHIR
+        // =========================
+
+        $lastBarang = Barang::where(
+            'kode',
+            'like',
+            $prefix . '%'
+        )->latest()->first();
+
+        // =========================
+        // GENERATE NOMOR
+        // =========================
+
+        if($lastBarang){
+
+            $lastNumber = (int)
+                substr($lastBarang->kode, 3);
+
+            $newNumber =
+                str_pad(
+                    $lastNumber + 1,
+                    3,
+                    '0',
+                    STR_PAD_LEFT
+                );
+
+        }else{
+
+            $newNumber = '001';
+
+        }
+
+        // =========================
+        // KODE FINAL
+        // =========================
+
+        $kode = $prefix . $newNumber;
+
+        // =========================
+        // SIMPAN DATA
+        // =========================
+
         Barang::create([
 
-            'kode' => $request->kode,
+            'kode' => $kode,
 
             'nama' => $request->nama,
+
+            'kategori' => $request->kategori,
 
             'warna' => $request->warna,
 
             'satuan' => $request->satuan,
 
-            // TAMBAHAN BARU
             'isi_per_satuan' =>
                 $request->isi_per_satuan,
 
@@ -55,15 +108,15 @@ class BarangController extends Controller
 
         $barang->update([
 
-            'kode' => $request->kode,
-
+            // kode tidak diubah manual
             'nama' => $request->nama,
+
+            'kategori' => $request->kategori,
 
             'warna' => $request->warna,
 
             'satuan' => $request->satuan,
 
-            // TAMBAHAN BARU
             'isi_per_satuan' =>
                 $request->isi_per_satuan,
 

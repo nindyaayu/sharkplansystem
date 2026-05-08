@@ -21,6 +21,7 @@ use App\Models\Barang;
 // =========================
 // LOGIN
 // =========================
+
 Route::get('/login', function () {
 
     return view('login');
@@ -46,23 +47,54 @@ Route::middleware('auth')->group(function () {
     // =========================
     // DASHBOARD
     // =========================
+
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
     // =========================
     // BAHAN
     // =========================
+
+    // semua bahan
     Route::get('/bahan', [BarangController::class, 'index']);
 
+    // material utama
+    Route::get('/material-utama', function () {
+
+        $data = Barang::where(
+            'kategori',
+            'Kain'
+        )->latest()->get();
+
+        return view('bahan', compact('data'));
+
+    });
+
+    // material pendukung
+    Route::get('/material-pendukung', function () {
+
+        $data = Barang::where(
+            'kategori',
+            'Aksesoris'
+        )->latest()->get();
+
+        return view('bahan', compact('data'));
+
+    });
+
+    // tambah bahan
     Route::post('/bahan', [BarangController::class, 'store']);
 
+    // edit bahan
     Route::put('/bahan/{id}', [BarangController::class, 'update']);
 
+    // hapus bahan
     Route::delete('/bahan/{id}', [BarangController::class, 'destroy']);
 
     // =========================
     // PRODUK
     // =========================
+
     Route::get('/produk', [ProdukController::class, 'index']);
 
     Route::post('/produk', [ProdukController::class, 'store']);
@@ -100,12 +132,14 @@ Route::middleware('auth')->group(function () {
     // ==================================================
     // PERHITUNGAN BOM
     // ==================================================
+
     Route::get('/perhitungan-bom', [BomController::class, 'perhitungan'])
         ->name('perhitungan-bom');
 
     // ==================================================
     // ROUTE /bom
     // ==================================================
+
     Route::redirect('/bom', '/master-bom');
 
     // ==================================================
@@ -127,11 +161,13 @@ Route::middleware('auth')->group(function () {
     // =========================
     // INVENTORI
     // =========================
+
     Route::get('/inventori', fn() => view('inventori'));
 
     // =========================
     // BARANG MASUK
     // =========================
+
     Route::get('/barang-masuk', [BarangMasukController::class, 'index'])
         ->name('barang-masuk.index');
 
@@ -147,6 +183,7 @@ Route::middleware('auth')->group(function () {
     // =========================
     // BARANG KELUAR
     // =========================
+
     Route::get('/barang-keluar', [BarangKeluarController::class, 'index'])
         ->name('barang-keluar.index');
 
@@ -167,24 +204,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan', [LaporanController::class, 'index'])
         ->name('laporan');
 
-    // filter tampilkan
+    // filter laporan
     Route::get('/laporan/filter', [LaporanController::class, 'filter'])
         ->name('laporan.filter');
 
     // export pdf
     Route::get('/laporan/pdf', [LaporanController::class, 'exportPdf'])
         ->name('laporan.pdf');
-// =========================
-// LAPORAN PRODUKSI
-// =========================
 
-Route::get(
-    '/laporan-produksi',
-    [ProduksiController::class, 'laporan']
-)->name('laporan-produksi');
+    // =========================
+    // LAPORAN PRODUKSI
+    // =========================
+
+    Route::get(
+        '/laporan-produksi',
+        [ProduksiController::class, 'laporan']
+    )->name('laporan-produksi');
+
     // =========================
     // MENU LAIN
     // =========================
+
     Route::get('/pengguna', fn() => view('pengguna'));
 
     Route::get('/pengaturan', fn() => view('pengaturan'));
@@ -192,6 +232,7 @@ Route::get(
     // =========================
     // LOGOUT
     // =========================
+
     Route::get('/logout', [AuthController::class, 'logout'])
         ->name('logout');
 

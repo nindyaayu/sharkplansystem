@@ -57,20 +57,17 @@ table{
     border-collapse:collapse;
 }
 
-/* HEADER */
 thead th{
     padding:12px;
     color:#94a3b8;
     text-align:left;
 }
 
-/* BODY */
 tbody td{
     padding:12px;
     border-top:1px solid rgba(255,255,255,0.05);
 }
 
-/* HOVER */
 tbody tr:hover{
     background:rgba(99,102,241,0.05);
 }
@@ -86,6 +83,24 @@ tbody tr:hover{
     color:#c4b5fd;
 }
 
+.badge-kain{
+    background:rgba(34,197,94,0.15);
+    color:#4ade80;
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.badge-aksesoris{
+    background:rgba(99,102,241,0.15);
+    color:#c4b5fd;
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+}
+
 /* ================= BUTTON ================= */
 
 .btn-edit{
@@ -95,11 +110,6 @@ tbody tr:hover{
     padding:6px 12px;
     border-radius:8px;
     cursor:pointer;
-    transition:0.2s;
-}
-
-.btn-edit:hover{
-    background:rgba(99,102,241,0.4);
 }
 
 .btn-delete{
@@ -109,11 +119,6 @@ tbody tr:hover{
     padding:6px 12px;
     border-radius:8px;
     cursor:pointer;
-    transition:0.2s;
-}
-
-.btn-delete:hover{
-    background:rgba(239,68,68,0.4);
 }
 
 /* ================= MODAL ================= */
@@ -137,20 +142,16 @@ tbody tr:hover{
     padding:25px;
     border-radius:16px;
     width:360px;
-    display:flex;
-    flex-direction:column;
-    gap:14px;
     border:1px solid rgba(255,255,255,0.05);
-    box-shadow:0 20px 40px rgba(0,0,0,0.5);
 }
 
 .modal-content h3{
-    margin:0;
     color:white;
+    margin-bottom:15px;
 }
 
-/* INPUT */
-.modal-content input{
+.modal-content input,
+.modal-content select{
     width:100%;
     padding:12px;
     border-radius:10px;
@@ -161,15 +162,9 @@ tbody tr:hover{
     box-sizing:border-box;
 }
 
-.modal-content input::placeholder{
-    color:#64748b;
-}
-
-/* BUTTON GROUP */
 .modal-actions{
     display:flex;
     justify-content:space-between;
-    margin-top:10px;
 }
 
 .btn-save{
@@ -190,17 +185,25 @@ tbody tr:hover{
     cursor:pointer;
 }
 
-.btn-cancel:hover{
-    background:rgba(255,255,255,0.1);
-}
-
 </style>
 
 <!-- ================= HEADER ================= -->
 
 <div class="page-header">
 
-    <h2>Bahan Baku</h2>
+    @if(request()->is('material-utama'))
+
+        <h2>Material Utama</h2>
+
+    @elseif(request()->is('material-pendukung'))
+
+        <h2>Material Pendukung</h2>
+
+    @else
+
+        <h2>Bahan Baku</h2>
+
+    @endif
 
 </div>
 
@@ -231,6 +234,7 @@ tbody tr:hover{
 <th>No</th>
 <th>Kode</th>
 <th>Nama</th>
+<th>Kategori</th>
 <th>Warna</th>
 <th>Satuan</th>
 <th>Isi / Satuan</th>
@@ -248,96 +252,83 @@ tbody tr:hover{
 
 <tr>
 
+<td>{{ $loop->iteration }}</td>
+
+<td>{{ $d->kode }}</td>
+
+<td>{{ $d->nama }}</td>
+
 <td>
 
-    {{ $loop->iteration }}
+@if($d->kategori == 'Kain')
+
+<span class="badge-kain">
+    Material Utama
+</span>
+
+@else
+
+<span class="badge-aksesoris">
+    Material Pendukung
+</span>
+
+@endif
 
 </td>
 
 <td>
 
-    {{ $d->kode }}
+<span class="badge-color">
+
+{{ $d->warna ?? '-' }}
+
+</span>
 
 </td>
 
-<td>
+<td>{{ $d->satuan }}</td>
 
-    {{ $d->nama }}
+<td>{{ $d->isi_per_satuan ?? '-' }}</td>
 
-</td>
+<td>{{ $d->satuan_konversi ?? '-' }}</td>
 
-<td>
-
-    <span class="badge-color">
-
-        {{ $d->warna ?? '-' }}
-
-    </span>
-
-</td>
+<td>{{ $d->stok }}</td>
 
 <td>
 
-    {{ $d->satuan }}
+<div style="display:flex; gap:8px;">
 
-</td>
+<button
+type="button"
+class="btn-edit"
+onclick="openEditModal(
+'{{ $d->id }}',
+'{{ $d->kode }}',
+'{{ $d->nama }}',
+'{{ $d->kategori }}',
+'{{ $d->warna }}',
+'{{ $d->satuan }}',
+'{{ $d->isi_per_satuan }}',
+'{{ $d->satuan_konversi }}',
+'{{ $d->stok }}'
+)">
 
-<td>
+Edit
 
-    {{ $d->isi_per_satuan ?? '-' }}
+</button>
 
-</td>
+<form action="/bahan/{{ $d->id }}" method="POST">
 
-<td>
+@csrf
+@method('DELETE')
 
-    {{ $d->satuan_konversi ?? '-' }}
+<button class="btn-delete">
 
-</td>
+Hapus
 
-<td>
+</button>
 
-    {{ $d->stok }}
-
-</td>
-
-<td>
-
-<div style="display:flex; gap:8px; justify-content:center;">
-
-    <!-- EDIT -->
-    <button
-        type="button"
-        class="btn-edit"
-        onclick="openEditModal(
-            '{{ $d->id }}',
-            '{{ $d->kode }}',
-            '{{ $d->nama }}',
-            '{{ $d->warna }}',
-            '{{ $d->satuan }}',
-            '{{ $d->isi_per_satuan }}',
-            '{{ $d->satuan_konversi }}',
-            '{{ $d->stok }}'
-        )">
-
-        Edit
-
-    </button>
-
-    <!-- DELETE -->
-    <form 
-        action="/bahan/{{ $d->id }}"
-        method="POST">
-
-        @csrf
-        @method('DELETE')
-
-        <button class="btn-delete">
-
-            Hapus
-
-        </button>
-
-    </form>
+</form>
 
 </div>
 
@@ -357,74 +348,104 @@ tbody tr:hover{
 
 <div id="modal" class="modal">
 
-    <div class="modal-content">
+<div class="modal-content">
 
-        <h3>
+<h3>Tambah Bahan</h3>
 
-            Tambah Bahan
+<form method="POST" action="/bahan">
 
-        </h3>
+@csrf
 
-        <form method="POST" action="/bahan">
+<input 
+name="kode"
+placeholder="Kode Bahan">
 
-            @csrf
+<input 
+name="nama"
+placeholder="Nama Bahan">
 
-            <input 
-                name="kode"
-                placeholder="Kode Bahan">
+@if(request()->is('material-utama'))
 
-            <input 
-                name="nama"
-                placeholder="Nama Bahan">
+<input 
+type="hidden"
+name="kategori"
+value="Kain">
 
-            <input 
-                name="warna"
-                placeholder="Warna">
+@elseif(request()->is('material-pendukung'))
 
-            <input 
-                name="satuan"
-                placeholder="Satuan (ROLL/PACK/PCS)">
+<input 
+type="hidden"
+name="kategori"
+value="Aksesoris">
 
-            <input 
-                type="number"
-                step="0.01"
-                name="isi_per_satuan"
-                placeholder="Isi per satuan">
+@else
 
-            <input 
-                name="satuan_konversi"
-                placeholder="Satuan konversi (Meter/CM)">
+<select name="kategori">
 
-            <input 
-                type="number"
-                step="0.01"
-                name="stok"
-                placeholder="Stok Awal">
+<option value="">
+Pilih Kategori
+</option>
 
-            <div class="modal-actions">
+<option value="Kain">
+Material Utama
+</option>
 
-                <button 
-                    type="button"
-                    class="btn-cancel"
-                    onclick="closeModal()">
+<option value="Aksesoris">
+Material Pendukung
+</option>
 
-                    Batal
+</select>
 
-                </button>
+@endif
 
-                <button 
-                    type="submit"
-                    class="btn-save">
+<input 
+name="warna"
+placeholder="Warna">
 
-                    Simpan
+<input 
+name="satuan"
+placeholder="Satuan">
 
-                </button>
+<input 
+type="number"
+step="0.01"
+name="isi_per_satuan"
+placeholder="Isi per satuan">
 
-            </div>
+<input 
+name="satuan_konversi"
+placeholder="Satuan konversi">
 
-        </form>
+<input 
+type="number"
+step="0.01"
+name="stok"
+placeholder="Stok">
 
-    </div>
+<div class="modal-actions">
+
+<button 
+type="button"
+class="btn-cancel"
+onclick="closeModal()">
+
+Batal
+
+</button>
+
+<button 
+type="submit"
+class="btn-save">
+
+Simpan
+
+</button>
+
+</div>
+
+</form>
+
+</div>
 
 </div>
 
@@ -432,85 +453,88 @@ tbody tr:hover{
 
 <div id="editModal" class="modal">
 
-    <div class="modal-content">
+<div class="modal-content">
 
-        <h3>Edit Bahan</h3>
+<h3>Edit Bahan</h3>
 
-        <form 
-            method="POST"
-            id="editForm">
+<form method="POST" id="editForm">
 
-            @csrf
-            @method('PUT')
+@csrf
+@method('PUT')
 
-            <input 
-                type="text"
-                name="kode"
-                id="editKode"
-                placeholder="Kode">
+<input 
+type="text"
+name="kode"
+id="editKode">
 
-            <input 
-                type="text"
-                name="nama"
-                id="editNama"
-                placeholder="Nama">
+<input 
+type="text"
+name="nama"
+id="editNama">
 
-            <input 
-                type="text"
-                name="warna"
-                id="editWarna"
-                placeholder="Warna">
+<select name="kategori" id="editKategori">
 
-            <input 
-                type="text"
-                name="satuan"
-                id="editSatuan"
-                placeholder="Satuan">
+<option value="Kain">
+Material Utama
+</option>
 
-            <input 
-                type="number"
-                step="0.01"
-                name="isi_per_satuan"
-                id="editIsiPerSatuan"
-                placeholder="Isi per satuan">
+<option value="Aksesoris">
+Material Pendukung
+</option>
 
-            <input 
-                type="text"
-                name="satuan_konversi"
-                id="editSatuanKonversi"
-                placeholder="Satuan konversi">
+</select>
 
-            <input 
-                type="number"
-                step="0.01"
-                name="stok"
-                id="editStok"
-                placeholder="Stok">
+<input 
+type="text"
+name="warna"
+id="editWarna">
 
-            <div class="modal-actions">
+<input 
+type="text"
+name="satuan"
+id="editSatuan">
 
-                <button 
-                    type="button"
-                    class="btn-cancel"
-                    onclick="closeEditModal()">
+<input 
+type="number"
+step="0.01"
+name="isi_per_satuan"
+id="editIsiPerSatuan">
 
-                    Batal
+<input 
+type="text"
+name="satuan_konversi"
+id="editSatuanKonversi">
 
-                </button>
+<input 
+type="number"
+step="0.01"
+name="stok"
+id="editStok">
 
-                <button 
-                    type="submit"
-                    class="btn-save">
+<div class="modal-actions">
 
-                    Update
+<button 
+type="button"
+class="btn-cancel"
+onclick="closeEditModal()">
 
-                </button>
+Batal
 
-            </div>
+</button>
 
-        </form>
+<button 
+type="submit"
+class="btn-save">
 
-    </div>
+Update
+
+</button>
+
+</div>
+
+</form>
+
+</div>
 
 </div>
 
@@ -518,64 +542,66 @@ tbody tr:hover{
 
 function openModal(){
 
-    document.getElementById('modal')
-        .style.display='flex';
+document.getElementById('modal')
+.style.display='flex';
 
 }
 
 function closeModal(){
 
-    document.getElementById('modal')
-        .style.display='none';
+document.getElementById('modal')
+.style.display='none';
 
 }
 
-/* ================= EDIT ================= */
-
 function openEditModal(
-    id,
-    kode,
-    nama,
-    warna,
-    satuan,
-    isi_per_satuan,
-    satuan_konversi,
-    stok
+id,
+kode,
+nama,
+kategori,
+warna,
+satuan,
+isi_per_satuan,
+satuan_konversi,
+stok
 ){
 
-    document.getElementById('editModal')
-        .style.display='flex';
+document.getElementById('editModal')
+.style.display='flex';
 
-    document.getElementById('editKode')
-        .value = kode;
+document.getElementById('editKode')
+.value = kode;
 
-    document.getElementById('editNama')
-        .value = nama;
+document.getElementById('editNama')
+.value = nama;
 
-    document.getElementById('editWarna')
-        .value = warna;
+document.getElementById('editKategori')
+.value = kategori;
 
-    document.getElementById('editSatuan')
-        .value = satuan;
+document.getElementById('editWarna')
+.value = warna;
 
-    document.getElementById('editIsiPerSatuan')
-        .value = isi_per_satuan;
+document.getElementById('editSatuan')
+.value = satuan;
 
-    document.getElementById('editSatuanKonversi')
-        .value = satuan_konversi;
+document.getElementById('editIsiPerSatuan')
+.value = isi_per_satuan;
 
-    document.getElementById('editStok')
-        .value = stok;
+document.getElementById('editSatuanKonversi')
+.value = satuan_konversi;
 
-    document.getElementById('editForm')
-        .action = '/bahan/' + id;
+document.getElementById('editStok')
+.value = stok;
+
+document.getElementById('editForm')
+.action = '/bahan/' + id;
 
 }
 
 function closeEditModal(){
 
-    document.getElementById('editModal')
-        .style.display='none';
+document.getElementById('editModal')
+.style.display='none';
 
 }
 
