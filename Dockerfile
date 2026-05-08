@@ -1,23 +1,13 @@
-FROM php:8.2-cli
-
-RUN apt-get update && apt-get install -y \
-    unzip \
-    git \
-    curl \
-    libzip-dev \
-    zip \
-    default-mysql-client
-
-RUN docker-php-ext-install pdo pdo_mysql zip
-
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+FROM webdevops/php-nginx:8.2
 
 WORKDIR /app
 
-COPY . .
+COPY . /app
 
 RUN composer install --no-dev --optimize-autoloader
 
-EXPOSE 8000
+RUN php artisan key:generate || true
 
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
+ENV WEB_DOCUMENT_ROOT=/app/public
+
+EXPOSE 80
