@@ -262,6 +262,7 @@ tbody tr:hover{
     <input 
         type="date"
         name="tanggal"
+        value="{{ date('Y-m-d') }}"
         class="input"
         required>
 
@@ -301,12 +302,48 @@ tbody tr:hover{
 
         <div class="component-subtitle">
 
-            Komponen:
-            {{ $item->nama_komponen }}
+        Komponen:
+        {{ $item->nama_komponen }}
 
         </div>
 
+        <div
+            style="
+            margin-top:6px;
+            font-size:13px;
+            color:#94a3b8;
+            ">
+
+                Tanggal :
+                {{ $item->created_at->format('d/m/Y') }}
+
+            </div>
     </div>
+    <!-- EDIT KOMPONEN -->
+<div
+style="
+display:flex;
+flex-direction:column;
+gap:10px;
+align-items:flex-end;
+">
+
+    <!-- EDIT KOMPONEN -->
+    <button
+    type="button"
+    class="action-btn"
+
+    onclick="openKomponenModal(
+
+    '{{ $item->id }}',
+
+    '{{ $item->nama_komponen }}'
+
+    )">
+
+    ✏️ Edit Komponen
+
+    </button>
 
     <!-- HAPUS KOMPONEN -->
     <form 
@@ -326,6 +363,8 @@ tbody tr:hover{
         </button>
 
     </form>
+
+</div>
 
 </div>
 
@@ -550,6 +589,59 @@ tbody tr:hover{
 </div>
 
 @endforeach
+<!-- ================= MODAL EDIT KOMPONEN ================= -->
+
+        <div class="modal" id="komponenModal">
+
+        <div class="modal-content">
+
+        <div class="modal-title">
+
+            Edit Komponen
+
+        </div>
+
+        <form
+        method="POST"
+        id="komponenForm">
+
+        @csrf
+        @method('PUT')
+
+        <input
+        type="text"
+        name="nama_komponen"
+        id="editKomponen"
+        class="input"
+        placeholder="Nama Komponen"
+        required>
+
+        <div class="modal-actions">
+
+        <button
+        type="button"
+        class="action-btn"
+        onclick="closeKomponenModal()">
+
+        Batal
+
+        </button>
+
+        <button
+        type="submit"
+        class="btn-primary">
+
+        Update
+
+        </button>
+
+        </div>
+
+        </form>
+
+        </div>
+
+</div>
 
 <!-- ================= MODAL EDIT ================= -->
 
@@ -653,7 +745,32 @@ function closeEditModal(){
         .getElementById('editModal')
         .style.display = 'none';
 }
+function openKomponenModal(
+id,
+nama
+){
 
+    document
+        .getElementById('komponenModal')
+        .style.display = 'flex';
+
+    document
+        .getElementById('editKomponen')
+        .value = nama;
+
+    document
+        .getElementById('komponenForm')
+        .action = '/master-bom/' + id;
+
+}
+
+function closeKomponenModal(){
+
+    document
+        .getElementById('komponenModal')
+        .style.display = 'none';
+
+}
 </script>
 
 @endsection

@@ -4,32 +4,28 @@
 
 <style>
 
-/* ===== GLOBAL ===== */
-body {
-    background: #0f172a;
-    color: #e5e7eb;
+body{
+    background:#0f172a;
+    color:#e5e7eb;
 }
 
-/* HEADER */
-.page-header {
+.page-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin-bottom:20px;
 }
-.page-header h2 { color:white; }
 
-/* ACTION */
-.action-bar {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
+.page-header h2{
+    color:white;
 }
 
-/* BUTTON */
-.btn-primary {
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+.action-bar{
+    margin-bottom:20px;
+}
+
+.btn-primary{
+    background:linear-gradient(90deg,#6366f1,#8b5cf6);
     border:none;
     padding:10px 16px;
     border-radius:10px;
@@ -37,120 +33,133 @@ body {
     cursor:pointer;
 }
 
-/* TABLE */
-.table-box {
-    background: rgba(17,24,39,0.7);
+.table-box{
+    background:rgba(17,24,39,0.7);
     border-radius:16px;
     padding:15px;
+    overflow:auto;
 }
 
-/* TABLE */
-table {
+table{
     width:100%;
     border-collapse:collapse;
 }
 
-thead th {
+thead th{
     padding:12px;
     color:#94a3b8;
+    text-align:left;
+    font-size:13px;
 }
 
-tbody td {
+tbody td{
     padding:12px;
     border-top:1px solid rgba(255,255,255,0.05);
 }
 
-tbody tr:hover {
-    background: rgba(99,102,241,0.05);
+tbody tr:hover{
+    background:rgba(99,102,241,0.05);
 }
 
-/* ACTION BTN */
-.action-btn {
-    background: rgba(255,255,255,0.05);
-    border:none;
-    padding:6px 10px;
-    border-radius:8px;
-    cursor:pointer;
-    color:white;
+.badge-status{
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
 }
 
-/* DELETE */
-.btn-delete {
+.status-belum{
     background:rgba(239,68,68,0.2);
     color:#ef4444;
 }
 
-/* MODAL */
-.modal {
+.status-proses{
+    background:rgba(250,204,21,0.2);
+    color:#facc15;
+}
+
+.status-selesai{
+    background:rgba(34,197,94,0.2);
+    color:#22c55e;
+}
+
+.action-group{
+    display:flex;
+    gap:8px;
+}
+
+.btn-edit{
+    background:rgba(99,102,241,0.2);
+    color:#a5b4fc;
+    border:none;
+    padding:6px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.btn-delete{
+    background:rgba(239,68,68,0.2);
+    color:#ef4444;
+    border:none;
+    padding:6px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.modal{
     display:none;
     position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
     background:rgba(0,0,0,0.7);
-    backdrop-filter: blur(6px);
     justify-content:center;
     align-items:center;
     z-index:999;
 }
 
-.modal-content {
-    background: linear-gradient(180deg,#0f172a,#020617);
+.modal-content{
+    background:#111827;
     padding:25px;
     border-radius:16px;
-    width:320px;
-    display:flex;
-    flex-direction:column;
-    gap:14px;
-    border:1px solid rgba(255,255,255,0.05);
-    box-shadow:0 20px 40px rgba(0,0,0,0.5);
-    animation:fadeIn 0.2s ease;
+    width:420px;
 }
 
-.modal-content h3 {
-    margin:0;
+.modal-content h3{
     color:white;
-    font-size:18px;
+    margin-bottom:20px;
 }
 
-/* INPUT DARK */
-.modal-content input {
+.modal-content input,
+.modal-content select{
+    width:100%;
     padding:12px;
     border-radius:10px;
     border:1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.03);
+    background:rgba(255,255,255,0.03);
     color:white;
-    outline:none;
+    margin-bottom:12px;
+    box-sizing:border-box;
 }
 
-.modal-content input:focus {
-    border:1px solid #6366f1;
-}
-
-/* BUTTON GROUP */
-.modal-actions {
+.modal-actions{
     display:flex;
     justify-content:space-between;
-    margin-top:10px;
+    margin-top:15px;
 }
 
-/* SAVE */
-.btn-save {
-    background: linear-gradient(90deg,#6366f1,#8b5cf6);
+.btn-save{
+    background:linear-gradient(90deg,#6366f1,#8b5cf6);
     border:none;
     padding:10px 16px;
     border-radius:10px;
     color:white;
     cursor:pointer;
-    transition:0.2s;
 }
 
-.btn-save:hover {
-    box-shadow:0 0 10px rgba(99,102,241,0.6);
-}
-
-/* CANCEL */
-.btn-cancel {
-    background: rgba(255,255,255,0.05);
+.btn-cancel{
+    background:rgba(255,255,255,0.05);
     border:none;
     padding:10px 16px;
     border-radius:10px;
@@ -158,126 +167,436 @@ tbody tr:hover {
     cursor:pointer;
 }
 
-.btn-cancel:hover {
-    background: rgba(255,255,255,0.1);
-}
-
-/* ANIMATION */
-@keyframes fadeIn {
-    from { transform:scale(0.9); opacity:0; }
-    to { transform:scale(1); opacity:1; }
-}
-/* ===== FIX TABLE PRODUK ===== */
-table th, 
-table td {
-    text-align:left;
-}
-
-th:nth-child(1),
-td:nth-child(1){
-    width:60px;
-    text-align:center;
-}
-
-th:nth-child(2),
-td:nth-child(2){
-    width:140px;
-}
-
-th:nth-child(3),
-td:nth-child(3){
-    width:40%;
-}
-
-th:nth-child(4),
-td:nth-child(4){
-    width:120px;
-    text-align:center;
-}
-
-th:nth-child(5),
-td:nth-child(5){
-    width:120px;
-    text-align:center;
-}
 </style>
 
-<!-- HEADER -->
 <div class="page-header">
+
     <h2>Produk</h2>
-    <div class="admin">👤 Admin</div>
+
 </div>
 
-<!-- ACTION -->
 <div class="action-bar">
-    <button class="btn-primary" onclick="openModal()">+ Tambah Produk</button>
+
+    <button
+        class="btn-primary"
+        onclick="openModal()">
+
+        + Tambah Produk
+
+    </button>
+
 </div>
 
-<!-- TABLE -->
 <div class="table-box">
+
 <table>
+
 <thead>
+
 <tr>
+
 <th>No</th>
+<th>Tanggal</th>
 <th>Kode</th>
-<th>Nama</th>
-<th>Satuan</th>
+<th>Nama Produk</th>
+<th>Client</th>
+<th>No PO</th>
+<th>Qty Order</th>
+<th>Qty Kirim</th>
+<th>Progress</th>
+<th>Status</th>
 <th>Aksi</th>
+
 </tr>
+
 </thead>
 
 <tbody>
+
 @foreach($data as $d)
+
 <tr>
+
 <td>{{ $loop->iteration }}</td>
-<td>{{ $d->kode }}</td>
-<td>{{ $d->nama }}</td>
-<td>{{ $d->satuan }}</td>
+
 <td>
-<form action="/produk/{{ $d->id }}" method="POST">
+
+    {{ $d->created_at->format('d/m/Y') }}
+
+</td>
+
+<td>{{ $d->kode }}</td>
+
+<td>{{ $d->nama }}</td>
+
+<td>{{ $d->client ?? '-' }}</td>
+
+<td>{{ $d->no_po ?? '-' }}</td>
+
+<td>{{ $d->qty_order }}</td>
+
+<td>{{ $d->qty_kirim }}</td>
+
+<td>
+
+    @if($d->qty_order > 0)
+
+        {{ round(($d->qty_kirim / $d->qty_order) * 100) }}%
+
+    @else
+
+        0%
+
+    @endif
+
+</td>
+
+<td>
+
+    <span class="badge-status
+
+    @if($d->status == 'Belum')
+        status-belum
+    @elseif($d->status == 'Proses')
+        status-proses
+    @else
+        status-selesai
+    @endif
+
+    ">
+
+        {{ $d->status }}
+
+    </span>
+
+</td>
+
+<td>
+
+<div class="action-group">
+
+<button
+class="btn-edit"
+onclick="openEditModal(
+
+'{{ $d->id }}',
+'{{ $d->nama }}',
+'{{ $d->client }}',
+'{{ $d->no_po }}',
+'{{ $d->qty_order }}',
+'{{ $d->qty_kirim }}',
+'{{ $d->tahap }}',
+'{{ $d->satuan }}'
+
+)">
+
+Edit
+
+</button>
+
+<form
+action="/produk/{{ $d->id }}"
+method="POST">
+
 @csrf
 @method('DELETE')
-<button class="action-btn btn-delete">🗑</button>
+
+<button class="btn-delete">
+
+Hapus
+
+</button>
+
 </form>
+
+</div>
+
 </td>
+
 </tr>
+
 @endforeach
+
 </tbody>
 
 </table>
+
 </div>
 
-<!-- MODAL -->
-<!-- MODAL -->
+<!-- MODAL TAMBAH -->
+
 <div id="modal" class="modal">
-    <div class="modal-content">
 
-        <h3>Tambah Produk</h3>
+<div class="modal-content">
 
-        <form method="POST" action="/produk">
-            @csrf
+<h3>Tambah Produk</h3>
 
-            <input name="kode" placeholder="Kode Produk">
-            <input name="nama" placeholder="Nama Produk">
-            <input name="satuan" placeholder="Satuan (Unit/Pcs)">
+<form method="POST" action="/produk">
 
-            <div class="modal-actions">
-                <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
-                <button type="submit" class="btn-save">Simpan</button>
-            </div>
+@csrf
 
-        </form>
+<input
+name="prefix"
+placeholder="Prefix Kode (R/T/P)">
 
-    </div>
+<input
+name="nama"
+placeholder="Nama Produk">
+
+<input
+name="client"
+placeholder="Client">
+
+<input
+name="no_po"
+placeholder="No PO">
+
+<input
+type="number"
+name="qty_order"
+placeholder="Qty Order">
+
+<input
+type="number"
+name="qty_kirim"
+value="0"
+placeholder="Qty Kirim">
+
+<select name="tahap">
+
+<option value="Cutting">
+
+    Cutting
+
+</option>
+
+<option value="Sewing">
+
+    Sewing
+
+</option>
+
+<option value="Finishing">
+
+    Finishing
+
+</option>
+
+<option value="Packing">
+
+    Packing
+
+</option>
+
+</select>
+
+<input
+name="satuan"
+placeholder="Satuan">
+
+<input
+type="date"
+name="tanggal_input"
+value="{{ date('Y-m-d') }}">
+
+<div class="modal-actions">
+
+<button
+type="button"
+class="btn-cancel"
+onclick="closeModal()">
+
+Batal
+
+</button>
+
+<button
+type="submit"
+class="btn-save">
+
+Simpan
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<!-- MODAL EDIT -->
+
+<div id="editModal" class="modal">
+
+<div class="modal-content">
+
+<h3>Edit Produk</h3>
+
+<form
+method="POST"
+id="editForm">
+
+@csrf
+@method('PUT')
+
+<input
+type="text"
+name="nama"
+id="editNama"
+placeholder="Nama Produk">
+
+<input
+type="text"
+name="client"
+id="editClient"
+placeholder="Client">
+
+<input
+type="text"
+name="no_po"
+id="editNoPo"
+placeholder="No PO">
+
+<input
+type="number"
+name="qty_order"
+id="editQtyOrder"
+placeholder="Qty Order">
+
+<input
+type="number"
+name="qty_kirim"
+id="editQtyKirim"
+placeholder="Qty Kirim">
+
+<select
+name="tahap"
+id="editTahap">
+
+<option value="Cutting">
+
+    Cutting
+
+</option>
+
+<option value="Sewing">
+
+    Sewing
+
+</option>
+
+<option value="Finishing">
+
+    Finishing
+
+</option>
+
+<option value="Packing">
+
+    Packing
+
+</option>
+
+</select>
+
+<input
+type="text"
+name="satuan"
+id="editSatuan"
+placeholder="Satuan">
+
+<div class="modal-actions">
+
+<button
+type="button"
+class="btn-cancel"
+onclick="closeEditModal()">
+
+Batal
+
+</button>
+
+<button
+type="submit"
+class="btn-save">
+
+Update
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
 </div>
 
 <script>
+
 function openModal(){
-    document.getElementById('modal').style.display='flex';
+
+document.getElementById('modal')
+.style.display='flex';
+
 }
+
 function closeModal(){
-    document.getElementById('modal').style.display='none';
+
+document.getElementById('modal')
+.style.display='none';
+
 }
+
+function openEditModal(
+id,
+nama,
+client,
+no_po,
+qty_order,
+qty_kirim,
+tahap,
+satuan
+){
+
+document.getElementById('editModal')
+.style.display='flex';
+
+document.getElementById('editNama')
+.value = nama;
+
+document.getElementById('editClient')
+.value = client;
+
+document.getElementById('editNoPo')
+.value = no_po;
+
+document.getElementById('editQtyOrder')
+.value = qty_order;
+
+document.getElementById('editQtyKirim')
+.value = qty_kirim;
+
+document.getElementById('editTahap')
+.value = tahap;
+
+document.getElementById('editSatuan')
+.value = satuan;
+
+document.getElementById('editForm')
+.action = '/produk/' + id;
+
+}
+
+function closeEditModal(){
+
+document.getElementById('editModal')
+.style.display='none';
+
+}
+
 </script>
 
 @endsection

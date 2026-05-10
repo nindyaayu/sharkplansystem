@@ -30,7 +30,30 @@ class BomController extends Controller
             'bom'
         ));
     }
+// =========================
+// UPDATE HEADER BOM
+// =========================
+public function update(Request $request, $id)
+{
+    $request->validate([
 
+        'nama_komponen' => 'required'
+
+    ]);
+
+    $bom = Bom::findOrFail($id);
+
+    $bom->update([
+
+        'nama_komponen' =>
+            $request->nama_komponen
+
+    ]);
+
+    return redirect()
+        ->back()
+        ->with('success', 'Komponen berhasil diupdate');
+}
     // =========================
     // SIMPAN HEADER BOM
     // =========================

@@ -4,24 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BarangMasuk extends Model
+class JobOutDetail extends Model
 {
     protected $fillable = [
 
+        'job_out_id',
+
         'barang_id',
 
-        'jumlah',
+        'qty',
 
-        'jumlah_roll',
-
-        'tanggal_masuk',
-
-        'supplier',
-
-        // TAMBAHAN
-        'asal'
+        'satuan'
 
     ];
+
+    // =========================
+    // RELASI JOB OUT
+    // =========================
+
+    public function jobOut()
+    {
+        return $this->belongsTo(JobOut::class);
+    }
 
     // =========================
     // RELASI BARANG

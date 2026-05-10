@@ -45,7 +45,7 @@ class BarangController extends Controller
         // GENERATE NOMOR
         // =========================
 
-        if($lastBarang){
+        if ($lastBarang) {
 
             $lastNumber = (int)
                 substr($lastBarang->kode, 3);
@@ -58,10 +58,9 @@ class BarangController extends Controller
                     STR_PAD_LEFT
                 );
 
-        }else{
+        } else {
 
             $newNumber = '001';
-
         }
 
         // =========================
@@ -86,13 +85,32 @@ class BarangController extends Controller
 
             'satuan' => $request->satuan,
 
+            /*
+            =========================
+            MATERIAL UTAMA
+            =========================
+            */
+
+            'jumlah_roll' =>
+                $request->jumlah_roll ?? 0,
+
+            'jumlah_meter' =>
+                $request->jumlah_meter ?? 0,
+
+            /*
+            =========================
+            MATERIAL PENDUKUNG
+            =========================
+            */
+
+            'stok' =>
+                $request->stok ?? 0,
+
             'isi_per_satuan' =>
                 $request->isi_per_satuan,
 
             'satuan_konversi' =>
-                $request->satuan_konversi,
-
-            'stok' => $request->stok ?? 0
+                $request->satuan_konversi
 
         ]);
 
@@ -108,22 +126,48 @@ class BarangController extends Controller
 
         $barang->update([
 
-            // kode tidak diubah manual
             'nama' => $request->nama,
 
-            'kategori' => $request->kategori,
+            /*
+            =========================
+            FIX KATEGORI NULL
+            =========================
+            */
+
+            'kategori' => !empty($request->kategori)
+                ? $request->kategori
+                : $barang->kategori,
 
             'warna' => $request->warna,
 
             'satuan' => $request->satuan,
 
+            /*
+            =========================
+            MATERIAL UTAMA
+            =========================
+            */
+
+            'jumlah_roll' =>
+                $request->jumlah_roll ?? 0,
+
+            'jumlah_meter' =>
+                $request->jumlah_meter ?? 0,
+
+            /*
+            =========================
+            MATERIAL PENDUKUNG
+            =========================
+            */
+
+            'stok' =>
+                $request->stok ?? 0,
+
             'isi_per_satuan' =>
                 $request->isi_per_satuan,
 
             'satuan_konversi' =>
-                $request->satuan_konversi,
-
-            'stok' => $request->stok
+                $request->satuan_konversi
 
         ]);
 

@@ -286,6 +286,14 @@ tbody tr:hover{
 
     </button>
 
+    <button
+        class="btn-primary"
+        onclick="openJobOutModal()">
+
+        📦 Job Out
+
+    </button>
+
 </div>
 
 @endif
@@ -527,6 +535,7 @@ tbody tr:hover{
                 name="tanggal"
                 class="input"
                 required
+                value="{{ date('Y-m-d') }}"
                 style="
                     width:100%;
                     margin-top:5px;
@@ -612,7 +621,113 @@ tbody tr:hover{
     </div>
 
 </div>
+<!-- ================= MODAL JOB OUT ================= -->
 
+<div class="modal" id="modalJobOut">
+
+    <div class="modal-content">
+
+        <h3 style="margin-bottom:20px;">
+
+            Job Out
+
+        </h3>
+
+        <form
+            action="/job-out/generate-pdf"
+            method="GET">
+
+            <input
+                type="hidden"
+                name="produk_id"
+                value="{{ request('produk_id') }}">
+
+            <input
+                type="hidden"
+                name="qty_produksi"
+                value="{{ request('qty_produksi') }}">
+
+            <input
+                type="hidden"
+                name="mode"
+                value="{{ request('mode') }}">
+
+            <input
+                type="hidden"
+                name="komponen"
+                value="{{ request('komponen') }}">
+
+            <label>Vendor</label>
+
+            <input
+                type="text"
+                name="vendor"
+                class="input"
+                placeholder="Nama Vendor"
+                style="
+                    width:100%;
+                    margin-top:5px;
+                    margin-bottom:15px;
+                ">
+
+            <label>Ekspedisi</label>
+
+            <input
+                type="text"
+                name="ekspedisi"
+                class="input"
+                placeholder="Ekspedisi"
+                style="
+                    width:100%;
+                    margin-top:5px;
+                    margin-bottom:15px;
+                ">
+
+            <label>Catatan</label>
+
+            <textarea
+                name="catatan"
+                class="input"
+                placeholder="Catatan"
+                style="
+                    width:100%;
+                    margin-top:5px;
+                    margin-bottom:15px;
+                    height:80px;
+                "></textarea>
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:flex-end;
+                    gap:10px;
+                ">
+
+                <button
+                    type="button"
+                    class="btn-primary"
+                    onclick="closeJobOutModal()">
+
+                    Batal
+
+                </button>
+
+            <button
+                type="submit"
+                class="btn-primary"
+                onclick="closeJobOutModal()">
+
+                Generate Surat Jalan
+
+            </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 <!-- ================= SCRIPT ================= -->
 
 <script>
@@ -651,7 +766,19 @@ function closeProduksiModal(){
         .getElementById('modalProduksi')
         .style.display = 'none';
 }
+function openJobOutModal(){
 
+    document
+        .getElementById('modalJobOut')
+        .style.display = 'flex';
+}
+
+function closeJobOutModal(){
+
+    document
+        .getElementById('modalJobOut')
+        .style.display = 'none';
+}
 </script>
 
 @endsection

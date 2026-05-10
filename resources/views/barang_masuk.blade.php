@@ -4,18 +4,18 @@
 
 <style>
 
-.page-header {
+.page-header{
     display:flex;
     justify-content:space-between;
     margin-bottom:25px;
 }
 
-.page-header h2 { 
+.page-header h2{
     color:white;
     font-weight:600;
 }
 
-.filter-bar {
+.filter-bar{
     display:flex;
     gap:15px;
     align-items:end;
@@ -23,7 +23,7 @@
     flex-wrap:wrap;
 }
 
-.input {
+.input{
     background:#111827;
     border:1px solid rgba(255,255,255,0.1);
     padding:10px 12px;
@@ -31,8 +31,8 @@
     color:#e5e7eb;
 }
 
-.btn-primary {
-    background: linear-gradient(90deg,#6366f1,#8b5cf6);
+.btn-primary{
+    background:linear-gradient(90deg,#6366f1,#8b5cf6);
     border:none;
     padding:10px 16px;
     border-radius:10px;
@@ -41,24 +41,24 @@
     cursor:pointer;
 }
 
-.table-box {
+.table-box{
     background:rgba(17,24,39,0.7);
-    backdrop-filter: blur(10px);
+    backdrop-filter:blur(10px);
     border-radius:16px;
     overflow:hidden;
     border:1px solid rgba(255,255,255,0.05);
 }
 
-table {
+table{
     width:100%;
     border-collapse:collapse;
 }
 
-thead {
-    background: rgba(255,255,255,0.03);
+thead{
+    background:rgba(255,255,255,0.03);
 }
 
-thead th {
+thead th{
     padding:14px;
     text-align:left;
     font-size:13px;
@@ -66,17 +66,17 @@ thead th {
     border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
-tbody td {
+tbody td{
     padding:14px;
     color:#f1f5f9;
     font-size:14px;
 }
 
-tbody tr {
+tbody tr{
     border-top:1px solid rgba(255,255,255,0.05);
 }
 
-.badge-in {
+.badge-in{
     background:rgba(34,197,94,0.2);
     color:#22c55e;
     padding:5px 10px;
@@ -84,7 +84,7 @@ tbody tr {
     font-size:13px;
 }
 
-.action-btn {
+.action-btn{
     background:rgba(255,255,255,0.05);
     border:none;
     padding:6px 10px;
@@ -93,7 +93,7 @@ tbody tr {
     cursor:pointer;
 }
 
-.modal {
+.modal{
     display:none;
     position:fixed;
     top:0;
@@ -106,7 +106,7 @@ tbody tr {
     z-index:999;
 }
 
-.modal-content {
+.modal-content{
     background:#111827;
     padding:25px;
     border-radius:16px;
@@ -114,22 +114,22 @@ tbody tr {
     border:1px solid rgba(255,255,255,0.08);
 }
 
-.modal-content h3 {
+.modal-content h3{
     color:white;
     margin-bottom:20px;
 }
 
-.form-group {
+.form-group{
     margin-bottom:15px;
 }
 
-.form-group label {
+.form-group label{
     color:#cbd5e1;
     display:block;
     margin-bottom:6px;
 }
 
-.form-actions {
+.form-actions{
     display:flex;
     justify-content:end;
     gap:10px;
@@ -139,16 +139,19 @@ tbody tr {
 </style>
 
 <div class="page-header">
+
     <h2>Barang Masuk</h2>
+
 </div>
 
 <div class="filter-bar">
 
-    <button 
+    <button
         class="btn-primary"
         onclick="document.getElementById('modalInput').style.display='flex'">
 
         + Input Barang
+
     </button>
 
 </div>
@@ -158,16 +161,31 @@ tbody tr {
 <table>
 
 <thead>
+
 <tr>
+
 <th>No</th>
 <th>Tanggal</th>
 <th>Kode</th>
 <th>Nama</th>
 <th>Supplier</th>
-<th>Jumlah</th>
+
+@if(request()->is('barang-masuk-material-utama'))
+
+    <th>Roll</th>
+    <th>Meter</th>
+
+@else
+
+    <th>Jumlah</th>
+
+@endif
+
 <th>Satuan</th>
 <th>Aksi</th>
+
 </tr>
+
 </thead>
 
 <tbody>
@@ -188,26 +206,55 @@ tbody tr {
 
 <td>{{ $item->supplier }}</td>
 
-<td>
-<span class="badge-in">
-{{ $item->jumlah }}
-</span>
-</td>
+@if(request()->is('barang-masuk-material-utama'))
+
+    <td>
+
+        <span class="badge-in">
+
+            {{ $item->jumlah_roll ?? 0 }} Roll
+
+        </span>
+
+    </td>
+
+    <td>
+
+        <span class="badge-in">
+
+            {{ $item->jumlah }} Meter
+
+        </span>
+
+    </td>
+
+@else
+
+    <td>
+
+        <span class="badge-in">
+
+            {{ $item->jumlah }}
+
+        </span>
+
+    </td>
+
+@endif
 
 <td>{{ $item->barang->satuan }}</td>
 
 <td style="display:flex; gap:8px;">
 
-<!-- EDIT -->
-<button 
+<button
     class="action-btn"
     onclick="document.getElementById('editModal{{ $item->id }}').style.display='flex'">
 
     ✏️
+
 </button>
 
-<!-- HAPUS -->
-<form 
+<form
     action="{{ route('barang-masuk.destroy', $item->id) }}"
     method="POST">
 
@@ -215,7 +262,9 @@ tbody tr {
     @method('DELETE')
 
     <button class="action-btn">
+
         🗑
+
     </button>
 
 </form>
@@ -242,7 +291,7 @@ tbody tr {
 
 <h3>Edit Barang Masuk</h3>
 
-<form 
+<form
     action="{{ route('barang-masuk.update', $item->id) }}"
     method="POST">
 
@@ -253,14 +302,14 @@ tbody tr {
 
 <label>Barang</label>
 
-<select 
+<select
     name="barang_id"
     class="input"
     style="width:100%;">
 
     @foreach($barangs as $barang)
 
-    <option 
+    <option
         value="{{ $barang->id }}"
         {{ $barang->id == $item->barang_id ? 'selected' : '' }}>
 
@@ -278,7 +327,7 @@ tbody tr {
 
 <label>Supplier</label>
 
-<input 
+<input
     type="text"
     name="supplier"
     value="{{ $item->supplier }}"
@@ -288,11 +337,27 @@ tbody tr {
 
 </div>
 
+@if(request()->is('barang-masuk-material-utama'))
+
 <div class="form-group">
 
-<label>Jumlah</label>
+<label>Jumlah Roll</label>
 
-<input 
+<input
+    type="number"
+    name="jumlah_roll"
+    value="{{ $item->jumlah_roll ?? 0 }}"
+    class="input"
+    style="width:100%;"
+    required>
+
+</div>
+
+<div class="form-group">
+
+<label>Jumlah Meter</label>
+
+<input
     type="number"
     name="jumlah"
     value="{{ $item->jumlah }}"
@@ -302,11 +367,29 @@ tbody tr {
 
 </div>
 
+@else
+
+<div class="form-group">
+
+<label>Jumlah</label>
+
+<input
+    type="number"
+    name="jumlah"
+    value="{{ $item->jumlah }}"
+    class="input"
+    style="width:100%;"
+    required>
+
+</div>
+
+@endif
+
 <div class="form-group">
 
 <label>Tanggal Masuk</label>
 
-<input 
+<input
     type="date"
     name="tanggal_masuk"
     value="{{ $item->tanggal_masuk }}"
@@ -318,16 +401,19 @@ tbody tr {
 
 <div class="form-actions">
 
-<button 
+<button
     type="button"
     class="action-btn"
     onclick="document.getElementById('editModal{{ $item->id }}').style.display='none'">
 
     Batal
+
 </button>
 
 <button type="submit" class="btn-primary">
+
     Update
+
 </button>
 
 </div>
@@ -355,7 +441,7 @@ tbody tr {
 
 <label>Barang</label>
 
-<select 
+<select
     name="barang_id"
     class="input"
     style="width:100%;">
@@ -363,7 +449,9 @@ tbody tr {
     @foreach($barangs as $barang)
 
     <option value="{{ $barang->id }}">
+
         {{ $barang->kode }} - {{ $barang->nama }}
+
     </option>
 
     @endforeach
@@ -376,7 +464,7 @@ tbody tr {
 
 <label>Supplier</label>
 
-<input 
+<input
     type="text"
     name="supplier"
     class="input"
@@ -385,11 +473,26 @@ tbody tr {
 
 </div>
 
+@if(request()->is('barang-masuk-material-utama'))
+
 <div class="form-group">
 
-<label>Jumlah</label>
+<label>Jumlah Roll</label>
 
-<input 
+<input
+    type="number"
+    name="jumlah_roll"
+    class="input"
+    style="width:100%;"
+    required>
+
+</div>
+
+<div class="form-group">
+
+<label>Jumlah Meter</label>
+
+<input
     type="number"
     name="jumlah"
     class="input"
@@ -398,13 +501,31 @@ tbody tr {
 
 </div>
 
+@else
+
+<div class="form-group">
+
+<label>Jumlah</label>
+
+<input
+    type="number"
+    name="jumlah"
+    class="input"
+    style="width:100%;"
+    required>
+
+</div>
+
+@endif
+
 <div class="form-group">
 
 <label>Tanggal Masuk</label>
 
-<input 
+<input
     type="date"
     name="tanggal_masuk"
+    value="{{ date('Y-m-d') }}"
     class="input"
     style="width:100%;"
     required>
@@ -413,16 +534,19 @@ tbody tr {
 
 <div class="form-actions">
 
-<button 
+<button
     type="button"
     class="action-btn"
     onclick="document.getElementById('modalInput').style.display='none'">
 
     Batal
+
 </button>
 
 <button type="submit" class="btn-primary">
+
     Simpan
+
 </button>
 
 </div>

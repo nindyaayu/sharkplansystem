@@ -4,432 +4,627 @@
 
 <style>
 
-.page-header {
-    display:flex;
-    justify-content:space-between;
+.page-title{
+    color:white;
+    font-size:32px;
+    font-weight:bold;
     margin-bottom:25px;
 }
 
-.page-header h2 { 
+.top-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.btn{
+    background:linear-gradient(90deg,#6366f1,#8b5cf6);
     color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
     font-weight:600;
 }
 
-.filter-bar {
-    display:flex;
-    gap:15px;
-    align-items:end;
-    margin-bottom:20px;
-    flex-wrap:wrap;
-}
-
-.input {
-    background:#111827;
-    border:1px solid rgba(255,255,255,0.1);
-    padding:10px 12px;
-    border-radius:10px;
-    color:#e5e7eb;
-}
-
-.btn-primary {
-    background: linear-gradient(90deg,#6366f1,#8b5cf6);
-    border:none;
-    padding:10px 16px;
-    border-radius:10px;
-    color:white;
-    font-weight:500;
-    cursor:pointer;
-}
-
-.table-box {
-    background:rgba(17,24,39,0.7);
-    backdrop-filter: blur(10px);
-    border-radius:16px;
-    overflow:hidden;
+.table-box{
+    background:rgba(255,255,255,0.03);
     border:1px solid rgba(255,255,255,0.05);
+    border-radius:20px;
+    overflow:hidden;
 }
 
-table {
+table{
     width:100%;
     border-collapse:collapse;
 }
 
-thead {
-    background: rgba(255,255,255,0.03);
-}
-
-thead th {
-    padding:14px;
+th{
+    background:rgba(255,255,255,0.04);
+    color:#cbd5e1;
+    padding:16px;
     text-align:left;
-    font-size:13px;
-    color:#e2e8f0;
-    border-bottom:1px solid rgba(255,255,255,0.08);
-}
-
-tbody td {
-    padding:14px;
-    color:#f1f5f9;
     font-size:14px;
 }
 
-tbody tr {
+td{
+    padding:16px;
     border-top:1px solid rgba(255,255,255,0.05);
+    color:white;
+    font-size:14px;
 }
 
-.badge-out {
-    background:rgba(239,68,68,0.2);
-    color:#ef4444;
-    padding:5px 10px;
-    border-radius:8px;
-    font-size:13px;
-}
-
-.action-btn {
-    background:rgba(255,255,255,0.05);
-    border:none;
+.badge{
     padding:6px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+    display:inline-block;
+}
+
+.badge-danger{
+    background:rgba(239,68,68,0.2);
+    color:#f87171;
+}
+
+.action{
+    display:flex;
+    gap:8px;
+}
+
+.btn-edit{
+    background:#1e293b;
+    color:#f97316;
+    border:none;
+    padding:8px 12px;
     border-radius:8px;
-    color:#e5e7eb;
     cursor:pointer;
 }
 
-.modal {
+.btn-delete{
+    background:#1e293b;
+    color:#ef4444;
+    border:none;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.modal{
     display:none;
     position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
+    inset:0;
     background:rgba(0,0,0,0.7);
     justify-content:center;
     align-items:center;
     z-index:999;
 }
 
-.modal-content {
-    background:#111827;
-    padding:25px;
-    border-radius:16px;
-    width:400px;
+.modal-content{
+    background:#0f172a;
+    padding:30px;
+    border-radius:20px;
+    width:420px;
     border:1px solid rgba(255,255,255,0.08);
 }
 
-.modal-content h3 {
+.modal-title{
     color:white;
+    font-size:22px;
+    font-weight:bold;
     margin-bottom:20px;
 }
 
-.form-group {
+.input{
+    width:100%;
+    padding:12px;
     margin-bottom:15px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.1);
+    background:#111827;
+    color:white;
 }
 
-.form-group label {
-    color:#cbd5e1;
-    display:block;
-    margin-bottom:6px;
-}
-
-.form-actions {
+.modal-footer{
     display:flex;
-    justify-content:end;
+    justify-content:flex-end;
     gap:10px;
-    margin-top:20px;
+}
+
+.btn-secondary{
+    background:#1e293b;
+    color:white;
+    border:none;
+    padding:10px 16px;
+    border-radius:10px;
+    cursor:pointer;
 }
 
 </style>
 
-<div class="page-header">
-    <h2>Barang Keluar</h2>
+<div class="page-title">
+
+    Barang Keluar
+
 </div>
 
-<div class="filter-bar">
+<div class="top-bar">
 
-    <button 
-        class="btn-primary"
-        onclick="document.getElementById('modalKeluar').style.display='flex'">
+    <button class="btn" onclick="openModal()">
 
         + Barang Keluar
+
     </button>
 
 </div>
+
+@if(session('success'))
+
+    <script>
+
+        alert("{{ session('success') }}")
+
+    </script>
+
+@endif
+
+@if(session('error'))
+
+    <script>
+
+        alert("{{ session('error') }}")
+
+    </script>
+
+@endif
 
 <div class="table-box">
 
-<table>
+    <table>
 
-<thead>
-<tr>
-<th>No</th>
-<th>Tanggal</th>
-<th>Kode</th>
-<th>Nama</th>
-<th>Tujuan</th>
-<th>Jumlah</th>
-<th>Satuan</th>
-<th>Aksi</th>
-</tr>
-</thead>
+        <thead>
 
-<tbody>
+            <tr>
 
-@foreach($barangKeluars as $index => $item)
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>Kode</th>
+                <th>Nama</th>
+                <th>Tujuan</th>
 
-<tr>
+                @if(request()->is('barang-keluar-material-utama'))
 
-<td>{{ $index + 1 }}</td>
+                    <th>Roll</th>
+                    <th>Meter</th>
 
-<td>
-{{ \Carbon\Carbon::parse($item->tanggal_keluar)->format('d/m/Y') }}
-</td>
+                @else
 
-<td>{{ $item->barang->kode }}</td>
+                    <th>Jumlah</th>
 
-<td>{{ $item->barang->nama }}</td>
+                @endif
 
-<td>{{ $item->tujuan }}</td>
+                <th>Satuan</th>
+                <th>Aksi</th>
 
-<td>
-<span class="badge-out">
-{{ $item->jumlah }}
-</span>
-</td>
+            </tr>
 
-<td>{{ $item->barang->satuan }}</td>
+        </thead>
 
-<td style="display:flex; gap:8px;">
+        <tbody>
 
-<!-- EDIT -->
-<button 
-    class="action-btn"
-    onclick="document.getElementById('editModal{{ $item->id }}').style.display='flex'">
+            @forelse($barangKeluars as $item)
 
-    ✏️
-</button>
+                <tr>
 
-<!-- HAPUS -->
-<form 
-    action="{{ route('barang-keluar.destroy', $item->id) }}"
-    method="POST">
+                    <td>
 
-    @csrf
-    @method('DELETE')
+                        {{ $loop->iteration }}
 
-    <button class="action-btn">
-        🗑
-    </button>
+                    </td>
 
-</form>
+                    <td>
 
-</td>
+                        {{ \Carbon\Carbon::parse($item->tanggal_keluar)->format('d/m/Y') }}
 
-</tr>
+                    </td>
 
-@endforeach
+                    <td>
 
-</tbody>
+                        {{ $item->barang->kode ?? '-' }}
 
-</table>
+                    </td>
+
+                    <td>
+
+                        {{ $item->barang->nama ?? '-' }}
+
+                    </td>
+
+                    <td>
+
+                        {{ $item->tujuan }}
+
+                    </td>
+
+                    @if(request()->is('barang-keluar-material-utama'))
+
+                        <td>
+
+                            <span class="badge badge-danger">
+
+                                {{ $item->jumlah_roll ?? 0 }} Roll
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge badge-danger">
+
+                                {{ $item->jumlah ?? 0 }} Meter
+
+                            </span>
+
+                        </td>
+
+                    @else
+
+                        <td>
+
+                            <span class="badge badge-danger">
+                                @if($item->jumlah_roll > 0)
+
+                                    {{ number_format($item->jumlah_roll,0) }}
+
+                                @else
+
+                                    {{ number_format($item->jumlah,0) }}
+
+                                @endif
+                            </span>
+
+                        </td>
+
+                    @endif
+
+                    <td>
+
+                        {{ $item->barang->satuan ?? '-' }}
+
+                    </td>
+
+                    <td>
+
+                        <div class="action">
+
+                            <button
+                                class="btn-edit"
+                                onclick="openEditModal(
+                                    '{{ $item->id }}',
+                                    '{{ $item->barang_id }}',
+                                    '{{ $item->jumlah_roll ?? 0 }}',
+                                    '{{ $item->jumlah }}',
+                                    '{{ $item->tanggal_keluar }}',
+                                    '{{ $item->tujuan }}'
+                                )">
+
+                                ✏️
+
+                            </button>
+
+                            <form
+                                action="/barang-keluar/{{ $item->id }}"
+                                method="POST">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    class="btn-delete"
+                                    onclick="return confirm('Hapus data?')">
+
+                                    🗑️
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            @empty
+
+                <tr>
+
+                    <td colspan="9" style="text-align:center;">
+
+                        Tidak ada data
+
+                    </td>
+
+                </tr>
+
+            @endforelse
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- ================= MODAL TAMBAH ================= -->
+
+<div class="modal" id="modalTambah">
+
+    <div class="modal-content">
+
+        <div class="modal-title">
+
+            Tambah Barang Keluar
+
+        </div>
+
+        <form action="/barang-keluar" method="POST">
+
+            @csrf
+
+            <select
+                name="barang_id"
+                class="input"
+                required>
+
+                <option value="">
+
+                    Pilih Barang
+
+                </option>
+
+                @foreach($barangs as $barang)
+
+                    <option value="{{ $barang->id }}">
+
+                        {{ $barang->kode }} - {{ $barang->nama }}
+
+                    </option>
+
+                @endforeach
+
+            </select>
+
+            <input
+                type="text"
+                name="tujuan"
+                class="input"
+                placeholder="Tujuan"
+                required>
+
+            @if(request()->is('barang-keluar-material-utama'))
+
+                <input
+                    type="number"
+                    name="jumlah_roll"
+                    class="input"
+                    placeholder="Jumlah Roll"
+                    required>
+
+                <input
+                    type="number"
+                    name="jumlah"
+                    class="input"
+                    placeholder="Jumlah Meter"
+                    required>
+
+            @else
+
+                <input
+                    type="number"
+                    name="jumlah"
+                    class="input"
+                    placeholder="Jumlah"
+                    required>
+
+            @endif
+
+            <input
+                type="date"
+                name="tanggal_keluar"
+                value="{{ date('Y-m-d') }}"
+                class="input"
+                required>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn-secondary"
+                    onclick="closeModal()">
+
+                    Batal
+
+                </button>
+
+                <button type="submit" class="btn">
+
+                    Simpan
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 
 <!-- ================= MODAL EDIT ================= -->
 
-@foreach($barangKeluars as $item)
+<div class="modal" id="modalEdit">
 
-<div id="editModal{{ $item->id }}" class="modal">
+    <div class="modal-content">
 
-<div class="modal-content">
+        <div class="modal-title">
 
-<h3>Edit Barang Keluar</h3>
+            Edit Barang Keluar
 
-<form 
-    action="{{ route('barang-keluar.update', $item->id) }}"
-    method="POST">
+        </div>
 
-@csrf
-@method('PUT')
+        <form id="formEdit" method="POST">
 
-<div class="form-group">
+            @csrf
+            @method('PUT')
 
-<label>Barang</label>
+            <select
+                name="barang_id"
+                id="edit_barang"
+                class="input"
+                required>
 
-<select 
-    name="barang_id"
-    class="input"
-    style="width:100%;">
+                @foreach($barangs as $barang)
 
-    @foreach($barangs as $barang)
+                    <option value="{{ $barang->id }}">
 
-    <option 
-        value="{{ $barang->id }}"
-        {{ $barang->id == $item->barang_id ? 'selected' : '' }}>
+                        {{ $barang->kode }} - {{ $barang->nama }}
 
-        {{ $barang->kode }} - {{ $barang->nama }}
+                    </option>
 
-    </option>
+                @endforeach
 
-    @endforeach
+            </select>
 
-</select>
+            <input
+                type="text"
+                name="tujuan"
+                id="edit_tujuan"
+                class="input"
+                required>
 
-</div>
+            @if(request()->is('barang-keluar-material-utama'))
 
-<div class="form-group">
+                <input
+                    type="number"
+                    name="jumlah_roll"
+                    id="edit_roll"
+                    class="input"
+                    placeholder="Jumlah Roll"
+                    required>
 
-<label>Tujuan</label>
+                <input
+                    type="number"
+                    name="jumlah"
+                    id="edit_jumlah"
+                    class="input"
+                    placeholder="Jumlah Meter"
+                    required>
 
-<input 
-    type="text"
-    name="tujuan"
-    value="{{ $item->tujuan }}"
-    class="input"
-    style="width:100%;"
-    required>
+            @else
 
-</div>
+                <input
+                    type="number"
+                    name="jumlah"
+                    id="edit_jumlah"
+                    class="input"
+                    placeholder="Jumlah"
+                    required>
 
-<div class="form-group">
+            @endif
 
-<label>Jumlah</label>
+            <input
+                type="date"
+                name="tanggal_keluar"
+                id="edit_tanggal"
+                class="input"
+                required>
 
-<input 
-    type="number"
-    name="jumlah"
-    value="{{ $item->jumlah }}"
-    class="input"
-    style="width:100%;"
-    required>
+            <div class="modal-footer">
 
-</div>
+                <button
+                    type="button"
+                    class="btn-secondary"
+                    onclick="closeEditModal()">
 
-<div class="form-group">
+                    Batal
 
-<label>Tanggal Keluar</label>
+                </button>
 
-<input 
-    type="date"
-    name="tanggal_keluar"
-    value="{{ $item->tanggal_keluar }}"
-    class="input"
-    style="width:100%;"
-    required>
+                <button type="submit" class="btn">
 
-</div>
+                    Update
 
-<div class="form-actions">
+                </button>
 
-<button 
-    type="button"
-    class="action-btn"
-    onclick="document.getElementById('editModal{{ $item->id }}').style.display='none'">
+            </div>
 
-    Batal
-</button>
+        </form>
 
-<button type="submit" class="btn-primary">
-    Update
-</button>
-
-</div>
-
-</form>
-
-</div>
-</div>
-
-@endforeach
-
-<!-- ================= MODAL INPUT ================= -->
-
-<div id="modalKeluar" class="modal">
-
-<div class="modal-content">
-
-<h3>Input Barang Keluar</h3>
-
-<form action="{{ route('barang-keluar.store') }}" method="POST">
-
-@csrf
-
-<div class="form-group">
-
-<label>Barang</label>
-
-<select 
-    name="barang_id"
-    class="input"
-    style="width:100%;">
-
-    @foreach($barangs as $barang)
-
-    <option value="{{ $barang->id }}">
-        {{ $barang->kode }} - {{ $barang->nama }}
-    </option>
-
-    @endforeach
-
-</select>
+    </div>
 
 </div>
 
-<div class="form-group">
+<script>
 
-<label>Tujuan Keluar</label>
+function openModal(){
 
-<input 
-    type="text"
-    name="tujuan"
-    class="input"
-    style="width:100%;"
-    required>
+    document.getElementById('modalTambah')
+        .style.display = 'flex';
 
-</div>
+}
 
-<div class="form-group">
+function closeModal(){
 
-<label>Jumlah</label>
+    document.getElementById('modalTambah')
+        .style.display = 'none';
 
-<input 
-    type="number"
-    name="jumlah"
-    class="input"
-    style="width:100%;"
-    required>
+}
 
-</div>
+function openEditModal(
+    id,
+    barang,
+    roll,
+    jumlah,
+    tanggal,
+    tujuan
+){
 
-<div class="form-group">
+    document.getElementById('modalEdit')
+        .style.display = 'flex';
 
-<label>Tanggal Keluar</label>
+    document.getElementById('formEdit')
+        .action = '/barang-keluar/' + id;
 
-<input 
-    type="date"
-    name="tanggal_keluar"
-    class="input"
-    style="width:100%;"
-    required>
+    document.getElementById('edit_barang')
+        .value = barang;
 
-</div>
+    if(document.getElementById('edit_roll')){
 
-<div class="form-actions">
+        document.getElementById('edit_roll')
+            .value = roll;
 
-<button 
-    type="button"
-    class="action-btn"
-    onclick="document.getElementById('modalKeluar').style.display='none'">
+    }
 
-    Batal
-</button>
+    document.getElementById('edit_jumlah')
+        .value = jumlah;
 
-<button type="submit" class="btn-primary">
-    Simpan
-</button>
+    document.getElementById('edit_tanggal')
+        .value = tanggal;
 
-</div>
+    document.getElementById('edit_tujuan')
+        .value = tujuan;
 
-</form>
+}
 
-</div>
-</div>
+function closeEditModal(){
+
+    document.getElementById('modalEdit')
+        .style.display = 'none';
+
+}
+
+</script>
 
 @endsection

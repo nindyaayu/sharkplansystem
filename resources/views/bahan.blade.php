@@ -9,8 +9,6 @@ body{
     color:#e5e7eb;
 }
 
-/* ================= HEADER ================= */
-
 .page-header{
     display:flex;
     justify-content:space-between;
@@ -21,8 +19,6 @@ body{
 .page-header h2{
     color:white;
 }
-
-/* ================= ACTION ================= */
 
 .action-bar{
     display:flex;
@@ -37,14 +33,7 @@ body{
     border-radius:10px;
     color:white;
     cursor:pointer;
-    transition:0.3s;
 }
-
-.btn-primary:hover{
-    box-shadow:0 0 10px rgba(99,102,241,0.6);
-}
-
-/* ================= TABLE ================= */
 
 .table-box{
     background:rgba(17,24,39,0.7);
@@ -71,8 +60,6 @@ tbody td{
 tbody tr:hover{
     background:rgba(99,102,241,0.05);
 }
-
-/* ================= BADGE ================= */
 
 .badge-color{
     padding:6px 12px;
@@ -101,8 +88,6 @@ tbody tr:hover{
     font-weight:600;
 }
 
-/* ================= BUTTON ================= */
-
 .btn-edit{
     background:rgba(99,102,241,0.2);
     color:#a5b4fc;
@@ -120,8 +105,6 @@ tbody tr:hover{
     border-radius:8px;
     cursor:pointer;
 }
-
-/* ================= MODAL ================= */
 
 .modal{
     display:none;
@@ -187,41 +170,35 @@ tbody tr:hover{
 
 </style>
 
-<!-- ================= HEADER ================= -->
-
 <div class="page-header">
 
-    @if(request()->is('material-utama'))
+@if(request()->is('material-utama'))
 
-        <h2>Material Utama</h2>
+<h2>Material Utama</h2>
 
-    @elseif(request()->is('material-pendukung'))
+@elseif(request()->is('material-pendukung'))
 
-        <h2>Material Pendukung</h2>
+<h2>Material Pendukung</h2>
 
-    @else
+@else
 
-        <h2>Bahan Baku</h2>
+<h2>Bahan Baku</h2>
 
-    @endif
+@endif
 
 </div>
-
-<!-- ================= ACTION ================= -->
 
 <div class="action-bar">
 
-    <button 
-        class="btn-primary"
-        onclick="openModal()">
+<button 
+class="btn-primary"
+onclick="openModal()">
 
-        + Tambah Bahan
++ Tambah Bahan
 
-    </button>
+</button>
 
 </div>
-
-<!-- ================= TABLE ================= -->
 
 <div class="table-box">
 
@@ -232,14 +209,26 @@ tbody tr:hover{
 <tr>
 
 <th>No</th>
+<th>Tanggal</th>
 <th>Kode</th>
 <th>Nama</th>
 <th>Kategori</th>
 <th>Warna</th>
 <th>Satuan</th>
+
+@if(request()->is('material-utama'))
+
+<th>Jumlah Roll</th>
+<th>Jumlah Meter</th>
+
+@else
+
 <th>Isi / Satuan</th>
 <th>Konversi</th>
 <th>Stok</th>
+
+@endif
+
 <th>Aksi</th>
 
 </tr>
@@ -254,6 +243,12 @@ tbody tr:hover{
 
 <td>{{ $loop->iteration }}</td>
 
+<td>
+
+    {{ $d->created_at->format('d/m/Y') }}
+
+</td>
+
 <td>{{ $d->kode }}</td>
 
 <td>{{ $d->nama }}</td>
@@ -263,13 +258,13 @@ tbody tr:hover{
 @if($d->kategori == 'Kain')
 
 <span class="badge-kain">
-    Material Utama
+Material Utama
 </span>
 
 @else
 
 <span class="badge-aksesoris">
-    Material Pendukung
+Material Pendukung
 </span>
 
 @endif
@@ -288,11 +283,21 @@ tbody tr:hover{
 
 <td>{{ $d->satuan }}</td>
 
+@if($d->kategori == 'Kain')
+
+<td>{{ $d->jumlah_roll ?? 0 }}</td>
+
+<td>{{ $d->jumlah_meter ?? 0 }} Meter</td>
+
+@else
+
 <td>{{ $d->isi_per_satuan ?? '-' }}</td>
 
 <td>{{ $d->satuan_konversi ?? '-' }}</td>
 
-<td>{{ $d->stok }}</td>
+<td>{{ $d->stok ?? 0 }}</td>
+
+@endif
 
 <td>
 
@@ -310,7 +315,9 @@ onclick="openEditModal(
 '{{ $d->satuan }}',
 '{{ $d->isi_per_satuan }}',
 '{{ $d->satuan_konversi }}',
-'{{ $d->stok }}'
+'{{ $d->stok }}',
+'{{ $d->jumlah_roll }}',
+'{{ $d->jumlah_meter }}'
 )">
 
 Edit
@@ -344,7 +351,7 @@ Hapus
 
 </div>
 
-<!-- ================= MODAL TAMBAH ================= -->
+<!-- MODAL TAMBAH -->
 
 <div id="modal" class="modal">
 
@@ -355,10 +362,6 @@ Hapus
 <form method="POST" action="/bahan">
 
 @csrf
-
-<input 
-name="kode"
-placeholder="Kode Bahan">
 
 <input 
 name="nama"
@@ -378,24 +381,6 @@ type="hidden"
 name="kategori"
 value="Aksesoris">
 
-@else
-
-<select name="kategori">
-
-<option value="">
-Pilih Kategori
-</option>
-
-<option value="Kain">
-Material Utama
-</option>
-
-<option value="Aksesoris">
-Material Pendukung
-</option>
-
-</select>
-
 @endif
 
 <input 
@@ -406,12 +391,34 @@ placeholder="Warna">
 name="satuan"
 placeholder="Satuan">
 
+@if(request()->is('material-utama'))
+
+<input 
+type="number"
+name="jumlah_roll"
+placeholder="Jumlah Roll">
+
+<input 
+type="number"
+step="0.01"
+name="jumlah_meter"
+placeholder="Jumlah Meter">
+
+<input 
+type="date"
+name="tanggal_input"
+value="{{ date('Y-m-d') }}">
+@else
+
 <input 
 type="number"
 step="0.01"
 name="isi_per_satuan"
 placeholder="Isi per satuan">
-
+<input 
+type="date"
+name="created_at"
+value="{{ date('Y-m-d') }}">
 <input 
 name="satuan_konversi"
 placeholder="Satuan konversi">
@@ -421,6 +428,8 @@ type="number"
 step="0.01"
 name="stok"
 placeholder="Stok">
+
+@endif
 
 <div class="modal-actions">
 
@@ -449,7 +458,7 @@ Simpan
 
 </div>
 
-<!-- ================= MODAL EDIT ================= -->
+<!-- MODAL EDIT -->
 
 <div id="editModal" class="modal">
 
@@ -463,6 +472,11 @@ Simpan
 @method('PUT')
 
 <input 
+type="hidden"
+name="kategori"
+value="{{ request()->is('material-utama') ? 'Kain' : 'Aksesoris' }}">
+
+<input 
 type="text"
 name="kode"
 id="editKode">
@@ -471,18 +485,6 @@ id="editKode">
 type="text"
 name="nama"
 id="editNama">
-
-<select name="kategori" id="editKategori">
-
-<option value="Kain">
-Material Utama
-</option>
-
-<option value="Aksesoris">
-Material Pendukung
-</option>
-
-</select>
 
 <input 
 type="text"
@@ -493,6 +495,23 @@ id="editWarna">
 type="text"
 name="satuan"
 id="editSatuan">
+
+@if(request()->is('material-utama'))
+
+<input 
+type="number"
+name="jumlah_roll"
+id="editJumlahRoll"
+placeholder="Jumlah Roll">
+
+<input 
+type="number"
+step="0.01"
+name="jumlah_meter"
+id="editJumlahMeter"
+placeholder="Jumlah Meter">
+
+@else
 
 <input 
 type="number"
@@ -510,6 +529,8 @@ type="number"
 step="0.01"
 name="stok"
 id="editStok">
+
+@endif
 
 <div class="modal-actions">
 
@@ -532,6 +553,11 @@ Update
 
 </div>
 
+</form>
+
+</div>
+
+</div>
 </form>
 
 </div>
@@ -563,7 +589,9 @@ warna,
 satuan,
 isi_per_satuan,
 satuan_konversi,
-stok
+stok,
+jumlah_roll,
+jumlah_meter
 ){
 
 document.getElementById('editModal')
@@ -575,14 +603,21 @@ document.getElementById('editKode')
 document.getElementById('editNama')
 .value = nama;
 
-document.getElementById('editKategori')
-.value = kategori;
-
 document.getElementById('editWarna')
 .value = warna;
 
 document.getElementById('editSatuan')
 .value = satuan;
+
+@if(request()->is('material-utama'))
+
+document.getElementById('editJumlahRoll')
+.value = jumlah_roll;
+
+document.getElementById('editJumlahMeter')
+.value = jumlah_meter;
+
+@else
 
 document.getElementById('editIsiPerSatuan')
 .value = isi_per_satuan;
@@ -592,6 +627,8 @@ document.getElementById('editSatuanKonversi')
 
 document.getElementById('editStok')
 .value = stok;
+
+@endif
 
 document.getElementById('editForm')
 .action = '/bahan/' + id;

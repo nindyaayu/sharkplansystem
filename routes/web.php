@@ -1,5 +1,7 @@
 <?php
 
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -10,6 +12,8 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\BomController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ProduksiController;
+use App\Http\Controllers\JobOutController;
+use App\Http\Controllers\SuratJalanController;
 use App\Models\Barang;
 
 /*
@@ -98,34 +102,30 @@ Route::middleware('auth')->group(function () {
     Route::get('/produk', [ProdukController::class, 'index']);
 
     Route::post('/produk', [ProdukController::class, 'store']);
-
+    Route::put('/produk/{id}', [ProdukController::class, 'update']);
     Route::delete('/produk/{id}', [ProdukController::class, 'destroy']);
 
     // ==================================================
     // MASTER BOM
     // ==================================================
 
-    // halaman master bom
     Route::get('/master-bom', [BomController::class, 'index'])
         ->name('master-bom');
 
-    // simpan header bom
     Route::post('/master-bom', [BomController::class, 'store'])
         ->name('master-bom.store');
+    Route::put('/master-bom/{id}', [BomController::class, 'update'])
+        ->name('master-bom.update');
 
-    // simpan detail bahan
     Route::post('/bom-detail', [BomController::class, 'storeDetail'])
         ->name('bom-detail.store');
 
-    // update detail bahan
     Route::put('/bom-detail/{id}', [BomController::class, 'updateDetail'])
         ->name('bom-detail.update');
 
-    // hapus detail bahan
     Route::delete('/bom-detail/{id}', [BomController::class, 'destroyDetail'])
         ->name('bom-detail.destroy');
 
-    // hapus header bom
     Route::delete('/master-bom/{id}', [BomController::class, 'destroy'])
         ->name('master-bom.destroy');
 
@@ -146,15 +146,12 @@ Route::middleware('auth')->group(function () {
     // PRODUKSI
     // ==================================================
 
-    // halaman produksi
     Route::get('/produksi', [ProduksiController::class, 'index'])
         ->name('produksi');
 
-    // simpan produksi
     Route::post('/produksi', [ProduksiController::class, 'store'])
         ->name('produksi.store');
 
-    // proses produksi
     Route::post('/produksi/proses/{id}', [ProduksiController::class, 'proses'])
         ->name('produksi.proses');
 
@@ -164,54 +161,499 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/inventori', fn() => view('inventori'));
 
+    /*
+    |--------------------------------------------------------------------------
+    | BARANG MASUK
+    |--------------------------------------------------------------------------
+    */
+
     // =========================
-    // BARANG MASUK
+    // MATERIAL UTAMA
     // =========================
 
-    Route::get('/barang-masuk', [BarangMasukController::class, 'index'])
-        ->name('barang-masuk.index');
+    Route::get('/barang-masuk-material-utama', function () {
+
+        $barangMasuks = \App\Models\BarangMasuk::with('barang')
+            ->whereHas('barang', function ($q) {
+
+                $q->where('kategori', 'Kain');
+
+            })
+            ->latest()
+            ->get();
+
+        $barangs = Barang::where(
+            'kategori',
+            'Kain'
+        )->get();
+
+        return view('barang_masuk', compact(
+            'barangMasuks',
+            'barangs'
+        ));
+
+    })->name('barang-masuk-material-utama');
+
+
+    // =========================
+    // MATERIAL PENDUKUNG
+    // =========================
+
+    Route::get('/barang-masuk-material-pendukung', function () {
+
+        $barangMasuks = \App\Models\BarangMasuk::with('barang')
+            ->whereHas('barang', function ($q) {
+
+                $q->where('kategori', 'Aksesoris');
+
+            })
+            ->latest()
+            ->get();
+
+        $barangs = Barang::where(
+            'kategori',
+            'Aksesoris'
+        )->get();
+
+        return view('barang_masuk', compact(
+            'barangMasuks',
+            'barangs'
+        ));
+
+    })->name('barang-masuk-material-pendukung');
+
+    // =========================
+    // STORE
+    // =========================
 
     Route::post('/barang-masuk', [BarangMasukController::class, 'store'])
         ->name('barang-masuk.store');
 
+    // =========================
+    // DELETE
+    // =========================
+
     Route::delete('/barang-masuk/{id}', [BarangMasukController::class, 'destroy'])
         ->name('barang-masuk.destroy');
+
+    // =========================
+    // UPDATE
+    // =========================
 
     Route::put('/barang-masuk/{id}', [BarangMasukController::class, 'update'])
         ->name('barang-masuk.update');
 
+    /*
+    |--------------------------------------------------------------------------
+    | BARANG KELUAR
+    |--------------------------------------------------------------------------
+    */
+
     // =========================
-    // BARANG KELUAR
+    // MATERIAL UTAMA
     // =========================
 
-    Route::get('/barang-keluar', [BarangKeluarController::class, 'index'])
-        ->name('barang-keluar.index');
+    Route::get('/barang-keluar-material-utama', function () {
+
+        $barangKeluars = \App\Models\BarangKeluar::with('barang')
+            ->whereHas('barang', function ($q) {
+
+                $q->where('kategori', 'Kain');
+
+            })
+            ->latest()
+            ->get();
+
+        $barangs = Barang::where(
+            'kategori',
+            'Kain'
+        )->get();
+
+        return view('barang_keluar', compact(
+            'barangKeluars',
+            'barangs'
+        ));
+
+    })->name('barang-keluar-material-utama');
+
+    // =========================
+    // MATERIAL PENDUKUNG
+    // =========================
+
+    Route::get('/barang-keluar-material-pendukung', function () {
+
+        $barangKeluars = \App\Models\BarangKeluar::with('barang')
+            ->whereHas('barang', function ($q) {
+
+                $q->where('kategori', 'Aksesoris');
+
+            })
+            ->latest()
+            ->get();
+
+        $barangs = Barang::where(
+            'kategori',
+            'Aksesoris'
+        )->get();
+
+        return view('barang_keluar', compact(
+            'barangKeluars',
+            'barangs'
+        ));
+
+    })->name('barang-keluar-material-pendukung');
+
+    // =========================
+    // STORE
+    // =========================
 
     Route::post('/barang-keluar', [BarangKeluarController::class, 'store'])
         ->name('barang-keluar.store');
 
+    // =========================
+    // DELETE
+    // =========================
+
     Route::delete('/barang-keluar/{id}', [BarangKeluarController::class, 'destroy'])
         ->name('barang-keluar.destroy');
 
+    // =========================
+    // UPDATE
+    // =========================
+
     Route::put('/barang-keluar/{id}', [BarangKeluarController::class, 'update'])
         ->name('barang-keluar.update');
+    // =========================
+    // JOB OUT
+    // =========================
+
+    Route::get('/job-out', [JobOutController::class, 'index'])
+        ->name('job-out');
+
+    Route::post('/job-out', [JobOutController::class, 'store'])
+        ->name('job-out.store');
+    Route::get(
+        '/job-out/generate-pdf',
+        [JobOutController::class, 'generatePdf']
+    )->name('job-out.generate');
+
+    Route::get(
+        '/surat-jalan',
+        [SuratJalanController::class, 'index']
+    )->name('surat-jalan');
+// =========================
+// LAPORAN MATERIAL UTAMA
+// =========================
+    Route::get('/laporan-material-utama', function (Request $request) {
+
+    $tanggal = $request->tanggal;
+
+    $data = Barang::where(
+        'kategori',
+        'Kain'
+    )->get();
 
     // =========================
-    // LAPORAN
+    // HITUNG STOK BERDASARKAN TANGGAL
     // =========================
 
-    // halaman laporan
-    Route::get('/laporan', [LaporanController::class, 'index'])
-        ->name('laporan');
+    foreach($data as $item){
 
-    // filter laporan
-    Route::get('/laporan/filter', [LaporanController::class, 'filter'])
-        ->name('laporan.filter');
+        // =========================
+        // TOTAL MASUK
+        // =========================
 
-    // export pdf
-    Route::get('/laporan/pdf', [LaporanController::class, 'exportPdf'])
-        ->name('laporan.pdf');
+        $totalMasukRoll =
+            $item->barangMasuk()
+                ->when($tanggal, function($q) use ($tanggal){
 
+                    $q->whereDate(
+                        'tanggal_masuk',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah_roll');
+
+        $totalMasukMeter =
+            $item->barangMasuk()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_masuk',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah');
+
+        // =========================
+        // TOTAL KELUAR
+        // =========================
+
+        $totalKeluarRoll =
+            $item->barangKeluar()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_keluar',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah_roll');
+
+        $totalKeluarMeter =
+            $item->barangKeluar()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_keluar',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah');
+
+        // =========================
+        // STOK AKHIR
+        // =========================
+
+        $item->jumlah_roll =
+            $totalMasukRoll -
+            $totalKeluarRoll;
+
+        $item->jumlah_meter =
+            $totalMasukMeter -
+            $totalKeluarMeter;
+    }
+
+    return view(
+        'laporan_material_utama',
+        compact(
+            'data',
+            'tanggal'
+        )
+    );
+
+})->name('laporan-material-utama');
+Route::get('/laporan-material-utama-pdf', function (Request $request) {
+
+    $tanggal = $request->tanggal;
+
+    $data = Barang::where(
+        'kategori',
+        'Kain'
+    )->get();
+
+    foreach($data as $item){
+
+        // TOTAL MASUK
+
+        $totalMasukRoll =
+            $item->barangMasuk()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_masuk',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah_roll');
+
+        $totalMasukMeter =
+            $item->barangMasuk()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_masuk',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah');
+
+        // TOTAL KELUAR
+
+        $totalKeluarRoll =
+            $item->barangKeluar()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_keluar',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah_roll');
+
+        $totalKeluarMeter =
+            $item->barangKeluar()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_keluar',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah');
+
+        // STOK AKHIR
+
+        $item->jumlah_roll =
+            $totalMasukRoll -
+            $totalKeluarRoll;
+
+        $item->jumlah_meter =
+            $totalMasukMeter -
+            $totalKeluarMeter;
+    }
+
+    $pdf = Pdf::loadView(
+        'laporan_material_utama_pdf',
+        compact(
+            'data',
+            'tanggal'
+        )
+    );
+
+    return $pdf->download(
+        'laporan-material-utama.pdf'
+    );
+
+});
+// =========================
+        // ROUTE LAPORAN MATERIAL PENDUKUNG
+        // =========================
+Route::get('/laporan-material-pendukung', function (Request $request) {
+
+    $tanggal = $request->tanggal;
+
+    $data = Barang::where(
+        'kategori',
+        'Aksesoris'
+    )->get();
+
+    foreach($data as $item){
+
+        // =========================
+        // TOTAL MASUK
+        // =========================
+
+        $totalMasuk =
+            $item->barangMasuk()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_masuk',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah');
+
+        // =========================
+        // TOTAL KELUAR
+        // =========================
+
+        $totalKeluar =
+            $item->barangKeluar()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_keluar',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah');
+
+        // =========================
+        // STOK AKHIR
+        // =========================
+
+        $item->stok =
+            $totalMasuk -
+            $totalKeluar;
+    }
+
+    return view(
+        'laporan_material_pendukung',
+        compact(
+            'data',
+            'tanggal'
+        )
+    );
+
+})->name('laporan-material-pendukung');
+
+Route::get('/laporan-material-pendukung-pdf', function (Request $request) {
+
+    $tanggal = $request->tanggal;
+
+    $data = Barang::where(
+        'kategori',
+        'Aksesoris'
+    )->get();
+
+    foreach($data as $item){
+
+        $totalMasuk =
+            $item->barangMasuk()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_masuk',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah');
+
+        $totalKeluar =
+            $item->barangKeluar()
+                ->when($tanggal, function($q) use ($tanggal){
+
+                    $q->whereDate(
+                        'tanggal_keluar',
+                        '<=',
+                        $tanggal
+                    );
+
+                })
+                ->sum('jumlah');
+
+        $item->stok =
+            $totalMasuk -
+            $totalKeluar;
+    }
+
+    $pdf = Pdf::loadView(
+        'laporan_material_pendukung_pdf',
+        compact(
+            'data',
+            'tanggal'
+        )
+    );
+
+    return $pdf->download(
+        'laporan-material-pendukung.pdf'
+    );
+
+});
     // =========================
     // LAPORAN PRODUKSI
     // =========================

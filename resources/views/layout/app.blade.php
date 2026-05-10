@@ -275,36 +275,116 @@ body{
 
                     <div class="submenu">
 
-                        <a href="/barang-masuk">
+                        <!-- BARANG MASUK -->
 
-                            Barang Masuk
+                        <div class="menu-item">
 
-                        </a>
+                            <div class="menu-link" onclick="toggleMenu(this)">
 
-                        <a href="/barang-keluar">
+                                📥 Barang Masuk
 
-                            Barang Keluar
+                                <span class="arrow">
+                                    ▼
+                                </span>
 
-                        </a>
+                            </div>
+
+                            <div class="submenu">
+
+                                <a href="/barang-masuk-material-utama">
+
+                                    Material Utama
+
+                                </a>
+
+                                <a href="/barang-masuk-material-pendukung">
+
+                                    Material Pendukung
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <!-- BARANG KELUAR -->
+
+                        <div class="menu-item">
+
+                            <div class="menu-link" onclick="toggleMenu(this)">
+
+                                📤 Barang Keluar
+
+                                <span class="arrow">
+                                    ▼
+                                </span>
+
+                            </div>
+
+                            <div class="submenu">
+
+                                <a href="/barang-keluar-material-utama">
+
+                                    Material Utama
+
+                                </a>
+
+                                <a href="/barang-keluar-material-pendukung">
+
+                                    Material Pendukung
+
+                                </a>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
                 </div>
 
                 <div class="divider"></div>
+<!-- ================= LAPORAN ================= -->
 
-                <!-- LAPORAN -->
+<div class="menu-item">
 
-                <a href="/laporan">
+    <div class="menu-link" onclick="toggleMenu(this)">
 
-                    📄 Laporan
+        📄 Laporan
 
-                </a>
+        <span class="arrow">
+
+            ▼
+
+        </span>
+
+    </div>
+
+    <div class="submenu">
+
+        <a href="/laporan-material-utama">
+
+            Material Utama
+
+        </a>
+
+        <a href="/laporan-material-pendukung">
+
+            Material Pendukung
+
+        </a>
+
+    </div>
+
+</div>
 
                 <a href="/laporan-produksi">
 
                     🏭 Laporan Produksi
 
+                </a>
+                <a href="/surat-jalan">
+                    📦 Surat Jalan
                 </a>
 
             @endif
@@ -374,17 +454,69 @@ body{
 
                     <div class="submenu">
 
-                        <a href="/barang-masuk">
+                        <!-- BARANG MASUK -->
 
-                            Barang Masuk
+                        <div class="menu-item">
 
-                        </a>
+                            <div class="menu-link" onclick="toggleMenu(this)">
 
-                        <a href="/barang-keluar">
+                                📥 Barang Masuk
 
-                            Barang Keluar
+                                <span class="arrow">
+                                    ▼
+                                </span>
 
-                        </a>
+                            </div>
+
+                            <div class="submenu">
+
+                                <a href="/barang-masuk-material-utama">
+
+                                    Material Utama
+
+                                </a>
+
+                                <a href="/barang-masuk-material-pendukung">
+
+                                    Material Pendukung
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <!-- BARANG KELUAR -->
+
+                        <div class="menu-item">
+
+                            <div class="menu-link" onclick="toggleMenu(this)">
+
+                                📤 Barang Keluar
+
+                                <span class="arrow">
+                                    ▼
+                                </span>
+
+                            </div>
+
+                            <div class="submenu">
+
+                                <a href="/barang-keluar-material-utama">
+
+                                    Material Utama
+
+                                </a>
+
+                                <a href="/barang-keluar-material-pendukung">
+
+                                    Material Pendukung
+
+                                </a>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -397,14 +529,39 @@ body{
                     🔗 Perhitungan BOM
 
                 </a>
+<!-- ================= LAPORAN ================= -->
 
-                <!-- LAPORAN -->
+<div class="menu-item">
 
-                <a href="/laporan">
+    <div class="menu-link" onclick="toggleMenu(this)">
 
-                    📄 Laporan
+        📄 Laporan
 
-                </a>
+        <span class="arrow">
+
+            ▼
+
+        </span>
+
+    </div>
+
+    <div class="submenu">
+
+        <a href="/laporan-material-utama">
+
+            Material Utama
+
+        </a>
+
+        <a href="/laporan-material-pendukung">
+
+            Material Pendukung
+
+        </a>
+
+    </div>
+
+</div>
 
             @endif
 

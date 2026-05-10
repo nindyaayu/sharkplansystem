@@ -8,15 +8,16 @@ use Illuminate\Http\Request;
 
 class BarangKeluarController extends Controller
 {
-    // tampil halaman
+    // =========================
+    // TAMPIL HALAMAN
+    // =========================
+
     public function index()
     {
-        // ambil data barang keluar
         $barangKeluars = BarangKeluar::with('barang')
             ->latest()
             ->get();
 
-        // ambil data barang
         $barangs = Barang::all();
 
         return view('barang_keluar', compact(
@@ -25,38 +26,106 @@ class BarangKeluarController extends Controller
         ));
     }
 
-    // simpan barang keluar
+    // =========================
+    // SIMPAN BARANG KELUAR
+    // =========================
+
     public function store(Request $request)
     {
         $request->validate([
+
             'barang_id' => 'required',
-            'jumlah' => 'required|integer|min:1',
+
             'tanggal_keluar' => 'required',
+
             'tujuan' => 'required'
+
         ]);
 
-        // cari barang
+        // =========================
+        // CARI BARANG
+        // =========================
+
         $barang = Barang::find($request->barang_id);
 
-        // cek stok
-        if ($barang->stok < $request->jumlah) {
+        // =========================
+        // MATERIAL UTAMA
+        // =========================
 
-            return redirect()
-                ->back()
-                ->with('error', 'Stok tidak mencukupi');
+        if ($barang->kategori == 'Kain') {
+
+            if ($barang->jumlah_meter < $request->jumlah) {
+
+                return redirect()
+                    ->back()
+                    ->with('error', 'Jumlah meter tidak mencukupi');
+            }
+
+            // =========================
+            // SIMPAN TRANSAKSI
+            // =========================
+
+            BarangKeluar::create([
+
+                'barang_id' => $request->barang_id,
+
+                'jumlah_roll' =>
+                    $request->jumlah_roll,
+
+                'jumlah' =>
+                    $request->jumlah,
+
+                'tanggal_keluar' =>
+                    $request->tanggal_keluar,
+
+                'tujuan' =>
+                    $request->tujuan,
+
+            ]);
+
+            // =========================
+            // KURANGI STOK
+            // =========================
+
+            $barang->jumlah_roll -=
+                $request->jumlah_roll;
+
+            $barang->jumlah_meter -=
+                $request->jumlah;
 
         }
 
-        // simpan transaksi
-        BarangKeluar::create([
-            'barang_id' => $request->barang_id,
-            'jumlah' => $request->jumlah,
-            'tanggal_keluar' => $request->tanggal_keluar,
-            'tujuan' => $request->tujuan,
-        ]);
+        // =========================
+        // MATERIAL PENDUKUNG
+        // =========================
 
-        // kurangi stok
-        $barang->stok -= $request->jumlah;
+        else {
+
+            if ($barang->stok < $request->jumlah) {
+
+                return redirect()
+                    ->back()
+                    ->with('error', 'Stok tidak mencukupi');
+            }
+
+            BarangKeluar::create([
+
+                'barang_id' => $request->barang_id,
+
+                'jumlah' =>
+                    $request->jumlah,
+
+                'tanggal_keluar' =>
+                    $request->tanggal_keluar,
+
+                'tujuan' =>
+                    $request->tujuan,
+
+            ]);
+
+            $barang->stok -=
+                $request->jumlah;
+        }
 
         $barang->save();
 
@@ -64,67 +133,119 @@ class BarangKeluarController extends Controller
             ->back()
             ->with('success', 'Barang keluar berhasil ditambahkan');
     }
-// update barang keluar
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'barang_id' => 'required',
-        'jumlah' => 'required|integer|min:1',
-        'tanggal_keluar' => 'required',
-        'tujuan' => 'required'
-    ]);
 
-    // data lama
-    $barangKeluar = BarangKeluar::findOrFail($id);
+    // =========================
+    // UPDATE BARANG KELUAR
+    // =========================
 
-    // rollback stok lama
-    $barangLama = Barang::find($barangKeluar->barang_id);
+    public function update(Request $request, $id)
+    {
+        $barangKeluar = BarangKeluar::findOrFail($id);
 
-    $barangLama->stok += $barangKeluar->jumlah;
+        $barang = Barang::find($request->barang_id);
 
-    $barangLama->save();
+        // =========================
+        // KEMBALIKAN STOK LAMA
+        // =========================
 
-    // cek stok barang baru
-    $barangBaru = Barang::find($request->barang_id);
+        if ($barang->kategori == 'Kain') {
 
-    if ($barangBaru->stok < $request->jumlah) {
+            $barang->jumlah_roll +=
+                $barangKeluar->jumlah_roll;
+
+            $barang->jumlah_meter +=
+                $barangKeluar->jumlah;
+
+        } else {
+
+            $barang->stok +=
+                $barangKeluar->jumlah;
+        }
+
+        // =========================
+        // UPDATE TRANSAKSI
+        // =========================
+
+        $barangKeluar->update([
+
+            'barang_id' =>
+                $request->barang_id,
+
+            'jumlah_roll' =>
+                $request->jumlah_roll,
+
+            'jumlah' =>
+                $request->jumlah,
+
+            'tanggal_keluar' =>
+                $request->tanggal_keluar,
+
+            'tujuan' =>
+                $request->tujuan,
+
+        ]);
+
+        // =========================
+        // KURANGI STOK BARU
+        // =========================
+
+        if ($barang->kategori == 'Kain') {
+
+            $barang->jumlah_roll -=
+                $request->jumlah_roll;
+
+            $barang->jumlah_meter -=
+                $request->jumlah;
+
+        } else {
+
+            $barang->stok -=
+                $request->jumlah;
+        }
+
+        $barang->save();
 
         return redirect()
             ->back()
-            ->with('error', 'Stok tidak mencukupi');
-
+            ->with('success', 'Barang keluar berhasil diupdate');
     }
 
-    // update transaksi
-    $barangKeluar->update([
-        'barang_id' => $request->barang_id,
-        'jumlah' => $request->jumlah,
-        'tanggal_keluar' => $request->tanggal_keluar,
-        'tujuan' => $request->tujuan,
-    ]);
+    // =========================
+    // HAPUS BARANG KELUAR
+    // =========================
 
-    // kurangi stok baru
-    $barangBaru->stok -= $request->jumlah;
-
-    $barangBaru->save();
-
-    return redirect()
-        ->back()
-        ->with('success', 'Barang keluar berhasil diupdate');
-}
-    // hapus barang keluar
     public function destroy($id)
     {
         $barangKeluar = BarangKeluar::findOrFail($id);
 
-        // kembalikan stok
-        $barang = Barang::find($barangKeluar->barang_id);
+        $barang = Barang::find(
+            $barangKeluar->barang_id
+        );
 
-        $barang->stok += $barangKeluar->jumlah;
+        // =========================
+        // KEMBALIKAN STOK
+        // =========================
+
+        if ($barang->kategori == 'Kain') {
+
+            $barang->jumlah_roll +=
+                $barangKeluar->jumlah_roll;
+
+            $barang->jumlah_meter +=
+                $barangKeluar->jumlah;
+
+        } else {
+
+            $barang->stok +=
+                $barangKeluar->jumlah;
+        }
 
         $barang->save();
 
-        // hapus transaksi
+        // =========================
+        // HAPUS TRANSAKSI
+        // =========================
+
         $barangKeluar->delete();
 
         return redirect()

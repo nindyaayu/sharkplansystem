@@ -12,7 +12,6 @@ class Barang extends Model
 
         'nama',
 
-        // TAMBAHAN BARU
         'kategori',
 
         'warna',
@@ -23,13 +22,22 @@ class Barang extends Model
 
         'isi_per_satuan',
 
-        'satuan_konversi'
+        'satuan_konversi',
+
+        // =========================
+        // MATERIAL UTAMA
+        // =========================
+
+        'jumlah_roll',
+
+        'jumlah_meter'
 
     ];
 
     // =========================
     // RELASI BARANG MASUK
     // =========================
+
     public function barangMasuk()
     {
         return $this->hasMany(BarangMasuk::class);
@@ -38,6 +46,7 @@ class Barang extends Model
     // =========================
     // RELASI BARANG KELUAR
     // =========================
+
     public function barangKeluar()
     {
         return $this->hasMany(BarangKeluar::class);

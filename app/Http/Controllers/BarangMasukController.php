@@ -8,15 +8,16 @@ use Illuminate\Http\Request;
 
 class BarangMasukController extends Controller
 {
-    // tampil halaman
+    // =========================
+    // TAMPIL HALAMAN
+    // =========================
+
     public function index()
     {
-        // ambil data barang masuk + relasi barang
         $barangMasuks = BarangMasuk::with('barang')
             ->latest()
             ->get();
 
-        // ambil semua barang untuk dropdown form
         $barangs = Barang::all();
 
         return view('barang_masuk', compact(
@@ -25,106 +26,259 @@ class BarangMasukController extends Controller
         ));
     }
 
-    // simpan data barang masuk
+    // =========================
+    // SIMPAN DATA
+    // =========================
+
     public function store(Request $request)
     {
         $request->validate([
+
             'barang_id' => 'required',
+
             'jumlah' => 'required|integer|min:1',
+
             'tanggal_masuk' => 'required',
+
             'supplier' => 'required'
+
         ]);
 
-        // simpan transaksi barang masuk
-        BarangMasuk::create([
+        // =========================
+        // CARI BARANG
+        // =========================
 
-    'barang_id' => $request->barang_id,
-
-    'jumlah' => $request->jumlah,
-
-    'tanggal_masuk' => $request->tanggal_masuk,
-
-    // TAMBAHAN
-    'supplier' => $request->supplier,
-
-]);
-
-        // update stok barang
         $barang = Barang::find($request->barang_id);
 
-        $barang->stok += $request->jumlah;
+        // =========================
+        // MATERIAL UTAMA
+        // =========================
 
-        $barang->save();
+        if($barang->kategori == 'Kain'){
 
-        return redirect()
-            ->back()
-            ->with('success', 'Barang masuk berhasil ditambahkan');
-    }
-// update barang masuk
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'barang_id' => 'required',
-        'jumlah' => 'required|integer|min:1',
-        'tanggal_masuk' => 'required',
-        'supplier' => 'required'
-    ]);
+            BarangMasuk::create([
 
-    // data lama
-    $barangMasuk = BarangMasuk::findOrFail($id);
+                'barang_id' =>
+                    $request->barang_id,
 
-    // rollback stok lama
-    $barangLama = Barang::find($barangMasuk->barang_id);
+                'jumlah_roll' =>
+                    $request->jumlah_roll,
 
-    $barangLama->stok -= $barangMasuk->jumlah;
+                'jumlah' =>
+                    $request->jumlah,
 
-    if ($barangLama->stok < 0) {
-        $barangLama->stok = 0;
-    }
+                'tanggal_masuk' =>
+                    $request->tanggal_masuk,
 
-    $barangLama->save();
+                'supplier' =>
+                    $request->supplier,
 
-    // update transaksi
-    $barangMasuk->update([
-        'barang_id' => $request->barang_id,
-        'jumlah' => $request->jumlah,
-        'tanggal_masuk' => $request->tanggal_masuk,
-        'supplier' => $request->supplier,
-    ]);
+            ]);
 
-    // tambah stok baru
-    $barangBaru = Barang::find($request->barang_id);
+            // tambah stok kain
 
-    $barangBaru->stok += $request->jumlah;
+            $barang->jumlah_roll +=
+                $request->jumlah_roll;
 
-    $barangBaru->save();
+            $barang->jumlah_meter +=
+                $request->jumlah;
 
-    return redirect()
-        ->back()
-        ->with('success', 'Barang masuk berhasil diupdate');
-}
-    // hapus barang masuk
-    public function destroy($id)
-    {
-        $barangMasuk = BarangMasuk::findOrFail($id);
+        }
 
-        // kurangi stok saat data dihapus
-        $barang = Barang::find($barangMasuk->barang_id);
+        // =========================
+        // MATERIAL PENDUKUNG
+        // =========================
 
-        $barang->stok -= $barangMasuk->jumlah;
+        else{
 
-        // cegah stok minus
-        if ($barang->stok < 0) {
-            $barang->stok = 0;
+            BarangMasuk::create([
+
+                'barang_id' =>
+                    $request->barang_id,
+
+                'jumlah' =>
+                    $request->jumlah,
+
+                'tanggal_masuk' =>
+                    $request->tanggal_masuk,
+
+                'supplier' =>
+                    $request->supplier,
+
+            ]);
+
+            $barang->stok +=
+                $request->jumlah;
         }
 
         $barang->save();
 
-        // hapus transaksi
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'Barang masuk berhasil ditambahkan'
+            );
+    }
+
+    // =========================
+    // UPDATE DATA
+    // =========================
+
+    public function update(Request $request, $id)
+    {
+        $barangMasuk = BarangMasuk::findOrFail($id);
+
+        $barang = Barang::find($request->barang_id);
+
+        // =========================
+        // ROLLBACK STOK LAMA
+        // =========================
+
+        if($barang->kategori == 'Kain'){
+
+            $barang->jumlah_roll -=
+                $barangMasuk->jumlah_roll;
+
+            $barang->jumlah_meter -=
+                $barangMasuk->jumlah;
+
+            if($barang->jumlah_roll < 0){
+
+                $barang->jumlah_roll = 0;
+
+            }
+
+            if($barang->jumlah_meter < 0){
+
+                $barang->jumlah_meter = 0;
+
+            }
+
+        }else{
+
+            $barang->stok -=
+                $barangMasuk->jumlah;
+
+            if($barang->stok < 0){
+
+                $barang->stok = 0;
+
+            }
+        }
+
+        // =========================
+        // UPDATE TRANSAKSI
+        // =========================
+
+        $barangMasuk->update([
+
+            'barang_id' =>
+                $request->barang_id,
+
+            'jumlah_roll' =>
+                $request->jumlah_roll,
+
+            'jumlah' =>
+                $request->jumlah,
+
+            'tanggal_masuk' =>
+                $request->tanggal_masuk,
+
+            'supplier' =>
+                $request->supplier,
+
+        ]);
+
+        // =========================
+        // TAMBAH STOK BARU
+        // =========================
+
+        if($barang->kategori == 'Kain'){
+
+            $barang->jumlah_roll +=
+                $request->jumlah_roll;
+
+            $barang->jumlah_meter +=
+                $request->jumlah;
+
+        }else{
+
+            $barang->stok +=
+                $request->jumlah;
+        }
+
+        $barang->save();
+
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'Barang masuk berhasil diupdate'
+            );
+    }
+
+    // =========================
+    // HAPUS DATA
+    // =========================
+
+    public function destroy($id)
+    {
+        $barangMasuk = BarangMasuk::findOrFail($id);
+
+        $barang = Barang::find(
+            $barangMasuk->barang_id
+        );
+
+        // =========================
+        // KURANGI STOK
+        // =========================
+
+        if($barang->kategori == 'Kain'){
+
+            $barang->jumlah_roll -=
+                $barangMasuk->jumlah_roll;
+
+            $barang->jumlah_meter -=
+                $barangMasuk->jumlah;
+
+            if($barang->jumlah_roll < 0){
+
+                $barang->jumlah_roll = 0;
+
+            }
+
+            if($barang->jumlah_meter < 0){
+
+                $barang->jumlah_meter = 0;
+
+            }
+
+        }else{
+
+            $barang->stok -=
+                $barangMasuk->jumlah;
+
+            if($barang->stok < 0){
+
+                $barang->stok = 0;
+
+            }
+        }
+
+        $barang->save();
+
+        // =========================
+        // HAPUS TRANSAKSI
+        // =========================
+
         $barangMasuk->delete();
 
         return redirect()
             ->back()
-            ->with('success', 'Data berhasil dihapus');
+            ->with(
+                'success',
+                'Data berhasil dihapus'
+            );
     }
 }
