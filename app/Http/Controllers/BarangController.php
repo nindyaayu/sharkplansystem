@@ -10,6 +10,7 @@ class BarangController extends Controller
     // =========================
     // TAMPIL DATA
     // =========================
+
     public function index()
     {
         $data = Barang::latest()->get();
@@ -20,8 +21,23 @@ class BarangController extends Controller
     // =========================
     // TAMBAH DATA
     // =========================
+
     public function store(Request $request)
     {
+        // =========================
+        // VALIDASI
+        // =========================
+
+        $request->validate([
+
+            'nama' => 'required',
+
+            'kategori' => 'required',
+
+            'satuan' => 'required'
+
+        ]);
+
         // =========================
         // PREFIX KODE
         // =========================
@@ -70,7 +86,7 @@ class BarangController extends Controller
         $kode = $prefix . $newNumber;
 
         // =========================
-        // SIMPAN DATA
+        // SIMPAN MASTER BARANG
         // =========================
 
         Barang::create([
@@ -87,24 +103,17 @@ class BarangController extends Controller
 
             /*
             =========================
-            MATERIAL UTAMA
+            STOK AWAL = 0
+            STOK BERASAL DARI
+            TRANSAKSI MASUK/KELUAR
             =========================
             */
 
-            'jumlah_roll' =>
-                $request->jumlah_roll ?? 0,
+            'jumlah_roll' => 0,
 
-            'jumlah_meter' =>
-                $request->jumlah_meter ?? 0,
+            'jumlah_meter' => 0,
 
-            /*
-            =========================
-            MATERIAL PENDUKUNG
-            =========================
-            */
-
-            'stok' =>
-                $request->stok ?? 0,
+            'stok' => 0,
 
             'isi_per_satuan' =>
                 $request->isi_per_satuan,
@@ -114,12 +123,16 @@ class BarangController extends Controller
 
         ]);
 
-        return back();
+        return back()->with(
+            'success',
+            'Data bahan berhasil ditambahkan'
+        );
     }
 
     // =========================
     // EDIT DATA
     // =========================
+
     public function update(Request $request, $id)
     {
         $barang = Barang::findOrFail($id);
@@ -144,24 +157,9 @@ class BarangController extends Controller
 
             /*
             =========================
-            MATERIAL UTAMA
+            STOK TIDAK DIEDIT MANUAL
             =========================
             */
-
-            'jumlah_roll' =>
-                $request->jumlah_roll ?? 0,
-
-            'jumlah_meter' =>
-                $request->jumlah_meter ?? 0,
-
-            /*
-            =========================
-            MATERIAL PENDUKUNG
-            =========================
-            */
-
-            'stok' =>
-                $request->stok ?? 0,
 
             'isi_per_satuan' =>
                 $request->isi_per_satuan,
@@ -171,16 +169,23 @@ class BarangController extends Controller
 
         ]);
 
-        return back();
+        return back()->with(
+            'success',
+            'Data bahan berhasil diupdate'
+        );
     }
 
     // =========================
     // HAPUS DATA
     // =========================
+
     public function destroy($id)
     {
         Barang::destroy($id);
 
-        return back();
+        return back()->with(
+            'success',
+            'Data bahan berhasil dihapus'
+        );
     }
 }
