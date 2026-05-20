@@ -15,6 +15,7 @@ use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\JobOutController;
 use App\Http\Controllers\SuratJalanController;
 use App\Models\Barang;
+use App\Models\BarangMasuk;
 
 /*
 |--------------------------------------------------------------------------
@@ -677,5 +678,40 @@ Route::get('/laporan-material-pendukung-pdf', function (Request $request) {
 
     Route::get('/logout', [AuthController::class, 'logout'])
         ->name('logout');
+    Route::get('/sinkron-stok-awal', function () {
 
+    $barangs = Barang::all();
+
+    foreach($barangs as $barang){
+
+        $cek = BarangMasuk::where(
+            'barang_id',
+            $barang->id
+        )
+        ->first();
+
+        if(!$cek){
+
+            BarangMasuk::create([
+
+                'barang_id' =>
+                    $barang->id,
+
+                'jumlah' =>
+                    $barang->stok ?? 0,
+
+                'jumlah_roll' =>
+                    $barang->jumlah_roll ?? 0,
+
+                'tanggal_masuk' =>
+                    now(),
+
+                'supplier' =>
+                    'STOK AWAL',
+            ]);
+        }
+    }
+
+    return 'Sinkron stok awal berhasil';
+});
 });
