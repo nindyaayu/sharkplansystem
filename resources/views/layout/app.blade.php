@@ -383,14 +383,43 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
 
 </div>
 
-                <a href="/laporan-produksi">
+                <!-- ================= PRODUKSI ================= -->
 
-                    🏭 Laporan Produksi
+<div class="menu-item">
 
-                </a>
-                <a href="/surat-jalan">
-                    📦 Surat Jalan
-                </a>
+    <div class="menu-link" onclick="toggleMenu(this)">
+
+        🏭 Produksi
+
+        <span class="arrow">
+            ▼
+        </span>
+
+    </div>
+
+    <div class="submenu">
+
+        <a href="/laporan-produksi">
+
+            Laporan Produksi
+
+        </a>
+
+        <a href="/hasil-cutting">
+
+            ✂️ Hasil Cutting
+
+        </a>
+
+    </div>
+
+</div>
+
+<a href="/surat-jalan">
+
+    📦 Surat Jalan
+
+</a>
 
             @endif
 
@@ -567,7 +596,43 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
     </div>
 
 </div>
+                <!-- ================= PRODUKSI ================= -->
 
+        <div class="menu-item">
+
+            <div class="menu-link" onclick="toggleMenu(this)">
+
+                🏭 Produksi
+
+                <span class="arrow">
+                    ▼
+                </span>
+
+            </div>
+
+            <div class="submenu">
+
+                <a href="/laporan-produksi">
+
+                    Laporan Produksi
+
+                </a>
+
+                <a href="/hasil-cutting">
+
+                    ✂️ Hasil Cutting
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <a href="/surat-jalan">
+
+            📦 Surat Jalan
+
+        </a>
             @endif
 
 

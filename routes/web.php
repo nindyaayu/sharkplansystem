@@ -16,6 +16,8 @@ use App\Http\Controllers\JobOutController;
 use App\Http\Controllers\SuratJalanController;
 use App\Models\Barang;
 use App\Models\BarangMasuk;
+use App\Models\HasilCutting;
+use App\Models\Produk;
 
 /*
 |--------------------------------------------------------------------------
@@ -823,6 +825,73 @@ elseif ($status == 'Aman') {
         [ProduksiController::class, 'laporan']
     )->name('laporan-produksi');
 
+    Route::get('/hasil-cutting', function () {
+
+    $data = HasilCutting::latest()->get();
+
+    $produk = Produk::orderBy('nama')->get();
+
+    return view(
+        'hasil_cutting',
+        compact(
+            'data',
+            'produk'
+        )
+    );
+
+})->name('hasil-cutting');
+Route::post('/hasil-cutting/store', function (Request $request) {
+
+    HasilCutting::create([
+
+        'tanggal'    => $request->tanggal,
+        'produk'     => $request->produk,
+        'komponen'   => $request->komponen,
+        'hasil_pot'  => $request->hasil_pot,
+        'keterangan' => $request->keterangan
+
+    ]);
+
+    return redirect('/hasil-cutting');
+
+});
+        Route::get('/hasil-cutting/delete/{id}', function ($id) {
+
+            HasilCutting::findOrFail($id)->delete();
+
+            return redirect('/hasil-cutting');
+
+        });
+        Route::get('/hasil-cutting/edit/{id}', function ($id) {
+
+            $item = HasilCutting::findOrFail($id);
+
+            $produk = Produk::orderBy('nama')->get();
+
+            return view(
+                'hasil_cutting_edit',
+                compact(
+                    'item',
+                    'produk'
+                )
+            );
+
+        });
+        Route::post('/hasil-cutting/update/{id}', function (Request $request, $id) {
+
+    HasilCutting::findOrFail($id)->update([
+
+        'tanggal'    => $request->tanggal,
+        'produk'     => $request->produk,
+        'komponen'   => $request->komponen,
+        'hasil_pot'  => $request->hasil_pot,
+        'keterangan' => $request->keterangan
+
+    ]);
+
+    return redirect('/hasil-cutting');
+
+});
     // =========================
     // MENU LAIN
     // =========================
