@@ -758,21 +758,24 @@ $data = $query->get();
     }
     if ($status == 'Habis') {
 
-    $data = $data->filter(fn($item)
-        => $item->stok == 0);
+    $data = $data->filter(function ($item) {
+        return $item->jumlah_roll == 0;
+    });
 
 }
 elseif ($status == 'Menipis') {
 
-    $data = $data->filter(fn($item)
-        => $item->stok > 0
-        && $item->stok <= 50);
+    $data = $data->filter(function ($item) {
+        return $item->jumlah_roll > 0
+            && $item->jumlah_roll <= 5;
+    });
 
 }
 elseif ($status == 'Aman') {
 
-    $data = $data->filter(fn($item)
-        => $item->stok > 50);
+    $data = $data->filter(function ($item) {
+        return $item->jumlah_roll > 5;
+    });
 
 }
     if ($status == 'Habis') {
