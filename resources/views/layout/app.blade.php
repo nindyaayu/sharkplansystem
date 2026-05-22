@@ -151,6 +151,11 @@ body{
 }
 
 </style>
+<link rel="stylesheet"
+href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+
+<link rel="stylesheet"
+href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.min.css">
 </head>
 
 <body>
@@ -688,6 +693,33 @@ window.onload = function(){
 }
 
 </script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/searchpanes/2.3.0/js/dataTables.searchPanes.min.js"></script>
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+    if(document.getElementById('laporanTable')){
+
+        $('#laporanTable').DataTable({
+
+            pageLength: 25,
+
+            dom: 'Plfrtip',
+
+            searchPanes: {
+                cascadePanes: true
+            }
+
+        });
+
+    }
+
+});
+
+</script>
 </body>
 </html>

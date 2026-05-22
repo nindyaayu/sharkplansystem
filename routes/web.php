@@ -446,10 +446,41 @@ Route::get('/laporan-material-utama-pdf', function (Request $request) {
 
     $tanggal = $request->tanggal;
 
-    $data = Barang::where(
+    $kode   = $request->kode;
+    $nama   = $request->nama;
+    $warna  = $request->warna;
+    $status = $request->status;
+
+    $query = Barang::where(
         'kategori',
         'Kain'
-    )->get();
+    );
+
+    if ($kode) {
+        $query->where(
+            'kode',
+            'like',
+            "%{$kode}%"
+        );
+    }
+
+    if ($nama) {
+        $query->where(
+            'nama',
+            'like',
+            "%{$nama}%"
+        );
+    }
+
+    if ($warna) {
+        $query->where(
+            'warna',
+            'like',
+            "%{$warna}%"
+        );
+    }
+
+    $data = $query->get();
 
     foreach($data as $item){
 
@@ -520,7 +551,27 @@ Route::get('/laporan-material-utama-pdf', function (Request $request) {
             $totalKeluarMeter;
     }
 
-    $pdf = Pdf::loadView(
+    if ($status == 'Habis') {
+
+    $data = $data->filter(function ($item) {
+        return $item->jumlah_meter == 0;
+    });
+
+} elseif ($status == 'Menipis') {
+
+    $data = $data->filter(function ($item) {
+        return $item->jumlah_meter > 0
+            && $item->jumlah_meter <= 500;
+    });
+
+} elseif ($status == 'Aman') {
+
+    $data = $data->filter(function ($item) {
+        return $item->jumlah_meter > 500;
+    });
+
+}
+$pdf = Pdf::loadView(
         'laporan_material_utama_pdf',
         compact(
             'data',
@@ -540,10 +591,34 @@ Route::get('/laporan-material-pendukung', function (Request $request) {
 
     $tanggal = $request->tanggal;
 
-    $data = Barang::where(
-        'kategori',
-        'Aksesoris'
-    )->get();
+$kode   = $request->kode;
+$nama   = $request->nama;
+$warna  = $request->warna;
+$satuan = $request->satuan;
+$status = $request->status;
+
+$query = Barang::where(
+    'kategori',
+    'Aksesoris'
+);
+
+if ($kode) {
+    $query->where('kode','like',"%{$kode}%");
+}
+
+if ($nama) {
+    $query->where('nama','like',"%{$nama}%");
+}
+
+if ($warna) {
+    $query->where('warna','like',"%{$warna}%");
+}
+
+if ($satuan) {
+    $query->where('satuan','like',"%{$satuan}%");
+}
+
+$data = $query->get();
 
     foreach($data as $item){
 
@@ -604,10 +679,50 @@ Route::get('/laporan-material-pendukung-pdf', function (Request $request) {
 
     $tanggal = $request->tanggal;
 
-    $data = Barang::where(
-        'kategori',
-        'Aksesoris'
-    )->get();
+$kode   = $request->kode;
+$nama   = $request->nama;
+$warna  = $request->warna;
+$satuan = $request->satuan;
+$status = $request->status;
+
+$query = Barang::where(
+    'kategori',
+    'Aksesoris'
+);
+
+if ($kode) {
+    $query->where(
+        'kode',
+        'like',
+        "%{$kode}%"
+    );
+}
+
+if ($nama) {
+    $query->where(
+        'nama',
+        'like',
+        "%{$nama}%"
+    );
+}
+
+if ($warna) {
+    $query->where(
+        'warna',
+        'like',
+        "%{$warna}%"
+    );
+}
+
+if ($satuan) {
+    $query->where(
+        'satuan',
+        'like',
+        "%{$satuan}%"
+    );
+}
+
+$data = $query->get();
 
     foreach($data as $item){
 
@@ -641,6 +756,47 @@ Route::get('/laporan-material-pendukung-pdf', function (Request $request) {
             $totalMasuk -
             $totalKeluar;
     }
+    if ($status == 'Habis') {
+
+    $data = $data->filter(fn($item)
+        => $item->stok == 0);
+
+}
+elseif ($status == 'Menipis') {
+
+    $data = $data->filter(fn($item)
+        => $item->stok > 0
+        && $item->stok <= 50);
+
+}
+elseif ($status == 'Aman') {
+
+    $data = $data->filter(fn($item)
+        => $item->stok > 50);
+
+}
+    if ($status == 'Habis') {
+
+    $data = $data->filter(function ($item) {
+        return $item->stok == 0;
+    });
+
+}
+elseif ($status == 'Menipis') {
+
+    $data = $data->filter(function ($item) {
+        return $item->stok > 0
+            && $item->stok <= 50;
+    });
+
+}
+elseif ($status == 'Aman') {
+
+    $data = $data->filter(function ($item) {
+        return $item->stok > 50;
+    });
+
+}
 
     $pdf = Pdf::loadView(
         'laporan_material_pendukung_pdf',

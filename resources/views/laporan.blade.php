@@ -49,7 +49,10 @@ body{
     color:white;
     min-width:220px;
 }
-
+select.input{
+    appearance:none;
+    cursor:pointer;
+}
 .input::placeholder{
     color:#64748b;
 }
@@ -209,24 +212,70 @@ tbody tr:hover{
 
 <div class="filter-bar">
 
-    <input 
+    <input
+        type="text"
+        name="kode"
+        class="input"
+        placeholder="Kode Barang"
+        value="{{ request('kode') }}">
+
+    <input
+        type="text"
+        name="nama"
+        class="input"
+        placeholder="Nama Barang"
+        value="{{ request('nama') }}">
+
+    <input
+        type="text"
+        name="warna"
+        class="input"
+        placeholder="Warna"
+        value="{{ request('warna') }}">
+
+    <select
+        name="status"
+        class="input">
+
+        <option value="">Semua Status</option>
+
+        <option value="aman"
+            {{ request('status')=='aman' ? 'selected' : '' }}>
+            Aman
+        </option>
+
+        <option value="menipis"
+            {{ request('status')=='menipis' ? 'selected' : '' }}>
+            Menipis
+        </option>
+
+        <option value="habis"
+            {{ request('status')=='habis' ? 'selected' : '' }}>
+            Habis
+        </option>
+
+    </select>
+
+    <input
         type="date"
         name="tanggal"
         class="input"
         value="{{ request('tanggal') }}">
 
-    <button class="btn btn-show">
-
+    <button type="submit" class="btn btn-show">
         🔍 Tampilkan
-
     </button>
 
-    <a 
-        href="{{ route('laporan.pdf') }}"
+    <a
+        href="{{ route('laporan.filter') }}"
         class="btn btn-pdf">
+        ♻ Reset
+    </a>
 
+    <a
+        href="{{ route('laporan.pdf', request()->all()) }}"
+        class="btn btn-pdf">
         📄 Export PDF
-
     </a>
 
 </div>

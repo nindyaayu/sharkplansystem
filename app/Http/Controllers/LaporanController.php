@@ -11,28 +11,58 @@ class LaporanController extends Controller
     // =========================
     // HALAMAN LAPORAN
     // =========================
-    public function index()
+    public function index(Request $request)
     {
-        $data = Barang::latest()->get();
+        $query = Barang::query();
+
+        // Filter Kode
+        if ($request->filled('kode')) {
+            $query->where(
+                'kode',
+                'like',
+                '%' . $request->kode . '%'
+            );
+        }
+
+        // Filter Nama Barang
+        if ($request->filled('nama')) {
+            $query->where(
+                'nama',
+                'like',
+                '%' . $request->nama . '%'
+            );
+        }
+
+        // Filter Warna
+        if ($request->filled('warna')) {
+            $query->where(
+                'warna',
+                'like',
+                '%' . $request->warna . '%'
+            );
+        }
+
+        $data = $query->latest()->get();
+
+        // Filter Status
+        if ($request->filled('status')) {
+
+            if ($request->status == 'habis') {
+
+                $data = $data->where('jumlah_meter', 0);
+
+            } elseif ($request->status == 'menipis') {
+
+                $data = $data->where('jumlah_meter', '>', 0)
+                             ->where('jumlah_meter', '<=', 500);
+
+            } elseif ($request->status == 'aman') {
+
+                $data = $data->where('jumlah_meter', '>', 500);
+            }
+        }
 
         return view('laporan', compact('data'));
-    }
-
-    // =========================
-    // FILTER TANGGAL
-    // =========================
-    public function filter(Request $request)
-    {
-        // ambil tanggal
-        $tanggal = $request->tanggal;
-
-        // sementara tetap ambil stok realtime
-        $data = Barang::latest()->get();
-
-        return view('laporan', compact(
-            'data',
-            'tanggal'
-        ));
     }
 
     // =========================
@@ -40,18 +70,58 @@ class LaporanController extends Controller
     // =========================
     public function exportPdf(Request $request)
     {
-        // ambil data stok
-        $data = Barang::latest()->get();
+        $query = Barang::query();
 
-        // generate pdf
+        if ($request->filled('kode')) {
+            $query->where(
+                'kode',
+                'like',
+                '%' . $request->kode . '%'
+            );
+        }
+
+        if ($request->filled('nama')) {
+            $query->where(
+                'nama',
+                'like',
+                '%' . $request->nama . '%'
+            );
+        }
+
+        if ($request->filled('warna')) {
+            $query->where(
+                'warna',
+                'like',
+                '%' . $request->warna . '%'
+            );
+        }
+
+        $data = $query->latest()->get();
+
+        if ($request->filled('status')) {
+
+            if ($request->status == 'habis') {
+
+                $data = $data->where('jumlah_meter', 0);
+
+            } elseif ($request->status == 'menipis') {
+
+                $data = $data->where('jumlah_meter', '>', 0)
+                             ->where('jumlah_meter', '<=', 500);
+
+            } elseif ($request->status == 'aman') {
+
+                $data = $data->where('jumlah_meter', '>', 500);
+            }
+        }
+
         $pdf = Pdf::loadView(
             'laporan_pdf',
             compact('data')
         );
 
-        // download pdf
         return $pdf->download(
-            'laporan-stok.pdf'
+            'laporan-material-utama.pdf'
         );
     }
 }
