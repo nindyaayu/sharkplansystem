@@ -271,7 +271,7 @@ tbody td{
 
         <div class="stat-value">
 
-            {{ $data->where('jumlah_meter',0)->count() }}
+            {{ $data->where('jumlah_roll',0)->count() }}
 
         </div>
 
@@ -377,31 +377,25 @@ tbody td{
 
 <td>
 
-    @if($item->jumlah_meter == 0)
+    @if($item->jumlah_roll == 0)
 
-        <span class="badge-danger">
+    <span class="badge-danger">
+        Habis
+    </span>
 
-            Habis
+@elseif($item->jumlah_roll <= 5)
 
-        </span>
+    <span class="badge-warning">
+        Menipis
+    </span>
 
-    @elseif($item->jumlah_meter <= 500)
+@else
 
-        <span class="badge-warning">
+    <span class="badge-safe">
+        Aman
+    </span>
 
-            Menipis
-
-        </span>
-
-    @else
-
-        <span class="badge-safe">
-
-            Aman
-
-        </span>
-
-    @endif
+@endif
 
 </td>
 
