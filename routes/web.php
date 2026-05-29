@@ -257,51 +257,71 @@ Route::middleware('auth')->group(function () {
     // MATERIAL PENDUKUNG
     // =========================
 
-    Route::get('/barang-masuk-material-pendukung', function () {
+    Route::get('/barang-masuk-material-pendukung', function (Request $request) {
 
-    $barangMasuks = \App\Models\BarangMasuk::with('barang')
-        ->whereHas('barang', function ($q) {
+        $query = \App\Models\BarangMasuk::with('barang')
+            ->whereHas('barang', function ($q) {
 
-            $q->where('kategori', 'Aksesoris');
+                $q->where('kategori', 'Aksesoris');
 
-        })
-        ->latest()
-        ->get();
+            });
 
-    $barangs = Barang::where(
-        'kategori',
-        'Aksesoris'
-    )->get();
+        // FILTER TANGGAL
 
-    // STATISTIK
+        if (
+            $request->filled('tanggal_awal')
+            &&
+            $request->filled('tanggal_akhir')
+        ) {
 
-    $totalTransaksi = $barangMasuks->count();
+            $query->whereBetween(
+                'tanggal_masuk',
+                [
+                    $request->tanggal_awal,
+                    $request->tanggal_akhir
+                ]
+            );
 
-    $totalQty = $barangMasuks->sum('jumlah');
+        }
 
-    $hariIni = $barangMasuks->where(
-        'tanggal_masuk',
-        now()->format('Y-m-d')
-    )->count();
+        $barangMasuks = $query
+            ->latest()
+            ->get();
 
-    $bulanIni = $barangMasuks->filter(function($item){
+        $barangs = Barang::where(
+            'kategori',
+            'Aksesoris'
+        )->get();
 
-        return \Carbon\Carbon::parse(
-            $item->tanggal_masuk
-        )->month == now()->month;
+        // STATISTIK
 
-    })->count();
+        $totalTransaksi = $barangMasuks->count();
 
-    return view('barang_masuk', compact(
-        'barangMasuks',
-        'barangs',
-        'totalTransaksi',
-        'totalQty',
-        'hariIni',
-        'bulanIni'
-    ));
+        $totalQty = $barangMasuks->sum('jumlah');
 
-})->name('barang-masuk-material-pendukung');
+        $hariIni = $barangMasuks->where(
+            'tanggal_masuk',
+            now()->format('Y-m-d')
+        )->count();
+
+        $bulanIni = $barangMasuks->filter(function($item){
+
+            return \Carbon\Carbon::parse(
+                $item->tanggal_masuk
+            )->month == now()->month;
+
+        })->count();
+
+        return view('barang_masuk', compact(
+            'barangMasuks',
+            'barangs',
+            'totalTransaksi',
+            'totalQty',
+            'hariIni',
+            'bulanIni'
+        ));
+
+    })->name('barang-masuk-material-pendukung');
 
     // =========================
     // STORE
@@ -323,51 +343,32 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/barang-masuk/{id}', [BarangMasukController::class, 'update'])
         ->name('barang-masuk.update');
-// =========================
-// EXPORT PDF MATERIAL UTAMA
-// =========================
-
-Route::get('/barang-masuk-material-utama-pdf', function () {
-
-    $data = \App\Models\BarangMasuk::with('barang')
-        ->whereHas('barang', function ($q) {
-
-            $q->where('kategori', 'Kain');
-
-        })
-        ->latest()
-        ->get();
-
-    $pdf = Pdf::loadView(
-        'barang_masuk_pdf',
-        compact('data')
-    );
-
-    return $pdf->download(
-        'barang-masuk-material-utama.pdf'
-    );
-
-})->name('barang-masuk-material-utama-pdf');
-
 
 // =========================
 // EXPORT PDF MATERIAL PENDUKUNG
 // =========================
 
-Route::get('/barang-masuk-material-pendukung-pdf', function () {
+Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Request $request) {
 
-    $rawData = \App\Models\BarangMasuk::with('barang')
+    $query = \App\Models\BarangMasuk::with('barang')
         ->whereHas('barang', function ($q) {
 
             $q->where('kategori', 'Aksesoris');
 
-        })
+        });
+
+    if ($request->filled('tanggal')) {
+
+        $query->whereDate(
+            'tanggal_masuk',
+            $request->tanggal
+        );
+
+    }
+
+    $rawData = $query
         ->latest()
         ->get();
-
-    // =========================
-    // REKAP PER BARANG
-    // =========================
 
     $data = $rawData
         ->groupBy('barang_id')
@@ -375,12 +376,8 @@ Route::get('/barang-masuk-material-pendukung-pdf', function () {
 
             $first = $items->first();
 
-            // TOTAL JUMLAH
-
             $totalJumlah =
                 $items->sum('jumlah');
-
-            // REKAP SUPPLIER
 
             $supplier =
                 $items
@@ -398,35 +395,30 @@ Route::get('/barang-masuk-material-pendukung-pdf', function () {
 
             return (object)[
 
-                'kode' =>
-                    $first->barang->kode,
-
-                'nama' =>
-                    $first->barang->nama,
-
-                'supplier' =>
-                    $supplier,
-
-                'jumlah' =>
-                    $totalJumlah,
-
-                'satuan' =>
-                    $first->barang->satuan,
+                'kode'    => $first->barang->kode,
+                'nama'    => $first->barang->nama,
+                'supplier'=> $supplier,
+                'jumlah'  => $totalJumlah,
+                'satuan'  => $first->barang->satuan,
 
             ];
 
         });
 
     $pdf = Pdf::loadView(
-        'barang_masuk_pdf',
-        compact('data')
-    );
+    'barang_masuk_pdf',
+    [
+        'data' => $data,
+        'tanggal' => $request->tanggal
+    ]
+);
 
     return $pdf->download(
         'barang-masuk-material-pendukung.pdf'
     );
 
 })->name('barang-masuk-material-pendukung-pdf');
+
     /*
     |--------------------------------------------------------------------------
     | BARANG KELUAR
@@ -1087,6 +1079,7 @@ Route::post('/hasil-cutting/store', function (Request $request) {
 
     Route::get('/logout', [AuthController::class, 'logout'])
         ->name('logout');
+        
     Route::get('/sinkron-stok-awal', function () {
 
     $barangs = Barang::all();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\PermintaanBarang;
+use App\Models\BarangKeluar;
 use Illuminate\Http\Request;
 
 class PermintaanBarangController extends Controller
@@ -97,5 +98,81 @@ class PermintaanBarangController extends Controller
                 )->findOrFail($id);
                 return response()->json($permintaan);
                 }
+
+            public function update(Request $request, $id)
+                {
+                $permintaan = PermintaanBarang::with(
+                'details.barang'
+                )->findOrFail($id);
+
+                if (
+                    $request->status == 'Sudah Diambil'
+                    &&
+                    $permintaan->status != 'Sudah Diambil'
+                ) {
+
+                    foreach ($permintaan->details as $detail) {
+
+                        $barang = $detail->barang;
+
+                        // =========================
+                        // BARANG KELUAR
+                        // =========================
+
+                        BarangKeluar::create([
+
+                            'barang_id' =>
+                                $barang->id,
+
+                            'jumlah' =>
+                                $detail->jumlah,
+
+                            'jumlah_roll' =>
+                                0,
+
+                            'tanggal_keluar' =>
+                                now(),
+
+                            'tujuan' =>
+                                'INTERNAL - ' .
+                                strtoupper(
+                                    $permintaan->nama_penjahit
+                                )
+
+                        ]);
+
+                        // =========================
+                        // KURANGI STOK
+                        // =========================
+
+                        $barang->update([
+
+                            'stok' =>
+                                max(
+                                    0,
+                                    $barang->stok - $detail->jumlah
+                                )
+
+                        ]);
+                    }
+                }
+
+                $permintaan->update([
+
+                    'status' => $request->status
+
+                ]);
+
+                return redirect()
+                    ->route('permintaan-barang')
+                    ->with(
+                        'success',
+                        'Status berhasil diperbarui'
+                    );
+
+                }
+
+
+
 
 }

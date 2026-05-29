@@ -114,6 +114,17 @@
                             Ditolak
                         </span>
 
+                    @elseif($item->status == 'Sudah Diambil')
+
+                        <span style="
+                            background:#3b82f6;
+                            color:white;
+                            padding:5px 12px;
+                            border-radius:20px;
+                        ">
+                            Sudah Diambil
+                        </span>
+
                     @endif
 
                 </td>
@@ -129,20 +140,122 @@
                             padding:6px 12px;
                             border-radius:6px;
                             cursor:pointer;
+                            margin-right:5px;
                         "
                     >
                         Detail
                     </button>
 
+                    @if(
+                        strtolower(auth()->user()->role) == 'admin' ||
+                        strtolower(auth()->user()->role) == 'gudang'
+                    )
+
+                        @if($item->status == 'Menunggu')
+
+                            <form
+                                action="{{ route('permintaan-barang.update',$item->id) }}"
+                                method="POST"
+                                style="display:inline;"
+                            >
+                                @csrf
+                                @method('PUT')
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="Disetujui"
+                                >
+
+                                <button
+                                    type="submit"
+                                    style="
+                                        background:#22c55e;
+                                        color:white;
+                                        border:none;
+                                        padding:6px 12px;
+                                        border-radius:6px;
+                                        cursor:pointer;
+                                        margin-right:5px;
+                                    "
+                                >
+                                    ACC
+                                </button>
+
+                            </form>
+
+                            <form
+                                action="{{ route('permintaan-barang.update',$item->id) }}"
+                                method="POST"
+                                style="display:inline;"
+                            >
+                                @csrf
+                                @method('PUT')
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="Ditolak"
+                                >
+
+                                <button
+                                    type="submit"
+                                    style="
+                                        background:#ef4444;
+                                        color:white;
+                                        border:none;
+                                        padding:6px 12px;
+                                        border-radius:6px;
+                                        cursor:pointer;
+                                    "
+                                >
+                                    Tolak
+                                </button>
+
+                            </form>
+
+                        @endif
+
+                        @if($item->status == 'Disetujui')
+
+                            <form
+                                action="{{ route('permintaan-barang.update',$item->id) }}"
+                                method="POST"
+                                style="display:inline;"
+                            >
+                                @csrf
+                                @method('PUT')
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="Sudah Diambil"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="btn-sudah-diambil"
+                                >
+                                    ✓ Sudah Diambil
+                                </button>
+
+                            </form>
+
+                        @endif
+
+                    @endif
+
                 </td>
+
 
             </tr>
 
             @empty
 
-            <tr>
+                <tr>
 
-                <td colspan="7"
+                <td
+                    colspan="7"
                     style="
                         text-align:center;
                         padding:30px;
@@ -152,7 +265,7 @@
                     Belum ada permintaan barang
                 </td>
 
-            </tr>
+                </tr>
 
             @endforelse
 
@@ -161,7 +274,6 @@
     </table>
 
 </div>
-```
 
 </div>
 
@@ -438,6 +550,16 @@ label{
     cursor:pointer;
 }
 
+.btn-sudah-diambil{
+    background:#3b82f6;
+    color:white;
+    border:none;
+    padding:6px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:600;
+    margin-left:5px;
+}
 </style>
 
 <script>

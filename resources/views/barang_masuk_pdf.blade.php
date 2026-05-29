@@ -39,9 +39,16 @@
 
 <body>
 
-<h2>
+<h2 style="text-align:center;">
     Laporan Barang (Material Pendukung) Masuk
 </h2>
+
+    @if(!empty($tanggal))
+        <p style="text-align:center;">
+            Tanggal :
+            {{ \Carbon\Carbon::parse($tanggal)->format('d-m-Y') }}
+        </p>
+    @endif
 
 <table>
 

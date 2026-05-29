@@ -338,6 +338,24 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
 
                     📋 Permintaan Barang
 
+                    @if($jumlahPermintaan > 0)
+
+                        <span
+                            style="
+                                background:#ef4444;
+                                color:white;
+                                border-radius:999px;
+                                padding:2px 8px;
+                                font-size:11px;
+                                margin-left:6px;
+                                font-weight:bold;
+                            "
+                        >
+                            {{ $jumlahPermintaan }}
+                        </span>
+
+                    @endif
+
                 </a>
                 <!-- INVENTORI -->
 
@@ -553,6 +571,24 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
 
                     📋 Permintaan Barang
 
+                    @if($jumlahPermintaan > 0)
+
+                        <span
+                            style="
+                                background:#ef4444;
+                                color:white;
+                                border-radius:999px;
+                                padding:2px 8px;
+                                font-size:11px;
+                                margin-left:6px;
+                                font-weight:bold;
+                            "
+                        >
+                            {{ $jumlahPermintaan }}
+                        </span>
+
+                    @endif
+
                 </a>
                 <!-- INVENTORI -->
 
@@ -740,8 +776,37 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
 
                 </a>
                 <!-- PERMINTAAN BARANG -->
+                 
                 <a href="/permintaan-barang">
+
                     📋 Permintaan Barang
+
+                    @if(
+                        $jumlahPermintaan > 0
+                        &&
+                        (
+                            auth()->user()->role == 'admin'
+                            ||
+                            auth()->user()->role == 'gudang'
+                        )
+                    )
+
+                        <span
+                            style="
+                                background:#ef4444;
+                                color:white;
+                                border-radius:999px;
+                                padding:2px 8px;
+                                font-size:11px;
+                                margin-left:6px;
+                                font-weight:bold;
+                            "
+                        >
+                            {{ $jumlahPermintaan }}
+                        </span>
+
+                    @endif
+
                 </a>
 
                 <!-- PRODUKSI -->
