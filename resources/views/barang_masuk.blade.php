@@ -148,40 +148,58 @@ tbody tr{
 <div class="card filter-card">
 
     <form method="GET"
-          style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+      style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
 
-        <input
-            type="date"
-            name="tanggal"
-            value="{{ request('tanggal') }}"
-            class="input">
+    <input
+        type="date"
+        name="tanggal_awal"
+        value="{{ request('tanggal_awal') }}"
+        class="input">
 
-        <button type="submit"
-                class="btn-primary">
+    <span style="color:white;">
+        s/d
+    </span>
 
-            🔍 Tampilkan
+    <input
+        type="date"
+        name="tanggal_akhir"
+        value="{{ request('tanggal_akhir') }}"
+        class="input">
 
-        </button>
+    <button
+        type="submit"
+        class="btn-primary">
 
-        <a href="{{ url()->current() }}"
-           class="btn-secondary">
+        🔍 Tampilkan
 
-            ♻ Reset
+    </button>
 
-        </a>
+    <a
+        href="{{ url()->current() }}"
+        class="btn-secondary">
 
-        <a
-    href="{{ request()->is('barang-masuk-material-utama')
-        ? route('barang-masuk-material-utama-pdf')
-        : route('barang-masuk-material-pendukung-pdf') }}"
-    class="btn-secondary"
-    style="text-decoration:none;">
+        ♻ Reset
 
-    📄 Export PDF
+    </a>
 
-</a>
+    <a
+        href="{{ request()->is('barang-masuk-material-utama')
+            ? route('barang-masuk-material-utama-pdf',[
+                'tanggal_awal'=>request('tanggal_awal'),
+                'tanggal_akhir'=>request('tanggal_akhir')
+            ])
+            : route('barang-masuk-material-pendukung-pdf',[
+                'tanggal_awal'=>request('tanggal_awal'),
+                'tanggal_akhir'=>request('tanggal_akhir')
+            ]) }}"
+        class="btn-secondary"
+        style="text-decoration:none;">
 
-    </form>
+        📄 Export PDF
+
+    </a>
+
+</form>
 
 </div>
 
