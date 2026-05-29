@@ -12,19 +12,60 @@ class BarangMasukController extends Controller
     // TAMPIL HALAMAN
     // =========================
 
-    public function index()
-    {
-        $barangMasuks = BarangMasuk::with('barang')
-            ->latest()
-            ->get();
+    public function index(Request $request)
+{
+    $query = BarangMasuk::with('barang');
 
-        $barangs = Barang::all();
+    // FILTER TANGGAL
+    if ($request->filled('tanggal')) {
 
-        return view('barang_masuk', compact(
-            'barangMasuks',
-            'barangs'
-        ));
+        $query->whereDate(
+            'tanggal_masuk',
+            $request->tanggal
+        );
     }
+
+    $barangMasuks = $query
+        ->latest()
+        ->get();
+
+    $barangs = Barang::all();
+
+    // =====================
+    // STATISTIK
+    // =====================
+
+    $totalTransaksi = BarangMasuk::count();
+
+    $totalQty = BarangMasuk::sum('jumlah');
+
+    $hariIni = BarangMasuk::whereDate(
+        'tanggal_masuk',
+        now()->toDateString()
+    )->count();
+
+    $bulanIni = BarangMasuk::whereMonth(
+        'tanggal_masuk',
+        now()->month
+    )
+    ->whereYear(
+        'tanggal_masuk',
+        now()->year
+    )
+    ->count();
+
+    return view(
+        'barang_masuk',
+        compact(
+            'barangMasuks',
+            'barangs',
+            'totalTransaksi',
+            'totalQty',
+            'hariIni',
+            'bulanIni'
+        )
+    );
+}
 
     // =========================
     // SIMPAN DATA

@@ -143,6 +143,101 @@ tbody tr{
     <h2>Barang Masuk</h2>
 
 </div>
+<!-- FILTER -->
+
+<div class="card filter-card">
+
+    <form method="GET"
+          style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+
+        <input
+            type="date"
+            name="tanggal"
+            value="{{ request('tanggal') }}"
+            class="input">
+
+        <button type="submit"
+                class="btn-primary">
+
+            🔍 Tampilkan
+
+        </button>
+
+        <a href="{{ url()->current() }}"
+           class="btn-secondary">
+
+            ♻ Reset
+
+        </a>
+
+        <a
+    href="{{ request()->is('barang-masuk-material-utama')
+        ? route('barang-masuk-material-utama-pdf')
+        : route('barang-masuk-material-pendukung-pdf') }}"
+    class="btn-secondary"
+    style="text-decoration:none;">
+
+    📄 Export PDF
+
+</a>
+
+    </form>
+
+</div>
+
+<!-- STATISTIK -->
+
+<div class="stats-grid">
+
+    <div class="card stat-card">
+
+        <div class="stat-title">
+            Total Transaksi
+        </div>
+
+        <div class="stat-value">
+            {{ number_format($totalTransaksi) }}
+        </div>
+
+    </div>
+
+    <div class="card stat-card">
+
+        <div class="stat-title">
+            Total Qty
+        </div>
+
+        <div class="stat-value">
+            {{ number_format($totalQty) }}
+        </div>
+
+    </div>
+
+    <div class="card stat-card">
+
+        <div class="stat-title">
+            Hari Ini
+        </div>
+
+        <div class="stat-value">
+            {{ $hariIni }}
+        </div>
+
+    </div>
+
+    <div class="card stat-card">
+
+        <div class="stat-title">
+            Bulan Ini
+        </div>
+
+        <div class="stat-value">
+            {{ $bulanIni }}
+        </div>
+
+    </div>
+
+</div>
 
 <div class="filter-bar">
 

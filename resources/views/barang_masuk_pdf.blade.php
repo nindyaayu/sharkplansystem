@@ -3,7 +3,7 @@
 <head>
 
     <title>
-        Laporan Material Utama
+        Laporan Barang (Material Pendukung) Masuk
     </title>
 
     <style>
@@ -13,11 +13,6 @@
         }
 
         h2{
-            text-align:center;
-            margin-bottom:5px;
-        }
-
-        p{
             text-align:center;
             margin-bottom:20px;
         }
@@ -45,21 +40,8 @@
 <body>
 
 <h2>
-
-    Laporan Material Utama
-
+    Laporan Barang (Material Pendukung) Masuk
 </h2>
-
-@if($tanggal)
-
-<p>
-
-    Tanggal :
-    {{ \Carbon\Carbon::parse($tanggal)->format('d F Y') }}
-
-</p>
-
-@endif
 
 <table>
 
@@ -70,10 +52,9 @@
 <th>No</th>
 <th>Kode</th>
 <th>Nama Barang</th>
-<th>Warna</th>
-<th>Jumlah Roll</th>
-<th>Jumlah Meter</th>
-<th>Status</th>
+<th>Supplier</th>
+<th>Total Jumlah</th>
+<th>Satuan</th>
 
 </tr>
 
@@ -85,34 +66,28 @@
 
 <tr>
 
-<td>{{ $loop->iteration }}</td>
-
-<td>{{ $item->kode }}</td>
-
-<td>{{ $item->nama }}</td>
-
-<td>{{ $item->warna }}</td>
-
-<td>{{ $item->jumlah_roll }} Roll</td>
-
-<td>{{ $item->jumlah_meter }} Meter</td>
+<td>
+    {{ $loop->iteration }}
+</td>
 
 <td>
+    {{ $item->kode }}
+</td>
 
-    @if($item->jumlah_roll == 0 && $item->jumlah_meter == 0)
+<td>
+    {{ $item->nama }}
+</td>
 
-        Habis
+<td>
+    {{ $item->supplier }}
+</td>
 
-    @elseif($item->jumlah_roll <= 5 || $item->jumlah_meter <= 500)
+<td>
+    {{ $item->jumlah }}
+</td>
 
-        Menipis
-
-    @else
-
-        Aman
-
-    @endif
-
+<td>
+    {{ $item->satuan }}
 </td>
 
 </tr>

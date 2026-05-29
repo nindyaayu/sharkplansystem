@@ -377,28 +377,27 @@ tbody td{
 
 <td>
 
-    @if($item->jumlah_roll == 0)
+    @if($item->jumlah_roll == 0 && $item->jumlah_meter == 0)
 
-    <span class="badge-danger">
-        Habis
-    </span>
+        <span class="badge-danger">
+            Habis
+        </span>
 
-@elseif($item->jumlah_roll <= 5)
+    @elseif($item->jumlah_roll <= 5 || $item->jumlah_meter <= 500)
 
-    <span class="badge-warning">
-        Menipis
-    </span>
+        <span class="badge-warning">
+            Menipis
+        </span>
 
-@else
+    @else
 
-    <span class="badge-safe">
-        Aman
-    </span>
+        <span class="badge-safe">
+            Aman
+        </span>
 
-@endif
+    @endif
 
 </td>
-
 </tr>
 
 @empty
