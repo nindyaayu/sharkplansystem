@@ -149,7 +149,78 @@ body{
     margin:15px 0;
     border-top:1px solid rgba(255,255,255,0.1);
 }
+/* ================= CARD ================= */
 
+.card{
+    background:rgba(17,24,39,.7);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.05);
+    border-radius:20px;
+}
+
+/* ================= FILTER CARD ================= */
+
+.filter-card{
+    padding:20px;
+    margin-bottom:25px;
+}
+
+/* ================= STATS ================= */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    padding:22px;
+}
+
+.stat-title{
+    color:#94a3b8;
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.stat-value{
+    color:white;
+    font-size:48px;
+    font-weight:700;
+}
+
+@media(max-width:900px){
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+/* ================= BUTTON ================= */
+
+.btn-secondary{
+    background:#374151;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:10px 16px;
+    cursor:pointer;
+    text-decoration:none;
+}
+
+.btn-secondary:hover{
+    background:#4b5563;
+}
 </style>
 <link rel="stylesheet"
 href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
@@ -261,7 +332,13 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
                     </div>
 
                 </div>
+                <!-- PERMINTAAN BARANG -->
+                 
+                <a href="/permintaan-barang">
 
+                    📋 Permintaan Barang
+
+                </a>
                 <!-- INVENTORI -->
 
                 <div class="menu-item">
@@ -401,7 +478,7 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
 
         <a href="/laporan-produksi">
 
-            Laporan Produksi
+            🗂️ Laporan Produksi
 
         </a>
 
@@ -470,6 +547,13 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
 
                 </div>
 
+                <!-- PERMINTAAN BARANG -->
+                 
+                <a href="/permintaan-barang">
+
+                    📋 Permintaan Barang
+
+                </a>
                 <!-- INVENTORI -->
 
                 <div class="menu-item">
@@ -654,6 +738,10 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
 
                     🔗 Perhitungan BOM
 
+                </a>
+                <!-- PERMINTAAN BARANG -->
+                <a href="/permintaan-barang">
+                    📋 Permintaan Barang
                 </a>
 
                 <!-- PRODUKSI -->
