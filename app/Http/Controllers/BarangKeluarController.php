@@ -172,7 +172,7 @@ class BarangKeluarController extends Controller
                 $request->barang_id,
 
             'jumlah_roll' =>
-                $request->jumlah_roll,
+                $request->jumlah_roll ?? 0,
 
             'jumlah' =>
                 $request->jumlah,

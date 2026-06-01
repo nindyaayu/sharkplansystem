@@ -3,7 +3,7 @@
 <head>
 
     <title>
-        Laporan Barang (Material Pendukung) Masuk
+        Laporan Barang Keluar (Material Utama)
     </title>
 
     <style>
@@ -39,13 +39,13 @@
 
 <body>
 
-<h2 style="text-align:center;">
-    Laporan Barang (Material Pendukung) Masuk
+<h2>
+    Laporan Barang Keluar (Material Utama)
 </h2>
 
-    @if(!empty($tanggal_awal) && !empty($tanggal_akhir))
+@if(!empty($tanggal_awal) && !empty($tanggal_akhir))
 
-<p style="text-align:center;margin-top:-10px;">
+<p style="text-align:center;">
 
     Periode :
 
@@ -66,11 +66,12 @@
 <tr>
 
 <th>No</th>
+<th>Tanggal</th>
 <th>Kode</th>
 <th>Nama Barang</th>
-<th>Supplier</th>
-<th>Total Jumlah</th>
-<th>Satuan</th>
+<th>Tujuan</th>
+<th>Roll</th>
+<th>Meter</th>
 
 </tr>
 
@@ -82,28 +83,30 @@
 
 <tr>
 
+<td>{{ $loop->iteration }}</td>
+
 <td>
-    {{ $loop->iteration }}
+    {{ \Carbon\Carbon::parse($item->tanggal_keluar)->format('d-m-Y') }}
 </td>
 
 <td>
-    {{ $item->kode }}
+    {{ $item->barang->kode ?? '-' }}
 </td>
 
 <td>
-    {{ $item->nama }}
+    {{ $item->barang->nama ?? '-' }}
 </td>
 
 <td>
-    {{ $item->supplier }}
+    {{ $item->tujuan }}
+</td>
+
+<td>
+    {{ $item->jumlah_roll }}
 </td>
 
 <td>
     {{ $item->jumlah }}
-</td>
-
-<td>
-    {{ $item->satuan }}
 </td>
 
 </tr>

@@ -3,7 +3,7 @@
 <head>
 
     <title>
-        Laporan Barang (Material Pendukung) Masuk
+        Laporan Barang (Material Utama) Masuk
     </title>
 
     <style>
@@ -39,13 +39,13 @@
 
 <body>
 
-<h2 style="text-align:center;">
-    Laporan Barang (Material Pendukung) Masuk
+<h2>
+    Laporan Barang (Material Utama) Masuk
 </h2>
 
-    @if(!empty($tanggal_awal) && !empty($tanggal_akhir))
+@if(!empty($tanggal_awal) && !empty($tanggal_akhir))
 
-<p style="text-align:center;margin-top:-10px;">
+<p style="text-align:center;">
 
     Periode :
 
@@ -69,8 +69,8 @@
 <th>Kode</th>
 <th>Nama Barang</th>
 <th>Supplier</th>
-<th>Total Jumlah</th>
-<th>Satuan</th>
+<th>Total Roll</th>
+<th>Total Meter</th>
 
 </tr>
 
@@ -82,29 +82,17 @@
 
 <tr>
 
-<td>
-    {{ $loop->iteration }}
-</td>
+<td>{{ $loop->iteration }}</td>
 
-<td>
-    {{ $item->kode }}
-</td>
+<td>{{ $item->kode }}</td>
 
-<td>
-    {{ $item->nama }}
-</td>
+<td>{{ $item->nama }}</td>
 
-<td>
-    {{ $item->supplier }}
-</td>
+<td>{{ $item->supplier }}</td>
 
-<td>
-    {{ $item->jumlah }}
-</td>
+<td>{{ $item->roll }}</td>
 
-<td>
-    {{ $item->satuan }}
-</td>
+<td>{{ $item->meter }}</td>
 
 </tr>
 

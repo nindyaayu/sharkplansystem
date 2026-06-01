@@ -79,7 +79,10 @@
                     {{ $item->details->count() }} Barang
                 </td>
 
-                <td style="padding:12px;text-align:center;">
+                <td
+                    id="status-permintaan-{{ $item->id }}"
+                    style="padding:12px;text-align:center;"
+                >
 
                     @if($item->status == 'Menunggu')
 
@@ -89,7 +92,7 @@
                             padding:5px 12px;
                             border-radius:20px;
                         ">
-                            Menunggu
+                           ⟳ Menunggu
                         </span>
 
                     @elseif($item->status == 'Disetujui')
@@ -103,6 +106,18 @@
                             Disetujui
                         </span>
 
+                        @elseif($item->status == 'Disetujui Sebagian')
+
+                        <span style="
+                            background:#8b5cf6;
+                            color:white;
+                            padding:5px 12px;
+                            border-radius:20px;
+                        ">
+                           ∞ Disetujui Sebagian
+                        </span>
+                        
+
                     @elseif($item->status == 'Ditolak')
 
                         <span style="
@@ -111,7 +126,7 @@
                             padding:5px 12px;
                             border-radius:20px;
                         ">
-                            Ditolak
+                           ✘ Ditolak
                         </span>
 
                     @elseif($item->status == 'Sudah Diambil')
@@ -122,7 +137,7 @@
                             padding:5px 12px;
                             border-radius:20px;
                         ">
-                            Sudah Diambil
+                            ✓ Sudah Diambil
                         </span>
 
                     @endif
@@ -143,78 +158,10 @@
                             margin-right:5px;
                         "
                     >
-                        Detail
+                       ✉ Detail
                     </button>
 
-                    @if(
-                        strtolower(auth()->user()->role) == 'admin' ||
-                        strtolower(auth()->user()->role) == 'gudang'
-                    )
-
-                        @if($item->status == 'Menunggu')
-
-                            <form
-                                action="{{ route('permintaan-barang.update',$item->id) }}"
-                                method="POST"
-                                style="display:inline;"
-                            >
-                                @csrf
-                                @method('PUT')
-
-                                <input
-                                    type="hidden"
-                                    name="status"
-                                    value="Disetujui"
-                                >
-
-                                <button
-                                    type="submit"
-                                    style="
-                                        background:#22c55e;
-                                        color:white;
-                                        border:none;
-                                        padding:6px 12px;
-                                        border-radius:6px;
-                                        cursor:pointer;
-                                        margin-right:5px;
-                                    "
-                                >
-                                    ACC
-                                </button>
-
-                            </form>
-
-                            <form
-                                action="{{ route('permintaan-barang.update',$item->id) }}"
-                                method="POST"
-                                style="display:inline;"
-                            >
-                                @csrf
-                                @method('PUT')
-
-                                <input
-                                    type="hidden"
-                                    name="status"
-                                    value="Ditolak"
-                                >
-
-                                <button
-                                    type="submit"
-                                    style="
-                                        background:#ef4444;
-                                        color:white;
-                                        border:none;
-                                        padding:6px 12px;
-                                        border-radius:6px;
-                                        cursor:pointer;
-                                    "
-                                >
-                                    Tolak
-                                </button>
-
-                            </form>
-
-                        @endif
+                    
 
                         @if($item->status == 'Disetujui')
 
@@ -243,7 +190,6 @@
 
                         @endif
 
-                    @endif
 
                 </td>
 
@@ -281,7 +227,13 @@
 
 <div id="modalPermintaan" class="modal">
 
-    <div class="modal-content">
+    <div
+            class="modal-content"
+            style="
+                max-height:90vh;
+                overflow-y:auto;
+            "
+        >
 
         <div class="modal-header">
 
@@ -321,9 +273,26 @@
                 required
             >
 
-            <h3 class="section-title">
-                Daftar Barang
-            </h3>
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin-bottom:15px;
+            ">
+
+                <h3 class="section-title" style="margin:0;">
+                    Daftar Barang
+                </h3>
+                <button
+                type="button"
+                onclick="tambahBaris()"
+                class="btn-add"
+            >
+                + Tambah Barang
+            </button>
+
+
+            </div>
 
             <table
                 class="table-dark"
@@ -348,15 +317,17 @@
 
             </table>
 
-            <button
-                type="button"
-                onclick="tambahBaris()"
-                class="btn-add"
+            <div
+                class="footer-button"
+                style="
+                    position:sticky;
+                    bottom:0;
+                    background:#07153d;
+                    padding:15px 0;
+                    margin-top:20px;
+                    z-index:10;
+                "
             >
-                + Tambah Barang
-            </button>
-
-            <div class="footer-button">
 
                 <button
                     type="button"
@@ -390,15 +361,21 @@
     background:rgba(0,0,0,.75);
     backdrop-filter:blur(6px);
     z-index:9999;
+
+    overflow-y:auto;
 }
 
 .modal-content{
     width:900px;
     max-width:95%;
-    max-height:85vh;
-    overflow-y:auto;
 
-    margin:30px auto;
+    height:auto;
+    max-height:95vh;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    margin:10px auto;
 
     background:#08132f;
     border-radius:20px;
@@ -414,6 +391,28 @@
         max-height:85vh;
         overflow-y:auto;
     }
+
+#barangTable{
+    width:100%;
+}
+
+#barangTable tbody{
+    display:block;
+    max-height:350px;
+    overflow-y:auto;
+}
+
+#barangTable thead,
+#barangTable tbody tr{
+    display:table;
+    width:100%;
+    table-layout:fixed;
+}
+
+#barangTable thead{
+    width:calc(100% - 8px);
+}
+
 .modal-header{
     display:flex;
     justify-content:space-between;
@@ -524,12 +523,14 @@ label{
     justify-content:flex-end;
     gap:12px;
 
-    margin-top:30px;
-    padding-top:20px;
+    margin-top:20px;
+    padding:15px;
 
     background:#08132f;
 
     border-top:1px solid rgba(255,255,255,.08);
+
+    z-index:9999;
 }
 
 .btn-batal{
@@ -560,9 +561,49 @@ label{
     font-weight:600;
     margin-left:5px;
 }
+@media (max-width:1024px){
+
+    .modal-content{
+
+        width:98%;
+        max-height:98vh;
+
+        padding:15px;
+    }
+
+    .modal-header h2{
+
+        font-size:28px;
+    }
+
+    .table-dark{
+
+        min-width:700px;
+    }
+
+    .footer-button{
+
+        position:sticky;
+        bottom:0;
+
+        padding:15px;
+        margin-top:20px;
+
+        background:#08132f;
+        z-index:999;
+    }
+
+    .btn-batal,
+    .btn-simpan{
+
+        padding:14px 20px;
+    }
+}
 </style>
 
 <script>
+
+    const userRole = "{{ strtolower(auth()->user()->role) }}";
 
 function openModal(){
     document.getElementById('modalPermintaan').style.display='block';
@@ -661,13 +702,21 @@ function tambahBaris(){
 
                 let badgeColor = '#f59e0b';
 
-                if(data.status == 'Disetujui'){
-                    badgeColor = '#10b981';
-                }
+                    if(data.status == 'Disetujui'){
+                        badgeColor = '#10b981';
+                    }
 
-                if(data.status == 'Ditolak'){
-                    badgeColor = '#ef4444';
-                }
+                    if(data.status == 'Disetujui Sebagian'){
+                        badgeColor = '#8b5cf6';
+                    }
+
+                    if(data.status == 'Ditolak'){
+                        badgeColor = '#ef4444';
+                    }
+
+                    if(data.status == 'Sudah Diambil'){
+                        badgeColor = '#3b82f6';
+                    }
 
                 let html = `
 
@@ -738,6 +787,8 @@ function tambahBaris(){
                             <th style="padding:14px;">Warna</th>
                             <th style="padding:14px;">Jumlah</th>
                             <th style="padding:14px;">Satuan</th>
+                            <th style="padding:14px;">Status</th>
+                            <th style="padding:14px;">Aksi</th>
 
                         </tr>
 
@@ -748,6 +799,9 @@ function tambahBaris(){
                 `;
 
                 data.details.forEach(item => {
+                    if(!item.barang){
+                        return;
+                    }
 
                     html += `
 
@@ -792,67 +846,233 @@ function tambahBaris(){
                                 ${item.barang.satuan}
                             </td>
 
-                        </tr>
+                            <td style="
+                                padding:14px;
+                                text-align:center;
+                                border-bottom:1px solid rgba(255,255,255,.08);
+                            ">
+
+                                ${
+                                    item.status == 'ACC'
+                                    ? '<span style="background:#22c55e;color:white;padding:5px 10px;border-radius:20px;">ACC</span>'
+
+                                    : item.status == 'Kosong'
+                                    ? '<span style="background:#f59e0b;color:white;padding:5px 10px;border-radius:20px;">Kosong</span>'
+
+                                    : item.status == 'Ditolak'
+                                    ? '<span style="background:#ef4444;color:white;padding:5px 10px;border-radius:20px;">Ditolak</span>'
+
+                                    : '<span style="background:#64748b;color:white;padding:5px 10px;border-radius:20px;">Menunggu</span>'
+                                }
+
+                            </td>
+
+
+                            <td style="
+                                padding:14px;
+                                text-align:center;
+                                border-bottom:1px solid rgba(255,255,255,.08);
+                            ">
+
+                                ${
+                                    item.status == 'Menunggu'
+                                        ? (
+                                            userRole == 'admin' || userRole == 'gudang'
+                                        )
+                                            ? `
+                                                <button
+                                                    onclick="updateDetailStatus(${item.id},'ACC')"
+                                                    style="
+                                                        background:#22c55e;
+                                                        color:white;
+                                                        border:none;
+                                                        padding:5px 10px;
+                                                        border-radius:8px;
+                                                        cursor:pointer;
+                                                    ">
+                                                    ACC
+                                                </button>
+
+                                                <button
+                                                    onclick="updateDetailStatus(${item.id},'Kosong')"
+                                                    style="
+                                                        background:#f59e0b;
+                                                        color:white;
+                                                        border:none;
+                                                        padding:5px 10px;
+                                                        border-radius:8px;
+                                                        cursor:pointer;
+                                                    ">
+                                                    Kosong
+                                                </button>
+                                            `
+                                            : '<span style="color:#94a3b8;">Menunggu Persetujuan</span>'
+                                        : '<span style="color:#94a3b8;">Selesai</span>'
+                                }
+
+                            </td>
+
+                            </tr>
 
                     `;
                 });
 
-                html += `
+                    html += `
 
-                    </tbody>
+                        </tbody>
 
-                </table>
+                    </table>
 
-                <div style="
-                    display:flex;
-                    justify-content:flex-end;
-                    margin-top:25px;
-                ">
+                    <div style="
+                        display:flex;
+                        justify-content:flex-end;
+                        margin-top:25px;
+                    ">
 
-                    <button
-                        onclick="closeDetailModal()"
-                        style="
-                            background:#374151;
-                            color:white;
-                            border:none;
-                            padding:10px 20px;
-                            border-radius:8px;
-                            cursor:pointer;
-                        "
-                    >
-                        Tutup
-                    </button>
+                        <button
+                            onclick="closeDetailModal()"
+                            style="
+                                background:#374151;
+                                color:white;
+                                border:none;
+                                padding:10px 20px;
+                                border-radius:8px;
+                                cursor:pointer;
+                            "
+                        >
+                            Tutup
+                        </button>
 
-                </div>
+                    </div>
 
-                `;
+                    `;
 
+                    document.getElementById(
+                        'detailContent'
+                    ).innerHTML = html;
+
+                    document.getElementById(
+                        'detailModal'
+                    ).style.display = 'block';
+
+                });
+
+                }
+
+                function closeDetailModal()
+                {
                 document.getElementById(
-                    'detailContent'
-                ).innerHTML = html;
-
-                document.getElementById(
-                    'detailModal'
-                ).style.display = 'block';
-
-            });
-
-            }
-
-            function closeDetailModal()
-            {
-            document.getElementById(
-            'detailModal'
-            ).style.display = 'none';
-            }
-
-
-        function closeDetailModal()
-        {
-            document.getElementById(
                 'detailModal'
-            ).style.display = 'none';
-        }
+                ).style.display = 'none';
+                }
+
+
+                function updateDetailStatus(id,status){
+
+                    fetch('/permintaan-barang-detail/' + id, {
+
+                        method:'PUT',
+
+                        headers:{
+                            'Content-Type':'application/json',
+                            'X-CSRF-TOKEN':
+                                document
+                                .querySelector(
+                                    'meta[name="csrf-token"]'
+                                )
+                                .content
+                        },
+
+                        body:JSON.stringify({
+                            status:status
+                        })
+
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+
+                        lihatDetail(data.permintaan_id);
+
+                            fetch('/permintaan-barang/' + data.permintaan_id)
+                            .then(res => res.json())
+                            .then(permintaan => {
+
+                                let badge = '';
+
+                                if(permintaan.status == 'Menunggu'){
+                                    badge = `
+                                        <span style="
+                                            background:#f59e0b;
+                                            color:white;
+                                            padding:5px 12px;
+                                            border-radius:20px;
+                                        ">
+                                            ⟳ Menunggu
+                                        </span>
+                                    `;
+                                }
+
+                                if(permintaan.status == 'Disetujui'){
+                                    badge = `
+                                        <span style="
+                                            background:#10b981;
+                                            color:white;
+                                            padding:5px 12px;
+                                            border-radius:20px;
+                                        ">
+                                            Disetujui
+                                        </span>
+                                    `;
+                                }
+
+                                if(permintaan.status == 'Disetujui Sebagian'){
+                                    badge = `
+                                        <span style="
+                                            background:#8b5cf6;
+                                            color:white;
+                                            padding:5px 12px;
+                                            border-radius:20px;
+                                        ">
+                                            ∞ Disetujui Sebagian
+                                        </span>
+                                    `;
+                                }
+
+                                if(permintaan.status == 'Ditolak'){
+                                    badge = `
+                                        <span style="
+                                            background:#ef4444;
+                                            color:white;
+                                            padding:5px 12px;
+                                            border-radius:20px;
+                                        ">
+                                            ✘ Ditolak
+                                        </span>
+                                    `;
+                                }
+
+                                if(permintaan.status == 'Sudah Diambil'){
+                                    badge = `
+                                        <span style="
+                                            background:#3b82f6;
+                                            color:white;
+                                            padding:5px 12px;
+                                            border-radius:20px;
+                                        ">
+                                            ✓ Sudah Diambil
+                                        </span>
+                                    `;
+                                }
+
+                                document.getElementById(
+                                    'status-permintaan-' + permintaan.id
+                                ).innerHTML = badge;
+
+                            });
+
+                    });
+
+                }
 
 </script>
 
