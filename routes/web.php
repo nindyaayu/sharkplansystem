@@ -189,6 +189,10 @@ Route::middleware('auth')->group(function () {
             [PermintaanBarangController::class, 'show']
         )->name('permintaan-barang.show');
         
+        Route::put(
+            '/permintaan-barang-detail/{id}',
+            [PermintaanBarangController::class, 'updateDetailStatus']
+        )->name('permintaan-barang-detail.update');
 // =========================
     // INVENTORI
     // =========================
@@ -206,14 +210,34 @@ Route::middleware('auth')->group(function () {
     // =========================
 
 
-        Route::get('/barang-masuk-material-utama', function () {
+        Route::get('/barang-masuk-material-utama', function (Request $request) {
 
-    $barangMasuks = \App\Models\BarangMasuk::with('barang')
+    $query = \App\Models\BarangMasuk::with('barang')
         ->whereHas('barang', function ($q) {
 
             $q->where('kategori', 'Kain');
 
-        })
+        });
+
+    // FILTER PERIODE
+
+    if (
+        $request->filled('tanggal_awal')
+        &&
+        $request->filled('tanggal_akhir')
+    ) {
+
+        $query->whereBetween(
+            'tanggal_masuk',
+            [
+                $request->tanggal_awal,
+                $request->tanggal_akhir
+            ]
+        );
+
+    }
+
+    $barangMasuks = $query
         ->latest()
         ->get();
 
@@ -221,8 +245,6 @@ Route::middleware('auth')->group(function () {
         'kategori',
         'Kain'
     )->get();
-
-    // STATISTIK
 
     $totalTransaksi = $barangMasuks->count();
 
@@ -251,6 +273,92 @@ Route::middleware('auth')->group(function () {
     ));
 
 })->name('barang-masuk-material-utama');
+// =========================
+// EXPORT PDF MATERIAL UTAMA
+// =========================
+
+Route::get('/barang-masuk-material-utama-pdf', function (Request $request) {
+
+    $query = \App\Models\BarangMasuk::with('barang')
+        ->whereHas('barang', function ($q) {
+
+            $q->where('kategori', 'Kain');
+
+        });
+
+    if (
+        $request->filled('tanggal_awal')
+        &&
+        $request->filled('tanggal_akhir')
+    ) {
+
+        $query->whereBetween(
+            'tanggal_masuk',
+            [
+                $request->tanggal_awal,
+                $request->tanggal_akhir
+            ]
+        );
+
+    }
+
+    $rawData = $query
+        ->latest()
+        ->get();
+
+    $data = $rawData
+    ->groupBy('barang_id')
+    ->map(function($items){
+
+        $first = $items->first();
+
+        $totalJumlah =
+            $items->sum('jumlah_roll')
+            +
+            $items->sum('jumlah');
+
+        $supplier =
+            $items
+                ->pluck('supplier')
+                ->filter()
+                ->unique()
+                ->implode(', ');
+
+            return (object)[
+
+                'kode' =>
+                    $first->barang->kode,
+
+                'nama' =>
+                    $first->barang->nama,
+
+                'supplier' =>
+                    $supplier,
+
+                'roll' =>
+                    $items->sum('jumlah_roll'),
+
+                'meter' =>
+                    $items->sum('jumlah'),
+
+            ];
+
+        });
+
+    $pdf = Pdf::loadView(
+    'barang_masuk_utama_pdf',
+        [
+            'data' => $data,
+            'tanggal_awal' => $request->tanggal_awal,
+            'tanggal_akhir' => $request->tanggal_akhir
+        ]
+    );
+
+    return $pdf->download(
+        'barang-masuk-material-utama.pdf'
+    );
+
+})->name('barang-masuk-material-utama-pdf');
 
 
     // =========================
@@ -357,11 +465,18 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
         });
 
-    if ($request->filled('tanggal')) {
+    if (
+    $request->filled('tanggal_awal')
+    &&
+    $request->filled('tanggal_akhir')
+    ) {
 
-        $query->whereDate(
+        $query->whereBetween(
             'tanggal_masuk',
-            $request->tanggal
+            [
+                $request->tanggal_awal,
+                $request->tanggal_akhir
+            ]
         );
 
     }
@@ -409,7 +524,8 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
     'barang_masuk_pdf',
     [
         'data' => $data,
-        'tanggal' => $request->tanggal
+        'tanggal_awal' => $request->tanggal_awal,
+        'tanggal_akhir' => $request->tanggal_akhir
     ]
 );
 
@@ -429,14 +545,32 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
     // MATERIAL UTAMA
     // =========================
 
-    Route::get('/barang-keluar-material-utama', function () {
+    Route::get('/barang-keluar-material-utama', function (Request $request) {
 
-        $barangKeluars = \App\Models\BarangKeluar::with('barang')
+        $query = \App\Models\BarangKeluar::with('barang')
             ->whereHas('barang', function ($q) {
 
                 $q->where('kategori', 'Kain');
 
-            })
+            });
+
+        if (
+            $request->filled('tanggal_awal')
+            &&
+            $request->filled('tanggal_akhir')
+        ) {
+
+            $query->whereBetween(
+                'tanggal_keluar',
+                [
+                    $request->tanggal_awal,
+                    $request->tanggal_akhir
+                ]
+            );
+
+        }
+
+        $barangKeluars = $query
             ->latest()
             ->get();
 
@@ -445,39 +579,159 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
             'Kain'
         )->get();
 
-        return view('barang_keluar', compact(
-            'barangKeluars',
-            'barangs'
-        ));
+        return view(
+            'barang_keluar',
+            compact(
+                'barangKeluars',
+                'barangs'
+            )
+        );
 
     })->name('barang-keluar-material-utama');
+
+    // =========================
+    // EXPORT PDF MATERIAL UTAMA
+    // =========================
+
+    Route::get('/barang-keluar-material-utama-pdf', function (Request $request) {
+
+            $query = \App\Models\BarangKeluar::with('barang')
+                ->whereHas('barang', function ($q) {
+
+                    $q->where('kategori', 'Kain');
+
+                });
+
+            if (
+                $request->filled('tanggal_awal')
+                &&
+                $request->filled('tanggal_akhir')
+            ) {
+
+                $query->whereBetween(
+                    'tanggal_keluar',
+                    [
+                        $request->tanggal_awal,
+                        $request->tanggal_akhir
+                    ]
+                );
+
+            }
+
+            $data = $query
+                ->latest()
+                ->get();
+
+            $pdf = Pdf::loadView(
+                'barang_keluar_utama_pdf',
+                [
+                    'data' => $data,
+                    'tanggal_awal' => $request->tanggal_awal,
+                    'tanggal_akhir' => $request->tanggal_akhir
+                ]
+            );
+
+            return $pdf->download(
+                'barang-keluar-material-utama.pdf'
+            );
+
+        })->name('barang-keluar-material-utama-pdf');
 
     // =========================
     // MATERIAL PENDUKUNG
     // =========================
 
-    Route::get('/barang-keluar-material-pendukung', function () {
+    Route::get('/barang-keluar-material-pendukung', function (Request $request) {
 
-        $barangKeluars = \App\Models\BarangKeluar::with('barang')
-            ->whereHas('barang', function ($q) {
+            $query = \App\Models\BarangKeluar::with('barang')
+                ->whereHas('barang', function ($q) {
 
-                $q->where('kategori', 'Aksesoris');
+                    $q->where('kategori', 'Aksesoris');
 
-            })
-            ->latest()
-            ->get();
+                });
 
-        $barangs = Barang::where(
-            'kategori',
-            'Aksesoris'
-        )->get();
+            if (
+                $request->filled('tanggal_awal')
+                &&
+                $request->filled('tanggal_akhir')
+            ) {
 
-        return view('barang_keluar', compact(
-            'barangKeluars',
-            'barangs'
-        ));
+                $query->whereBetween(
+                    'tanggal_keluar',
+                    [
+                        $request->tanggal_awal,
+                        $request->tanggal_akhir
+                    ]
+                );
 
-    })->name('barang-keluar-material-pendukung');
+            }
+
+            $barangKeluars = $query
+                ->latest()
+                ->get();
+
+            $barangs = Barang::where(
+                'kategori',
+                'Aksesoris'
+            )->get();
+
+            return view(
+                'barang_keluar',
+                compact(
+                    'barangKeluars',
+                    'barangs'
+                )
+            );
+
+        })->name('barang-keluar-material-pendukung');
+
+        // =========================
+        // EXPORT PDF MATERIAL PENDUKUNG
+        // =========================
+
+        Route::get('/barang-keluar-material-pendukung-pdf', function (Request $request) {
+
+            $query = \App\Models\BarangKeluar::with('barang')
+                ->whereHas('barang', function ($q) {
+
+                    $q->where('kategori', 'Aksesoris');
+
+                });
+
+            if (
+                $request->filled('tanggal_awal')
+                &&
+                $request->filled('tanggal_akhir')
+            ) {
+
+                $query->whereBetween(
+                    'tanggal_keluar',
+                    [
+                        $request->tanggal_awal,
+                        $request->tanggal_akhir
+                    ]
+                );
+
+            }
+
+            $data = $query
+                ->latest()
+                ->get();
+
+            $pdf = Pdf::loadView(
+                'barang_keluar_pendukung_pdf',
+                [
+                    'data' => $data,
+                    'tanggal_awal' => $request->tanggal_awal,
+                    'tanggal_akhir' => $request->tanggal_akhir
+                ]
+            );
+
+            return $pdf->download(
+                'barang-keluar-material-pendukung.pdf'
+            );
+
+        })->name('barang-keluar-material-pendukung-pdf');
 
     // =========================
     // STORE

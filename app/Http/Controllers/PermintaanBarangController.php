@@ -78,7 +78,10 @@ class PermintaanBarangController extends Controller
                             $barangId,
 
                         'jumlah' =>
-                            $request->jumlah[$index]
+                            $request->jumlah[$index],
+
+                        'status' =>
+                            'Menunggu'
 
                     ]);
                 }
@@ -92,12 +95,16 @@ class PermintaanBarangController extends Controller
             }
 
             public function show($id)
-                {
-                $permintaan = PermintaanBarang::with(
-                'details.barang'
-                )->findOrFail($id);
+            {
+                $permintaan = PermintaanBarang::with([
+                    'details' => function($q){
+                        $q->whereHas('barang');
+                    },
+                    'details.barang'
+                ])->findOrFail($id);
+
                 return response()->json($permintaan);
-                }
+            }
 
             public function update(Request $request, $id)
                 {
@@ -172,7 +179,75 @@ class PermintaanBarangController extends Controller
 
                 }
 
+                public function updateDetailStatus(Request $request, $id)
+                {
 
+            // CEK ROLE DULU
+                if (
+                    strtolower(auth()->user()->role) != 'admin' &&
+                    strtolower(auth()->user()->role) != 'gudang'
+                ) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Akses ditolak'
+                    ], 403);
+                }
+                    $detail = \App\Models\DetailPermintaanBarang::findOrFail($id);
 
+                    $detail->update([
+                        'status' => $request->status
+                    ]);
+
+                    $permintaan = PermintaanBarang::with('details')
+                        ->find($detail->permintaan_barang_id);
+
+                    $total = $permintaan->details->count();
+
+                    $acc = $permintaan->details
+                        ->where('status', 'ACC')
+                        ->count();
+
+                    $kosong = $permintaan->details
+                        ->where('status', 'Kosong')
+                        ->count();
+
+                    $ditolak = $permintaan->details
+                        ->where('status', 'Ditolak')
+                        ->count();
+
+                    if ($acc == $total) {
+
+                        $permintaan->update([
+                            'status' => 'Disetujui'
+                        ]);
+
+                    } elseif ($kosong == $total) {
+
+                        $permintaan->update([
+                            'status' => 'Ditolak'
+                        ]);
+
+                    } elseif (
+                        ($acc + $kosong + $ditolak) < $total
+                    ) {
+
+                        $permintaan->update([
+                            'status' => 'Menunggu'
+                        ]);
+
+                    } else {
+
+                        $permintaan->update([
+                            'status' => 'Disetujui Sebagian'
+                        ]);
+
+                    }
+
+                    return response()->json([
+                        'success' => true,
+                        'permintaan_id' => $detail->permintaan_barang_id,
+                        'status' => $permintaan->status,
+                    ]);
+                }
 
 }

@@ -149,15 +149,83 @@ td{
 
 </div>
 
-<div class="top-bar">
+    <div class="top-bar">
 
-    <button class="btn" onclick="openModal()">
+        <button class="btn" onclick="openModal()">
 
-        + Barang Keluar
+            + Barang Keluar
 
-    </button>
+        </button>
 
-</div>
+    </div>
+
+    <form
+        method="GET"
+        style="
+            display:flex;
+            gap:10px;
+            align-items:center;
+            margin-bottom:20px;
+            flex-wrap:wrap;
+        "
+    >
+
+        <input
+            type="date"
+            name="tanggal_awal"
+            value="{{ request('tanggal_awal') }}"
+            class="input"
+            style="width:auto;"
+        >
+
+        <span style="color:white;">
+            s/d
+        </span>
+
+        <input
+            type="date"
+            name="tanggal_akhir"
+            value="{{ request('tanggal_akhir') }}"
+            class="input"
+            style="width:auto;"
+        >
+
+        <button
+            type="submit"
+            class="btn"
+        >
+            🔍 Tampilkan
+        </button>
+
+        <a
+            href="{{ url()->current() }}"
+            class="btn-secondary"
+            style="text-decoration:none;"
+        >
+            ♻ Reset
+        </a>
+
+        <a
+            href="{{
+                request()->is('barang-keluar-material-utama')
+                ?
+                route('barang-keluar-material-utama-pdf',[
+                    'tanggal_awal'=>request('tanggal_awal'),
+                    'tanggal_akhir'=>request('tanggal_akhir')
+                ])
+                :
+                route('barang-keluar-material-pendukung-pdf',[
+                    'tanggal_awal'=>request('tanggal_awal'),
+                    'tanggal_akhir'=>request('tanggal_akhir')
+                ])
+            }}"
+            class="btn-secondary"
+            style="text-decoration:none;"
+        >
+            📄 Export PDF
+        </a>
+
+    </form>
 
 @if(session('success'))
 
