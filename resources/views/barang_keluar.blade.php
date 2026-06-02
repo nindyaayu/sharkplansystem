@@ -441,28 +441,20 @@ td{
 
             @csrf
 
-            <select
-                name="barang_id"
-                class="input"
-                required>
+            <label>Barang</label>
 
-                <option value="">
+                <input
+                    type="text"
+                    id="barang_search_keluar"
+                    class="input"
+                    placeholder="Cari barang..."
+                    autocomplete="off"
+                    required>
 
-                    Pilih Barang
-
-                </option>
-
-                @foreach($barangs as $barang)
-
-                    <option value="{{ $barang->id }}">
-
-                        {{ $barang->kode }} - {{ $barang->nama }}
-
-                    </option>
-
-                @endforeach
-
-            </select>
+                <input
+                    type="hidden"
+                    name="barang_id"
+                    id="barang_id_keluar">
 
             <input
                 type="text"
@@ -556,9 +548,7 @@ td{
                 @foreach($barangs as $barang)
 
                     <option value="{{ $barang->id }}">
-
                         {{ $barang->kode }} - {{ $barang->nama }}
-
                     </option>
 
                 @endforeach
@@ -692,6 +682,84 @@ function closeEditModal(){
         .style.display = 'none';
 
 }
+
+</script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+    const searchInput =
+        document.getElementById(
+            'barang_search_keluar'
+        );
+
+    const barangId =
+        document.getElementById(
+            'barang_id_keluar'
+        );
+
+    if(!searchInput) return;
+
+    const list =
+        document.createElement('datalist');
+
+    list.id = 'barang_list_keluar';
+
+    document.body.appendChild(list);
+
+    searchInput.setAttribute(
+        'list',
+        'barang_list_keluar'
+    );
+
+    searchInput.addEventListener(
+        'input',
+        async function(){
+
+            let response =
+                await fetch(
+                    '/search-barang?q=' +
+                    encodeURIComponent(this.value)
+                );
+
+            let data =
+                await response.json();
+
+            list.innerHTML = '';
+
+            data.forEach(item => {
+
+                let option =
+                    document.createElement('option');
+
+                option.value =
+                    item.text;
+
+                list.appendChild(option);
+
+            });
+
+            this.onchange = function(){
+
+                let selected =
+                    data.find(
+                        x => x.text === this.value
+                    );
+
+                if(selected){
+
+                    barangId.value =
+                        selected.id;
+
+                }
+
+            };
+
+        }
+    );
+
+});
 
 </script>
 

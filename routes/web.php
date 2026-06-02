@@ -240,46 +240,52 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/search-barang', function () {
 
-                return \App\Models\Barang::select(
-                    'id',
-                    'kode',
+            return \App\Models\Barang::select(
+                'id',
+                'kode',
+                'nama',
+                'warna',
+                'stok',
+                'satuan'
+            )
+            ->where(function($q){
+
+                $q->where(
                     'nama',
-                    'warna'
+                    'like',
+                    '%' . request('q') . '%'
                 )
-                ->where(function($q){
+                ->orWhere(
+                    'kode',
+                    'like',
+                    '%' . request('q') . '%'
+                );
 
-                    $q->where(
-                        'nama',
-                        'like',
-                        '%' . request('q') . '%'
-                    )
-                    ->orWhere(
-                        'kode',
-                        'like',
-                        '%' . request('q') . '%'
-                    );
+            })
+            ->limit(20)
+            ->get()
+            ->map(function($item){
 
-                })
-                ->limit(20)
-                ->get()
-                ->map(function($item){
+                return [
 
-                    return [
+                    'id' => $item->id,
 
-                        'id' => $item->id,
+                    'text' =>
+                        $item->kode .
+                        ' | ' .
+                        $item->nama .
+                        ' | ' .
+                        $item->warna .
+                        ' | ' .
+                        number_format($item->stok) .
+                        ' ' .
+                        strtoupper($item->satuan)
 
-                        'text' =>
-                            $item->kode .
-                            ' | ' .
-                            $item->nama .
-                            ' | ' .
-                            $item->warna
-
-                    ];
-
-                });
+                ];
 
             });
+
+        });
     // =========================
     // INVENTORI
     // =========================
