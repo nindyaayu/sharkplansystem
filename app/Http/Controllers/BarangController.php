@@ -11,12 +11,14 @@ class BarangController extends Controller
     // TAMPIL DATA
     // =========================
 
-    public function index()
-    {
-        $data = Barang::latest()->get();
+public function index()
+{
+    $data = Barang::orderBy('kategori')
+                  ->orderBy('nama')
+                  ->get();
 
-        return view('bahan', compact('data'));
-    }
+    return view('bahan', compact('data'));
+}
 
     // =========================
     // TAMBAH DATA

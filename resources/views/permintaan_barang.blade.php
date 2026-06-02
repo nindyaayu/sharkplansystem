@@ -4,7 +4,6 @@
 
 <div class="card" style="padding:24px">
 
-```
 <div style="
     display:flex;
     justify-content:space-between;
@@ -144,7 +143,10 @@
 
                 </td>
 
-                <td style="padding:12px;text-align:center;">
+                <td
+                        id="aksi-permintaan-{{ $item->id }}"
+                        style="padding:12px;text-align:center;"
+                    >
 
                     <button
                         onclick="lihatDetail({{ $item->id }})"
@@ -163,7 +165,10 @@
 
                     
 
-                        @if($item->status == 'Disetujui')
+                        @if(
+                            $item->status == 'Disetujui' ||
+                            $item->status == 'Disetujui Sebagian'
+                        )
 
                             <form
                                 action="{{ route('permintaan-barang.update',$item->id) }}"
@@ -354,6 +359,16 @@
 
 <style>
 
+.select2-search--dropdown{
+    display:block !important;
+}
+
+.select2-search__field{
+    background:#08132f !important;
+    color:white !important;
+    border:1px solid #334155 !important;
+}
+
 .modal{
     display:none;
     position:fixed;
@@ -396,6 +411,19 @@
     width:100%;
 }
 
+.select2-container{
+    width:100% !important;
+}
+
+.select2-container--open{
+    z-index:999999 !important;
+}
+
+.select2-dropdown{
+    z-index:999999 !important;
+}
+
+/*
 #barangTable tbody{
     display:block;
     max-height:350px;
@@ -412,7 +440,7 @@
 #barangTable thead{
     width:calc(100% - 8px);
 }
-
+*/
 .modal-header{
     display:flex;
     justify-content:space-between;
@@ -561,6 +589,53 @@ label{
     font-weight:600;
     margin-left:5px;
 }
+
+.select2-container--default .select2-selection--single{
+    background:#0f1b3f !important;
+    border:1px solid rgba(255,255,255,.08) !important;
+    border-radius:12px !important;
+    height:50px !important;
+}
+
+.select2-container--default .select2-selection__rendered{
+    color:white !important;
+    line-height:48px !important;
+}
+
+.select2-dropdown{
+    background:#0f1b3f !important;
+    border:1px solid rgba(255,255,255,.08) !important;
+}
+
+.select2-results__option{
+    color:white !important;
+}
+
+.select2-search__field{
+    background:#08132f !important;
+    color:white !important;
+}
+
+.barang-search{
+    width:100%;
+    padding:14px;
+    background:#0f1b3f;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:12px;
+    color:white;
+    outline:none;
+    box-sizing:border-box;
+}
+
+.barang-search::placeholder{
+    color:#94a3b8;
+}
+
+.barang-search:focus{
+    border-color:#3b82f6;
+    box-shadow:0 0 0 3px rgba(59,130,246,.15);
+}
+
 @media (max-width:1024px){
 
     .modal-content{
@@ -598,8 +673,16 @@ label{
 
         padding:14px 20px;
     }
+
 }
 </style>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
 
@@ -629,61 +712,54 @@ function tambahBaris(){
             );
 
         let row = `
-            <tr>
+                    <tr>
 
-                <td>
+                        <td>
 
-                    <select
-                        name="barang_id[]"
-                        class="select-dark"
-                        required
-                    >
+                            <input
+                                type="text"
+                                name="barang_nama[]"
+                                class="barang-search"
+                                placeholder="🔍 Cari barang..."
+                                autocomplete="off"
+                                required
+                            >
 
-                        @foreach($barang as $item)
+                            <input
+                                type="hidden"
+                                name="barang_id[]"
+                                class="barang-id"
+                            >
 
-                            <option value="{{ $item->id }}">
+                        </td>
 
-                                {{ $item->kode }}
-                                |
-                                {{ $item->nama }}
-                                |
-                                {{ $item->warna }}
+                        <td>
 
-                            </option>
+                            <input
+                                type="number"
+                                name="jumlah[]"
+                                min="1"
+                                placeholder="Masukkan jumlah"
+                                class="qty-input"
+                                required
+                            >
 
-                        @endforeach
+                        </td>
 
-                    </select>
+                        <td>
 
-                </td>
+                            <button
+                                type="button"
+                                class="btn-hapus"
+                                onclick="this.closest('tr').remove()"
+                            >
+                                Hapus
+                            </button>
 
-                <td>
+                        </td>
 
-                    <input
-                        type="number"
-                        name="jumlah[]"
-                        min="1"
-                        placeholder="Masukkan jumlah"
-                        class="qty-input"
-                        required
-                    >
-
-                </td>
-
-                <td>
-
-                    <button
-                        type="button"
-                        class="btn-hapus"
-                        onclick="this.closest('tr').remove()"
-                    >
-                        Hapus
-                    </button>
-
-                </td>
-
-            </tr>
-        `;
+                    </tr>
+                    `;
 
         tbody.insertAdjacentHTML(
             'beforeend',
@@ -1068,11 +1144,125 @@ function tambahBaris(){
                                     'status-permintaan-' + permintaan.id
                                 ).innerHTML = badge;
 
+                                // UPDATE BADGE SIDEBAR
+                                const notif = document.getElementById(
+                                    'notif-permintaan'
+                                );
+
+                                if(notif){
+
+                                    let jumlahSekarang =
+                                        parseInt(notif.innerText);
+
+                                    if(
+                                        permintaan.status != 'Menunggu'
+                                        &&
+                                        jumlahSekarang > 0
+                                    ){
+
+                                        jumlahSekarang--;
+
+                                        if(jumlahSekarang <= 0){
+
+                                            notif.remove();
+
+                                        }else{
+
+                                            notif.innerText =
+                                                jumlahSekarang;
+
+                                        }
+                                    }
+                                }
+
+                                const aksiCell = document.getElementById(
+                                    'aksi-permintaan-' + permintaan.id
+                                );
+
+                                if(
+                                    permintaan.status == 'Disetujui' ||
+                                    permintaan.status == 'Disetujui Sebagian' ||
+                                    permintaan.status == 'Ditolak' ||
+                                    permintaan.status == 'Sudah Diambil'
+                                ){
+                                    location.reload();
+                                }
+
                             });
 
                     });
 
                 }
+
+                $(document).on('input', '.barang-search', function(){
+
+                    let input = $(this);
+                    let keyword = input.val();
+
+                    if(keyword.length < 1){
+                        return;
+                    }
+
+                    $.get('/search-barang?q=' + keyword, function(data){
+
+                        let listId =
+                            'list-' +
+                            Math.random()
+                                .toString(36)
+                                .substring(2,8);
+
+                        let datalist =
+                            '<datalist id="' + listId + '">';
+
+                        data.forEach(function(item){
+
+                            datalist += `
+                                <option
+                                    value="${item.text}"
+                                    data-id="${item.id}">
+                                </option>
+                            `;
+
+                        });
+
+                        datalist += '</datalist>';
+
+                        $('datalist.temp-list').remove();
+
+                        $('body').append(
+                            $(datalist)
+                            .addClass('temp-list')
+                        );
+
+                        input.attr('list', listId);
+
+                        input.off('change').on('change', function(){
+
+                            let val = $(this).val();
+
+                            let barangId = '';
+
+                            data.forEach(function(item){
+
+                                if(item.text === val){
+
+                                    barangId = item.id;
+
+                                }
+
+                            });
+
+                            $(input)
+                                .closest('td')
+                                .find('.barang-id')
+                                .val(barangId);
+
+                        });
+
+                    });
+
+                });
+
 
 </script>
 
@@ -1093,7 +1283,6 @@ function tambahBaris(){
                 </button>
 
             </div>
-
             <div id="detailContent">
 
             </div>

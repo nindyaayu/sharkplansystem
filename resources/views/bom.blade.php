@@ -10,10 +10,24 @@ body{
 }
 
 .page-header{
+    position: sticky;
+    top: 0;
+    z-index: 999;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:25px;
+
+    padding:20px 0;
+
+    background:#071633; /* samakan dengan background halaman */
+}
+
+.form-box{
+    position:sticky;
+    top:90px; /* sesuaikan tinggi header */
+    z-index:999;
+
+    background:#111827;
 }
 
 .page-header h2{
@@ -23,10 +37,16 @@ body{
 /* ================= FORM ================= */
 
 .form-box{
-    background:rgba(17,24,39,0.7);
+    position:sticky;
+    top:90px;
+    z-index:998;
+
+    background:rgba(17,24,39,0.95);
     backdrop-filter:blur(10px);
+
     border:1px solid rgba(255,255,255,0.05);
     border-radius:16px;
+
     padding:20px;
     margin-bottom:20px;
 }
@@ -196,6 +216,29 @@ tbody tr:hover{
     margin-top:20px;
 }
 
+
+.page-header h2{
+    margin:0;
+    color:white;
+    font-size:38px;
+    font-weight:700;
+}
+
+.search-box{
+    background:#1e293b;
+    padding:4px;
+    border-radius:12px;
+}
+
+.search-box input{
+    width:320px;
+    padding:12px 16px;
+    border:none;
+    background:transparent;
+    color:white;
+    outline:none;
+}
+
 </style>
 
 <!-- ================= HEADER ================= -->
@@ -204,9 +247,21 @@ tbody tr:hover{
 
     <h2>Master BOM</h2>
 
-    <div>
-        👤 Admin
-    </div>
+    <input
+    type="text"
+    id="searchBom"
+    placeholder="🔍 Cari produk atau komponen..."
+    style="
+        width:320px;
+        padding:12px 18px;
+        border:none;
+        border-radius:12px;
+        background:#1e293b;
+        color:white;
+        outline:none;
+        font-size:14px;
+    "
+>
 
 </div>
 
@@ -286,7 +341,7 @@ tbody tr:hover{
 
 @foreach($bom as $item)
 
-<div class="table-box">
+<div class="table-box bom-card">
 
 <!-- ================= HEADER KOMPONEN ================= -->
 
@@ -295,16 +350,12 @@ tbody tr:hover{
     <div>
 
         <div class="component-title">
-
             {{ $item->produk->nama }}
-
         </div>
 
         <div class="component-subtitle">
-
-        Komponen:
-        {{ $item->nama_komponen }}
-
+            Komponen:
+            {{ $item->nama_komponen }}
         </div>
 
         <div
@@ -328,7 +379,17 @@ gap:10px;
 align-items:flex-end;
 ">
 
+    <!-- DETAIL BAHAN -->
+     <button
+    type="button"
+    class="action-btn"
+    onclick="toggleBom({{ $item->id }})"
+>
+    👁 Detail
+</button>
+
     <!-- EDIT KOMPONEN -->
+
     <button
     type="button"
     class="action-btn"
@@ -369,6 +430,11 @@ align-items:flex-end;
 </div>
 
 <!-- ================= FORM TAMBAH BAHAN ================= -->
+
+<div
+    id="bom-detail-{{ $item->id }}"
+    style="display:none;"
+>
 
 <div style="padding:20px;">
 
@@ -458,7 +524,7 @@ align-items:flex-end;
 
 <!-- ================= TABLE DETAIL ================= -->
 
-<table>
+<table id="tabelBom">
 
 <thead>
 
@@ -585,6 +651,8 @@ align-items:flex-end;
 </tbody>
 
 </table>
+
+</div>
 
 </div>
 
@@ -771,6 +839,58 @@ function closeKomponenModal(){
         .style.display = 'none';
 
 }
+
+document
+.getElementById('searchBom')
+.addEventListener('keyup', function(){
+
+    let keyword = this.value.toLowerCase();
+
+    document
+    .querySelectorAll('.table-box')
+    .forEach(card => {
+
+        let produk =
+            card.querySelector('.component-title')
+                .innerText
+                .toLowerCase();
+
+        let komponen =
+            card.querySelector('.component-subtitle')
+                .innerText
+                .toLowerCase();
+
+        if(
+            produk.includes(keyword) ||
+            komponen.includes(keyword)
+        ){
+            card.style.display = '';
+        }else{
+            card.style.display = 'none';
+        }
+
+    });
+
+});
+
+function toggleBom(id){
+
+    const detail =
+        document.getElementById(
+            'bom-detail-' + id
+        );
+
+    if(detail.style.display === 'none'){
+
+        detail.style.display = 'block';
+
+    }else{
+
+        detail.style.display = 'none';
+
+    }
+}
+
 </script>
 
 @endsection

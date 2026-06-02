@@ -177,19 +177,32 @@ tbody tr:hover{
 
 <div class="action-bar">
 
+    <input
+        type="text"
+        id="searchProduk"
+        placeholder="🔍 Cari kode, nama produk, client, no PO..."
+        style="
+            padding:10px 15px;
+            width:350px;
+            border:none;
+            border-radius:8px;
+            background:#1e293b;
+            color:white;
+        "
+    >
+
     <button
         class="btn-primary"
-        onclick="openModal()">
-
+        onclick="openModal()"
+    >
         + Tambah Produk
-
     </button>
 
 </div>
 
 <div class="table-box">
 
-<table>
+<table id="tabelProduk">
 
 <thead>
 
@@ -597,6 +610,32 @@ document.getElementById('editModal')
 
 }
 
+document
+    .getElementById('searchProduk')
+    .addEventListener('keyup', function () {
+
+        let keyword =
+            this.value.toLowerCase();
+
+        let rows =
+            document.querySelectorAll(
+                '#tabelProduk tbody tr'
+            );
+
+        rows.forEach(row => {
+
+            let text =
+                row.innerText.toLowerCase();
+
+            row.style.display =
+                text.includes(keyword)
+                ? ''
+                : 'none';
+
+        });
+
+    });
+    
 </script>
 
 @endsection

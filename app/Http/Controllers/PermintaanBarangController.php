@@ -64,7 +64,7 @@ class PermintaanBarangController extends Controller
 
                     'status' => 'Menunggu'
                 ]);
-
+                
                 foreach (
                     $request->barang_id as $index => $barangId
                 ) {
@@ -120,25 +120,22 @@ class PermintaanBarangController extends Controller
 
                     foreach ($permintaan->details as $detail) {
 
-                        $barang = $detail->barang;
+                        // HANYA BARANG ACC YANG KELUAR
+                        if ($detail->status != 'ACC') {
+                            continue;
+                        }
 
-                        // =========================
-                        // BARANG KELUAR
-                        // =========================
+                        $barang = $detail->barang;
 
                         BarangKeluar::create([
 
-                            'barang_id' =>
-                                $barang->id,
+                            'barang_id' => $barang->id,
 
-                            'jumlah' =>
-                                $detail->jumlah,
+                            'jumlah' => $detail->jumlah,
 
-                            'jumlah_roll' =>
-                                0,
+                            'jumlah_roll' => 0,
 
-                            'tanggal_keluar' =>
-                                now(),
+                            'tanggal_keluar' => now(),
 
                             'tujuan' =>
                                 'INTERNAL - ' .
@@ -147,10 +144,6 @@ class PermintaanBarangController extends Controller
                                 )
 
                         ]);
-
-                        // =========================
-                        // KURANGI STOK
-                        // =========================
 
                         $barang->update([
 

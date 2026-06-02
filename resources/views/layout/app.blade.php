@@ -579,6 +579,7 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
                     @if($jumlahPermintaan > 0)
 
                         <span
+                            id="notif-permintaan"
                             style="
                                 background:#ef4444;
                                 color:white;
