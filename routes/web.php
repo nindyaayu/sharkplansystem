@@ -69,26 +69,66 @@ Route::middleware('auth')->group(function () {
     // material utama
     Route::get('/material-utama', function () {
 
-        $data = Barang::where(
-            'kategori',
-            'Kain'
-        )->latest()->get();
+    $query = Barang::where(
+        'kategori',
+        'Kain'
+    );
 
-        return view('bahan', compact('data'));
+    if(request('sort') == 'za'){
 
-    });
+        $query->orderBy('nama', 'desc');
+
+    } elseif(request('sort') == 'new'){
+
+        $query->latest();
+
+    } elseif(request('sort') == 'old'){
+
+        $query->oldest();
+
+    } else {
+
+        $query->orderBy('nama', 'asc');
+
+    }
+
+    $data = $query->get();
+
+    return view('bahan', compact('data'));
+
+});
 
     // material pendukung
     Route::get('/material-pendukung', function () {
 
-        $data = Barang::where(
-            'kategori',
-            'Aksesoris'
-        )->latest()->get();
+    $query = Barang::where(
+        'kategori',
+        'Aksesoris'
+    );
 
-        return view('bahan', compact('data'));
+    if(request('sort') == 'za'){
 
-    });
+        $query->orderBy('nama', 'desc');
+
+    } elseif(request('sort') == 'new'){
+
+        $query->latest();
+
+    } elseif(request('sort') == 'old'){
+
+        $query->oldest();
+
+    } else {
+
+        $query->orderBy('nama', 'asc');
+
+    }
+
+    $data = $query->get();
+
+    return view('bahan', compact('data'));
+
+});
 
     // tambah bahan
     Route::post('/bahan', [BarangController::class, 'store']);
@@ -193,7 +233,54 @@ Route::middleware('auth')->group(function () {
             '/permintaan-barang-detail/{id}',
             [PermintaanBarangController::class, 'updateDetailStatus']
         )->name('permintaan-barang-detail.update');
-// =========================
+
+            // =========================
+            // ketik barang di permimntaan barang
+            // =========================
+
+        Route::get('/search-barang', function () {
+
+                return \App\Models\Barang::select(
+                    'id',
+                    'kode',
+                    'nama',
+                    'warna'
+                )
+                ->where(function($q){
+
+                    $q->where(
+                        'nama',
+                        'like',
+                        '%' . request('q') . '%'
+                    )
+                    ->orWhere(
+                        'kode',
+                        'like',
+                        '%' . request('q') . '%'
+                    );
+
+                })
+                ->limit(20)
+                ->get()
+                ->map(function($item){
+
+                    return [
+
+                        'id' => $item->id,
+
+                        'text' =>
+                            $item->kode .
+                            ' | ' .
+                            $item->nama .
+                            ' | ' .
+                            $item->warna
+
+                    ];
+
+                });
+
+            });
+    // =========================
     // INVENTORI
     // =========================
 

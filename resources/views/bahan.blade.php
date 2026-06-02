@@ -190,19 +190,71 @@ tbody tr:hover{
 
 <div class="action-bar">
 
-<button 
-class="btn-primary"
-onclick="openModal()">
+    <form method="GET" style="display:inline;">
 
-+ Tambah Bahan
+        <select
+            name="sort"
+            onchange="this.form.submit()"
+            style="
+                padding:10px;
+                border-radius:8px;
+                background:#1e293b;
+                color:white;
+                border:none;
+            "
+        >
 
-</button>
+            <option value="az"
+                {{ request('sort','az') == 'az' ? 'selected' : '' }}>
+                Nama A-Z
+            </option>
+
+            <option value="za"
+                {{ request('sort') == 'za' ? 'selected' : '' }}>
+                Nama Z-A
+            </option>
+
+            <option value="new"
+                {{ request('sort') == 'new' ? 'selected' : '' }}>
+                Terbaru
+            </option>
+
+            <option value="old"
+                {{ request('sort') == 'old' ? 'selected' : '' }}>
+                Terlama
+            </option>
+
+        </select>
+
+    </form>
+
+    <input
+    type="text"
+    id="searchBarang"
+    placeholder="🔍 Cari nama, kode, warna..."
+    style="
+        padding:10px 15px;
+        width:300px;
+        border:none;
+        border-radius:8px;
+        background:#1e293b;
+        color:white;
+        margin-left:15px;
+    "
+>
+
+    <button
+        class="btn-primary"
+        onclick="openModal()"
+    >
+        + Tambah Bahan
+    </button>
 
 </div>
 
 <div class="table-box">
 
-<table>
+<table id="tabelBarang">
 
 <thead>
 
@@ -642,6 +694,40 @@ document.getElementById('editModal')
 
 }
 
+function closeEditModal(){
+
+    document.getElementById('editModal')
+    .style.display='none';
+
+}
+
+// SEARCH BARANG
+document
+    .getElementById('searchBarang')
+    .addEventListener('keyup', function () {
+
+        let keyword =
+            this.value.toLowerCase();
+
+        let rows =
+            document.querySelectorAll(
+                '#tabelBarang tbody tr'
+            );
+
+        rows.forEach(row => {
+
+            let text =
+                row.innerText.toLowerCase();
+
+            row.style.display =
+                text.includes(keyword)
+                ? ''
+                : 'none';
+
+        });
+
+    });
+    
 </script>
 
 @endsection
