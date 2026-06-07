@@ -14,9 +14,12 @@ class BarangKeluarController extends Controller
 
     public function index()
     {
-        $barangKeluars = BarangKeluar::with('barang')
-            ->latest()
-            ->get();
+        $barangKeluars = BarangKeluar::with([
+            'barang',
+            'produk'
+        ])
+        ->latest()
+        ->get();
 
         $barangs = Barang::all();
 

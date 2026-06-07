@@ -42,6 +42,7 @@
 
                 <th style="padding:12px;">No Permintaan</th>
                 <th style="padding:12px;">Tanggal</th>
+                <th style="padding:12px;">Produk</th>
                 <th style="padding:12px;">Nama Peminta</th>
                 <th style="padding:12px;">Nama Penjahit</th>
                 <th style="padding:12px;">Jumlah Item</th>
@@ -64,6 +65,10 @@
 
                 <td style="padding:12px;text-align:center;">
                     {{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}
+                </td>
+
+                <td style="padding:12px;text-align:center;">
+                    {{ $item->produk->nama ?? '-' }}
                 </td>
 
                 <td style="padding:12px;text-align:center;">
@@ -258,7 +263,33 @@
 
         @csrf
 
-            <label>Nama Peminta</label>
+            <label>Produk</label>
+
+<select
+    name="produk_id"
+    class="input-dark"
+    required
+>
+
+    <option value="">
+        Pilih Produk
+    </option>
+
+    @foreach($produk as $item)
+
+        <option value="{{ $item->id }}">
+
+            {{ $item->kode }}
+            -
+            {{ $item->nama }}
+
+        </option>
+
+    @endforeach
+
+</select>
+
+<label>Nama Peminta</label>
 
             <input
                 type="text"

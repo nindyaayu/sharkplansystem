@@ -3,22 +3,31 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Produk;
 
 class BarangKeluar extends Model
 {
     protected $fillable = [
 
-        'barang_id',
+    'barang_id',
 
-        'jumlah',
+    'permintaan_barang_id',
 
-        'jumlah_roll',
+    'produk_id',
 
-        'tanggal_keluar',
+    'nama_peminta',
 
-        'tujuan'
+    'nama_penjahit',
 
-    ];
+    'jumlah',
+
+    'jumlah_roll',
+
+    'tanggal_keluar',
+
+    'tujuan'
+
+];
 
     // =========================
     // RELASI BARANG
@@ -27,5 +36,12 @@ class BarangKeluar extends Model
     public function barang()
     {
         return $this->belongsTo(Barang::class);
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(
+            Produk::class
+        );
     }
 }

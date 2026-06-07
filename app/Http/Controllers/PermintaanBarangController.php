@@ -5,24 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\PermintaanBarang;
 use App\Models\BarangKeluar;
+use App\Models\Produk;
 use Illuminate\Http\Request;
 
 class PermintaanBarangController extends Controller
 {
     public function index()
-    {
-        $barang = Barang::orderBy('nama')->get();
+{
+    $barang = Barang::orderBy('nama')->get();
 
-        $permintaan = PermintaanBarang::latest()->get();
+    $produk = Produk::orderBy('nama')->get();
 
-        return view(
-            'permintaan_barang',
-            compact(
-                'barang',
-                'permintaan'
-            )
-        );
-    }
+    $permintaan = PermintaanBarang::with('produk')
+    ->latest()
+    ->get();
+
+    return view(
+        'permintaan_barang',
+        compact(
+            'barang',
+            'produk',
+            'permintaan'
+        )
+    );
+}
 
     public function store(Request $request)
             {
@@ -55,6 +61,9 @@ class PermintaanBarangController extends Controller
                         ),
 
                     'tanggal' => now(),
+
+                    'produk_id' =>
+                        $request->produk_id,
 
                     'nama_peminta' =>
                         $request->nama_peminta,
@@ -131,6 +140,14 @@ class PermintaanBarangController extends Controller
 
                             'barang_id' => $barang->id,
 
+                            'permintaan_barang_id' => $permintaan->id,
+
+                            'produk_id' => $permintaan->produk_id,
+
+                            'nama_peminta' => $permintaan->nama_peminta,
+
+                            'nama_penjahit' => $permintaan->nama_penjahit,
+
                             'jumlah' => $detail->jumlah,
 
                             'jumlah_roll' => 0,
@@ -139,9 +156,9 @@ class PermintaanBarangController extends Controller
 
                             'tujuan' =>
                                 'INTERNAL - ' .
-                                strtoupper(
-                                    $permintaan->nama_penjahit
-                                )
+                                strtoupper($permintaan->nama_peminta) .
+                                ' - ' .
+                                strtoupper($permintaan->nama_penjahit)
 
                         ]);
 

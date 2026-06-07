@@ -259,6 +259,7 @@ td{
                 <th>Tanggal</th>
                 <th>Kode</th>
                 <th>Nama</th>
+                <th>Produk</th>
                 <th>Tujuan</th>
 
                 @if(request()->is('barang-keluar-material-utama'))
@@ -306,6 +307,12 @@ td{
                     <td>
 
                         {{ $item->barang->nama ?? '-' }}
+
+                    </td>
+
+                    <td>
+
+                        {{ $item->produk->nama ?? '-' }}
 
                     </td>
 

@@ -226,12 +226,24 @@ body{
 .btn-secondary:hover{
     background:#4b5563;
 }
+
+input[type="text"],
+input[type="search"],
+textarea{
+
+    text-transform: uppercase;
+
+}
+
 </style>
 <link rel="stylesheet"
 href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
 
 <link rel="stylesheet"
 href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.min.css">
+<link
+rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 </head>
 
 <body>
@@ -447,6 +459,14 @@ href="https://cdn.datatables.net/searchpanes/2.3.0/css/searchPanes.dataTables.mi
                     </div>
 
                 </div>
+
+                <!-- PELACAKAN BARANG -->
+
+                <a href="/pelacakan-barang">
+
+                    🔍 Pelacakan Barang
+
+                </a>
 
                 <div class="divider"></div>
 <!-- ================= LAPORAN ================= -->
@@ -945,5 +965,56 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 </script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+    if(document.getElementById('laporanTable')){
+
+        $('#laporanTable').DataTable({
+
+            pageLength: 25,
+
+            dom: 'Plfrtip',
+
+            searchPanes: {
+                cascadePanes: true
+            }
+
+        });
+
+    }
+
+});
+
+</script>
+
+<script>
+
+// AUTO UPPERCASE SELURUH INPUT
+
+document.addEventListener('input', function(e){
+
+    if(
+        e.target.tagName === 'INPUT'
+        ||
+        e.target.tagName === 'TEXTAREA'
+    ){
+
+        e.target.value =
+            e.target.value.toUpperCase();
+
+    }
+
+});
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 </body>
 </html>
+
+</body>
+</html>.btn-secondary:hover{
