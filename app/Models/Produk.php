@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\PermintaanBarang;
 
 class Produk extends Model
 {
@@ -13,10 +14,6 @@ class Produk extends Model
         'nama',
 
         'satuan',
-
-        // =========================
-        // TAMBAHAN PRODUK
-        // =========================
 
         'client',
 
@@ -31,4 +28,11 @@ class Produk extends Model
         'status'
 
     ];
+
+    public function permintaanBarangs()
+    {
+        return $this->hasMany(
+            PermintaanBarang::class
+        );
+    }
 }

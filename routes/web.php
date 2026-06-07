@@ -15,6 +15,7 @@ use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\JobOutController;
 use App\Http\Controllers\SuratJalanController;
 use App\Http\Controllers\PermintaanBarangController;
+use App\Http\Controllers\PelacakanBarangController;
 use App\Models\Barang;
 use App\Models\BarangMasuk;
 use App\Models\HasilCutting;
@@ -864,6 +865,14 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
         '/surat-jalan',
         [SuratJalanController::class, 'index']
     )->name('surat-jalan');
+
+// =========================
+// PELACAKAN BARANG
+// =========================
+    Route::get(
+    '/pelacakan-barang',
+    [PelacakanBarangController::class, 'index']
+);
 // =========================
 // LAPORAN MATERIAL UTAMA
 // =========================
