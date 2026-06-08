@@ -16,6 +16,7 @@ use App\Http\Controllers\JobOutController;
 use App\Http\Controllers\SuratJalanController;
 use App\Http\Controllers\PermintaanBarangController;
 use App\Http\Controllers\PelacakanBarangController;
+use App\Http\Controllers\KomponenProdukController;
 use App\Models\Barang;
 use App\Models\BarangMasuk;
 use App\Models\HasilCutting;
@@ -150,6 +151,53 @@ Route::middleware('auth')->group(function () {
     Route::put('/produk/{id}', [ProdukController::class, 'update']);
     Route::delete('/produk/{id}', [ProdukController::class, 'destroy']);
 
+    // =========================
+    // KOMPONEN PRODUK
+    // =========================
+
+    Route::post(
+        '/komponen-produk',
+        [KomponenProdukController::class, 'store']
+    );
+
+    Route::get(
+        '/komponen-produk/{produkId}',
+        [KomponenProdukController::class, 'getKomponen']
+    );
+
+    Route::put(
+        '/komponen-produk/{id}',
+        [KomponenProdukController::class, 'update']
+    );
+
+    Route::delete(
+        '/komponen-produk/{id}',
+        [KomponenProdukController::class, 'destroy']
+    );
+
+    // =========================
+    // SUB KOMPONEN
+    // =========================
+
+    Route::post(
+        '/sub-komponen',
+        [KomponenProdukController::class, 'storeSubKomponen']
+    );
+
+    Route::get(
+        '/sub-komponen/{parentId}',
+        [KomponenProdukController::class, 'getSubKomponen']
+    );
+
+    Route::put(
+        '/sub-komponen/{id}',
+        [KomponenProdukController::class, 'update']
+    );
+
+    Route::delete(
+        '/sub-komponen/{id}',
+        [KomponenProdukController::class, 'destroy']
+    );
     // ==================================================
     // MASTER BOM
     // ==================================================

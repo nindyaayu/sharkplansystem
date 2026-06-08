@@ -8,25 +8,10 @@ use App\Models\PermintaanBarang;
 class Produk extends Model
 {
     protected $fillable = [
-
         'kode',
-
         'nama',
-
-        'satuan',
-
-        'client',
-
-        'no_po',
-
-        'qty_order',
-
-        'qty_kirim',
-
-        'tahap',
-
-        'status'
-
+        'varian',
+        'satuan'
     ];
 
     public function permintaanBarangs()
@@ -35,4 +20,12 @@ class Produk extends Model
             PermintaanBarang::class
         );
     }
+
+public function komponen()
+{
+    return $this->hasMany(
+        KomponenProduk::class
+    );
+}
+
 }

@@ -177,20 +177,6 @@ tbody tr:hover{
 
 <div class="action-bar">
 
-    <input
-        type="text"
-        id="searchProduk"
-        placeholder="🔍 Cari kode, nama produk, client, no PO..."
-        style="
-            padding:10px 15px;
-            width:350px;
-            border:none;
-            border-radius:8px;
-            background:#1e293b;
-            color:white;
-        "
-    >
-
     <button
         class="btn-primary"
         onclick="openModal()"
@@ -209,15 +195,10 @@ tbody tr:hover{
 <tr>
 
 <th>No</th>
-<th>Tanggal</th>
 <th>Kode</th>
 <th>Nama Produk</th>
-<th>Client</th>
-<th>No PO</th>
-<th>Qty Order</th>
-<th>Qty Kirim</th>
-<th>Progress</th>
-<th>Status</th>
+<th>Model / Warna</th>
+<th>Satuan</th>
 <th>Aksi</th>
 
 </tr>
@@ -232,57 +213,13 @@ tbody tr:hover{
 
 <td>{{ $loop->iteration }}</td>
 
-<td>
-
-    {{ $d->created_at->format('d/m/Y') }}
-
-</td>
-
 <td>{{ $d->kode }}</td>
 
 <td>{{ $d->nama }}</td>
 
-<td>{{ $d->client ?? '-' }}</td>
+<td>{{ $d->varian }}</td>
 
-<td>{{ $d->no_po ?? '-' }}</td>
-
-<td>{{ $d->qty_order }}</td>
-
-<td>{{ $d->qty_kirim }}</td>
-
-<td>
-
-    @if($d->qty_order > 0)
-
-        {{ round(($d->qty_kirim / $d->qty_order) * 100) }}%
-
-    @else
-
-        0%
-
-    @endif
-
-</td>
-
-<td>
-
-    <span class="badge-status
-
-    @if($d->status == 'Belum')
-        status-belum
-    @elseif($d->status == 'Proses')
-        status-proses
-    @else
-        status-selesai
-    @endif
-
-    ">
-
-        {{ $d->status }}
-
-    </span>
-
-</td>
+<td>{{ $d->satuan }}</td>
 
 <td>
 
@@ -290,21 +227,22 @@ tbody tr:hover{
 
 <button
 class="btn-edit"
-onclick="openEditModal(
+onclick="openKomponenModal(
+'{{ $d->id }}',
+'{{ $d->nama }}'
+)">
+Detail Komponen
+</button>
 
+<button
+class="btn-edit"
+onclick="openEditModal(
 '{{ $d->id }}',
 '{{ $d->nama }}',
-'{{ $d->client }}',
-'{{ $d->no_po }}',
-'{{ $d->qty_order }}',
-'{{ $d->qty_kirim }}',
-'{{ $d->tahap }}',
+'{{ $d->varian }}',
 '{{ $d->satuan }}'
-
 )">
-
 Edit
-
 </button>
 
 <form
@@ -315,12 +253,12 @@ method="POST">
 @method('DELETE')
 
 <button class="btn-delete">
-
 Hapus
-
 </button>
 
 </form>
+
+</div>
 
 </div>
 
@@ -357,60 +295,12 @@ name="nama"
 placeholder="Nama Produk">
 
 <input
-name="client"
-placeholder="Client">
-
-<input
-name="no_po"
-placeholder="No PO">
-
-<input
-type="number"
-name="qty_order"
-placeholder="Qty Order">
-
-<input
-type="number"
-name="qty_kirim"
-value="0"
-placeholder="Qty Kirim">
-
-<select name="tahap">
-
-<option value="Cutting">
-
-    Cutting
-
-</option>
-
-<option value="Sewing">
-
-    Sewing
-
-</option>
-
-<option value="Finishing">
-
-    Finishing
-
-</option>
-
-<option value="Packing">
-
-    Packing
-
-</option>
-
-</select>
+name="varian"
+placeholder="Model / Warna">
 
 <input
 name="satuan"
 placeholder="Satuan">
-
-<input
-type="date"
-name="tanggal_input"
-value="{{ date('Y-m-d') }}">
 
 <div class="modal-actions">
 
@@ -462,57 +352,9 @@ placeholder="Nama Produk">
 
 <input
 type="text"
-name="client"
-id="editClient"
-placeholder="Client">
-
-<input
-type="text"
-name="no_po"
-id="editNoPo"
-placeholder="No PO">
-
-<input
-type="number"
-name="qty_order"
-id="editQtyOrder"
-placeholder="Qty Order">
-
-<input
-type="number"
-name="qty_kirim"
-id="editQtyKirim"
-placeholder="Qty Kirim">
-
-<select
-name="tahap"
-id="editTahap">
-
-<option value="Cutting">
-
-    Cutting
-
-</option>
-
-<option value="Sewing">
-
-    Sewing
-
-</option>
-
-<option value="Finishing">
-
-    Finishing
-
-</option>
-
-<option value="Packing">
-
-    Packing
-
-</option>
-
-</select>
+name="varian"
+id="editVarian"
+placeholder="Model / Warna">
 
 <input
 type="text"
@@ -547,6 +389,289 @@ Update
 
 </div>
 
+<div id="komponenModal" class="modal">
+
+<div class="modal-content"
+style="
+width:900px;
+max-width:95%;
+height:80vh;
+background:#04143d;
+border:1px solid rgba(255,255,255,.08);
+display:flex;
+flex-direction:column;
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+">
+
+<h2
+id="judulProduk"
+style="
+color:white;
+margin:0;
+">
+Komponen Produk
+</h2>
+
+<button
+onclick="closeKomponenModal()"
+style="
+background:none;
+border:none;
+font-size:30px;
+color:#94a3b8;
+cursor:pointer;
+">
+×
+</button>
+
+</div>
+
+<button
+class="btn-primary"
+style="margin-bottom:20px;">
++ Tambah Komponen Utama
+</button>
+
+<form id="formKomponen">
+
+@csrf
+
+<input
+type="hidden"
+name="produk_id"
+id="produk_id">
+
+<input
+type="text"
+name="nama_komponen"
+id="nama_komponen"
+placeholder="Nama Komponen">
+
+<button
+type="button"
+id="btnSimpanKomponen"
+class="btn-primary">
+Simpan
+</button>
+
+</form>
+
+<div
+style="
+flex:1;
+overflow-y:auto;
+margin-top:15px;
+">
+
+<table
+style="
+width:100%;
+color:white;
+">
+
+<thead>
+
+<tr>
+
+<th>No</th>
+
+<th>Nama Komponen</th>
+
+<th>Aksi</th>
+
+</tr>
+
+</thead>
+
+<tbody id="listKomponen">
+
+@forelse($komponen as $k)
+
+<tr>
+
+<td>
+{{ $loop->iteration }}
+</td>
+
+<td>
+{{ $k->nama_komponen }}
+</td>
+
+<td>
+
+<button
+class="btn-primary"
+onclick="openSubKomponenModal(
+'{{ $k->id }}',
+'{{ $k->nama_komponen }}'
+)">
+Sub Komponen
+</button>
+
+<button
+class="btn-edit"
+onclick="editKomponen(
+'{{ $k->id }}',
+'{{ $k->nama_komponen }}',
+this
+)">
+Edit
+</button>
+
+<button
+class="btn-delete"
+onclick="hapusKomponen(
+'{{ $k->id }}',
+this
+)">
+Hapus
+</button>
+
+</td>
+
+</tr>
+
+@empty
+
+<tr>
+
+<td colspan="3">
+
+Belum ada komponen
+
+</td>
+
+</tr>
+
+@endforelse
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div id="subKomponenModal" class="modal">
+
+<div class="modal-content"
+style="
+width:700px;
+max-width:95%;
+height:70vh;
+background:#04143d;
+display:flex;
+flex-direction:column;
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+">
+
+<h2
+id="judulSubKomponen"
+style="margin:0;color:white;">
+Sub Komponen
+</h2>
+
+<button
+onclick="closeSubKomponenModal()"
+style="
+background:none;
+border:none;
+font-size:30px;
+color:white;
+cursor:pointer;
+">
+×
+</button>
+
+</div>
+
+<hr>
+
+<form id="formSubKomponen">
+
+@csrf
+
+<input
+type="hidden"
+id="parent_id"
+name="parent_id">
+
+<input
+type="text"
+name="nama_komponen"
+id="nama_sub_komponen"
+placeholder="Nama Sub Komponen">
+
+<button
+type="button"
+id="btnSimpanSubKomponen"
+class="btn-primary">
+Simpan
+</button>
+
+</form>
+
+<div
+style="
+flex:1;
+overflow-y:auto;
+margin-top:15px;
+">
+
+<table style="width:100%;">
+
+<thead>
+
+<tr>
+
+<th>No</th>
+<th>Sub Komponen</th>
+
+</tr>
+
+</thead>
+
+<tbody id="listSubKomponen">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+@if(session('buka_komponen'))
+
+<script>
+
+window.onload = function(){
+
+    openKomponenModal(
+        '{{ session("buka_komponen") }}',
+        'CONTOH'
+    );
+
+};
+
+</script>
+
+@endif
+
 <script>
 
 function openModal(){
@@ -566,34 +691,18 @@ document.getElementById('modal')
 function openEditModal(
 id,
 nama,
-client,
-no_po,
-qty_order,
-qty_kirim,
-tahap,
+varian,
 satuan
 ){
+
+document.getElementById('editVarian')
+.value = varian;
 
 document.getElementById('editModal')
 .style.display='flex';
 
 document.getElementById('editNama')
 .value = nama;
-
-document.getElementById('editClient')
-.value = client;
-
-document.getElementById('editNoPo')
-.value = no_po;
-
-document.getElementById('editQtyOrder')
-.value = qty_order;
-
-document.getElementById('editQtyKirim')
-.value = qty_kirim;
-
-document.getElementById('editTahap')
-.value = tahap;
 
 document.getElementById('editSatuan')
 .value = satuan;
@@ -603,39 +712,356 @@ document.getElementById('editForm')
 
 }
 
+function openKomponenModal(
+id,
+nama
+){
+
+document.getElementById(
+'komponenModal'
+).style.display='flex';
+
+document.getElementById(
+'judulProduk'
+).innerHTML =
+'Komponen Produk - ' + nama;
+
+document.getElementById(
+'produk_id'
+).value = id;
+
+}
+
+
+function closeKomponenModal(){
+
+document.getElementById(
+'komponenModal'
+).style.display='none';
+
+}
+
+function openSubKomponenModal(
+id,
+nama
+){
+
+document.getElementById(
+'subKomponenModal'
+).style.display='flex';
+
+document.getElementById(
+'judulSubKomponen'
+).innerHTML =
+'Sub Komponen - ' + nama;
+
+document.getElementById(
+'parent_id'
+).value = id;
+
+fetch('/sub-komponen/' + id)
+
+.then(response => response.json())
+
+.then(data => {
+
+let tbody =
+document.getElementById(
+'listSubKomponen'
+);
+
+tbody.innerHTML = '';
+
+data.forEach((item,index)=>{
+
+tbody.insertAdjacentHTML(
+'beforeend',
+`
+<tr>
+<td>${index + 1}</td>
+<td>${item.nama_komponen}</td>
+</tr>
+`
+);
+
+});
+
+});
+
+}
+
+function closeSubKomponenModal(){
+
+document.getElementById(
+'subKomponenModal'
+).style.display='none';
+
+}
+
+function hapusKomponen(
+id,
+button
+){
+
+if(
+!confirm(
+'Hapus komponen ini?'
+)
+){
+return;
+}
+
+fetch(
+'/komponen-produk/' + id,
+{
+
+method:'DELETE',
+
+headers:{
+'X-CSRF-TOKEN':
+document.querySelector(
+'input[name="_token"]'
+).value
+}
+
+}
+)
+.then(response=>response.json())
+.then(data=>{
+
+button
+.closest('tr')
+.remove();
+
+});
+
+}
+
+function editKomponen(
+id,
+namaLama,
+button
+){
+
+let namaBaru =
+prompt(
+'Nama Komponen',
+namaLama
+);
+
+if(
+!namaBaru
+){
+return;
+}
+
+fetch(
+'/komponen-produk/' + id,
+{
+
+method:'PUT',
+
+headers:{
+'Content-Type':
+'application/json',
+
+'X-CSRF-TOKEN':
+document.querySelector(
+'input[name="_token"]'
+).value
+},
+
+body:JSON.stringify({
+
+nama_komponen:
+namaBaru
+
+})
+
+}
+)
+.then(response=>response.json())
+.then(data=>{
+
+button
+.closest('tr')
+.children[1]
+.innerHTML =
+namaBaru;
+
+});
+
+}
+
 function closeEditModal(){
 
 document.getElementById('editModal')
 .style.display='none';
 
 }
+    
+document
+.getElementById('btnSimpanKomponen')
+.addEventListener('click', function(){
+
+    let form =
+        document.getElementById(
+            'formKomponen'
+        );
+
+    let formData =
+        new FormData(form);
+
+    fetch('/komponen-produk', {
+
+        method:'POST',
+
+        headers:{
+            'X-CSRF-TOKEN':
+            document.querySelector(
+                'input[name="_token"]'
+            ).value
+        },
+
+        body:formData
+
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+
+    let namaKomponen =
+        document.getElementById(
+            'nama_komponen'
+        ).value;
+
+    let tbody =
+        document.getElementById(
+            'listKomponen'
+        );
+
+    let nomor =
+        tbody.querySelectorAll('tr').length + 1;
+
+    tbody.insertAdjacentHTML(
+        'beforeend',
+        `
+        <tr>
+
+        <td>${nomor}</td>
+
+        <td>${namaKomponen}</td>
+
+        <td>
+
+        <button
+        class="btn-primary"
+        onclick="openSubKomponenModal(
+        ${data.id},
+        '${namaKomponen}'
+        )">
+        Sub Komponen
+        </button>
+
+        <button
+            class="btn-edit"
+            onclick="editKomponen(
+            '{{ $k->id }}',
+            '{{ $k->nama_komponen }}',
+            this
+            )">
+            Edit
+            </button>
+
+        <button
+            class="btn-delete"
+            onclick="hapusKomponen(
+            '{{ $k->id }}',
+            this
+            )">
+            Hapus
+            </button>
+
+        </td>
+
+        </tr>
+        `
+        );
+
+    document.getElementById(
+        'nama_komponen'
+    ).value='';
+
+});
+
+});
 
 document
-    .getElementById('searchProduk')
-    .addEventListener('keyup', function () {
+.getElementById(
+'btnSimpanSubKomponen'
+)
+.addEventListener(
+'click',
+function(){
 
-        let keyword =
-            this.value.toLowerCase();
+let form =
+document.getElementById(
+'formSubKomponen'
+);
 
-        let rows =
-            document.querySelectorAll(
-                '#tabelProduk tbody tr'
-            );
+let formData =
+new FormData(form);
 
-        rows.forEach(row => {
+fetch('/sub-komponen',{
 
-            let text =
-                row.innerText.toLowerCase();
+method:'POST',
 
-            row.style.display =
-                text.includes(keyword)
-                ? ''
-                : 'none';
+headers:{
+'X-CSRF-TOKEN':
+document.querySelector(
+'input[name="_token"]'
+).value
+},
 
-        });
+body:formData
 
-    });
-    
+})
+.then(response=>response.json())
+.then(data=>{
+
+let nama =
+document.getElementById(
+'nama_sub_komponen'
+).value;
+
+let tbody =
+document.getElementById(
+'listSubKomponen'
+);
+
+let nomor =
+tbody.querySelectorAll(
+'tr'
+).length + 1;
+
+tbody.insertAdjacentHTML(
+'beforeend',
+`
+<tr>
+<td>${nomor}</td>
+<td>${nama}</td>
+</tr>
+`
+);
+
+document.getElementById(
+'nama_sub_komponen'
+).value='';
+
+});
+
+});
+
 </script>
 
 @endsection
