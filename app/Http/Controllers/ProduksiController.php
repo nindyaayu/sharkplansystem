@@ -15,18 +15,21 @@ class ProduksiController extends Controller
     // HALAMAN PRODUKSI
     // =========================
     public function index()
-    {
-        $produk = Produk::all();
+{
+    $data = Produk::latest()->get();
 
-        $produksi = Produksi::with('produk')
-            ->latest()
-            ->get();
+    $komponen =
+        \App\Models\KomponenProduk::latest()
+        ->get();
 
-        return view('produksi', compact(
-            'produk',
-            'produksi'
-        ));
-    }
+    return view(
+        'produk',
+        compact(
+            'data',
+            'komponen'
+        )
+    );
+}
 
     // =========================
     // LAPORAN PRODUKSI

@@ -8,7 +8,7 @@
         Pelacakan Barang
     </h1>
 
-    <form method="GET">
+    <form method="GET" id="form-pelacakan">
 
         <input
             type="text"
@@ -88,6 +88,118 @@
                 {{ $riwayatKeluar->sum('jumlah') }}
 
             </p>
+
+            <hr style="margin:15px 0;border-color:#374151;">
+
+                <h4 style="margin-bottom:10px;">
+                    Rekap Pemakaian Per Produk
+                </h4>
+
+                <hr style="margin:15px 0;border-color:#374151;">
+
+                    <h4 style="margin-bottom:10px;">
+                        Rekap Pemakaian Per Peminta
+                    </h4>
+
+                    <table
+                        style="
+                            width:100%;
+                            color:white;
+                            border-collapse:collapse;
+                        "
+                    >
+
+                        @forelse($rekapPeminta as $item)
+
+                            <tr>
+
+                                <td
+                                    style="
+                                        padding:6px 0;
+                                    "
+                                >
+
+                                    {{ $item->nama_peminta }}
+
+                                </td>
+
+                                <td
+                                    style="
+                                        text-align:right;
+                                    "
+                                >
+
+                                    {{ number_format($item->total,0) }}
+
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td>
+
+                                    Belum ada data
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
+
+                    </table>
+
+                <table
+                    style="
+                        width:100%;
+                        color:white;
+                        border-collapse:collapse;
+                    "
+                >
+
+                    @forelse($rekapProduk as $item)
+
+                        <tr>
+
+                            <td
+                                style="
+                                    padding:6px 0;
+                                "
+                            >
+
+                                {{ $item->produk->nama ?? '-' }}
+
+                            </td>
+
+                            <td
+                                style="
+                                    text-align:right;
+                                "
+                            >
+
+                                {{ number_format($item->total,0) }}
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td>
+
+                                Belum ada data
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
+                </table>
 
         </div>
 
