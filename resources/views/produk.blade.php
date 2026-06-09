@@ -432,12 +432,6 @@ cursor:pointer;
 
 </div>
 
-<button
-class="btn-primary"
-style="margin-bottom:20px;">
-+ Tambah Komponen Utama
-</button>
-
 <form id="formKomponen">
 
 @csrf
@@ -508,7 +502,7 @@ color:white;
 <button
 class="btn-primary"
 onclick="openSubKomponenModal(
-'{{ $k->id }}',
+${data.id},
 '{{ $k->nama_komponen }}'
 )">
 Sub Komponen
@@ -517,8 +511,8 @@ Sub Komponen
 <button
 class="btn-edit"
 onclick="editKomponen(
-'{{ $k->id }}',
-'{{ $k->nama_komponen }}',
+${data.id},
+'${namaKomponen}',
 this
 )">
 Edit
@@ -527,7 +521,7 @@ Edit
 <button
 class="btn-delete"
 onclick="hapusKomponen(
-'{{ $k->id }}',
+${data.id},
 this
 )">
 Hapus
@@ -655,7 +649,53 @@ margin-top:15px;
 
 </div>
 
+<!-- MODAL EDIT KOMPONEN -->
+
+<div id="editKomponenModal" class="modal">
+
+<div class="modal-content"
+style="
+width:500px;
+max-width:95%;
+background:#04143d;
+">
+
+<h3 style="color:white;">
+Edit Komponen
+</h3>
+
+<input
+type="hidden"
+id="edit_komponen_id">
+
+<input
+type="text"
+id="edit_nama_komponen"
+placeholder="Nama Komponen">
+
+<div class="modal-actions">
+
+<button
+type="button"
+class="btn-cancel">
+Batal
+</button>
+
+<button
+type="button"
+class="btn-save">
+Simpan
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 @if(session('buka_komponen'))
+
+
 
 <script>
 
@@ -843,53 +883,25 @@ namaLama,
 button
 ){
 
-let namaBaru =
-prompt(
-'Nama Komponen',
-namaLama
-);
+document.getElementById(
+'editKomponenModal'
+).style.display='flex';
 
-if(
-!namaBaru
-){
-return;
-}
+document.getElementById(
+'edit_komponen_id'
+).value = id;
 
-fetch(
-'/komponen-produk/' + id,
-{
-
-method:'PUT',
-
-headers:{
-'Content-Type':
-'application/json',
-
-'X-CSRF-TOKEN':
-document.querySelector(
-'input[name="_token"]'
-).value
-},
-
-body:JSON.stringify({
-
-nama_komponen:
-namaBaru
-
-})
+document.getElementById(
+'edit_nama_komponen'
+).value = namaLama;
 
 }
-)
-.then(response=>response.json())
-.then(data=>{
 
-button
-.closest('tr')
-.children[1]
-.innerHTML =
-namaBaru;
+function closeEditKomponenModal(){
 
-});
+document.getElementById(
+'editKomponenModal'
+).style.display='none';
 
 }
 
@@ -966,8 +978,8 @@ document
         <button
             class="btn-edit"
             onclick="editKomponen(
-            '{{ $k->id }}',
-            '{{ $k->nama_komponen }}',
+            ${data.id},
+            '${namaKomponen}',
             this
             )">
             Edit
@@ -976,7 +988,7 @@ document
         <button
             class="btn-delete"
             onclick="hapusKomponen(
-            '{{ $k->id }}',
+            ${data.id},
             this
             )">
             Hapus
