@@ -11,6 +11,7 @@ class PermintaanBarang extends Model
     'nomor_permintaan',
     'tanggal',
     'produk_id',
+    'komponen_produk_id',
     'nama_peminta',
     'nama_penjahit',
     'status'
@@ -27,6 +28,14 @@ class PermintaanBarang extends Model
 {
     return $this->belongsTo(
         Produk::class
+    );
+}
+
+public function komponen()
+{
+    return $this->belongsTo(
+        KomponenProduk::class,
+        'komponen_produk_id'
     );
 }
 

@@ -43,6 +43,7 @@
                 <th style="padding:12px;">No Permintaan</th>
                 <th style="padding:12px;">Tanggal</th>
                 <th style="padding:12px;">Produk</th>
+                <th style="padding:12px;">Komponen</th>
                 <th style="padding:12px;">Nama Peminta</th>
                 <th style="padding:12px;">Nama Penjahit</th>
                 <th style="padding:12px;">Jumlah Item</th>
@@ -69,6 +70,10 @@
 
                 <td style="padding:12px;text-align:center;">
                     {{ $item->produk->nama ?? '-' }}
+                </td>
+
+                <td style="padding:12px;text-align:center;">
+                    {{ $item->komponen->nama_komponen ?? '-' }}
                 </td>
 
                 <td style="padding:12px;text-align:center;">
@@ -263,31 +268,63 @@
 
         @csrf
 
-            <label>Produk</label>
+        <label>Produk</label>
 
-<select
-    name="produk_id"
-    class="input-dark"
-    required
->
+            <select
+                name="produk_id"
+                id="produk_id"
+                class="input-dark"
+                required>
 
-    <option value="">
-        Pilih Produk
-    </option>
+                <option value="">
+                    Pilih Produk
+                </option>
 
-    @foreach($produk as $item)
+                @foreach($produk as $item)
 
-        <option value="{{ $item->id }}">
+                    <option value="{{ $item->id }}">
+                        {{ $item->kode }} - {{ $item->nama }}
+                    </option>
 
-            {{ $item->kode }}
-            -
-            {{ $item->nama }}
+                @endforeach
 
-        </option>
+            </select>
 
-    @endforeach
+            <label>Mode Permintaan</label>
 
-</select>
+                <select
+                    name="mode_permintaan"
+                    id="modePermintaan"
+                    class="input-dark"
+                    onchange="toggleKomponenPermintaan()">
+
+                    <option value="full">
+                        Full Set
+                    </option>
+
+                    <option value="komponen">
+                        Per Komponen
+                    </option>
+
+                </select>
+
+
+                <div id="komponenWrapper">
+
+                    <label>Komponen</label>
+
+                    <select
+                        name="komponen_produk_id"
+                        id="komponen_id"
+                        class="input-dark">
+
+                        <option value="">
+                            Pilih Komponen
+                        </option>
+
+                    </select>
+
+                </div>
 
 <label>Nama Peminta</label>
 
@@ -801,9 +838,14 @@ function tambahBaris(){
 
         function lihatDetail(id)
             {
-            fetch('/permintaan-barang/' + id)
+                fetch(
+                    '/permintaan-barang/' +
+                    id +
+                    '?time=' +
+                    Date.now()
+                )
 
-            .then(response => response.json())
+                .then(response => response.json())
 
             .then(data => {
 
@@ -982,40 +1024,53 @@ function tambahBaris(){
                             ">
 
                                 ${
-                                    item.status == 'Menunggu'
-                                        ? (
-                                            userRole == 'admin' || userRole == 'gudang'
-                                        )
-                                            ? `
-                                                <button
-                                                    onclick="updateDetailStatus(${item.id},'ACC')"
-                                                    style="
-                                                        background:#22c55e;
-                                                        color:white;
-                                                        border:none;
-                                                        padding:5px 10px;
-                                                        border-radius:8px;
-                                                        cursor:pointer;
-                                                    ">
-                                                    ACC
-                                                </button>
+    item.status == 'Menunggu'
+    ? (
+        userRole == 'admin' || userRole == 'gudang'
+    )
+        ? `
+            <button
+                onclick="updateDetailStatus(${item.id},'ACC')"
+                style="
+                    background:#22c55e;
+                    color:white;
+                    border:none;
+                    padding:5px 10px;
+                    border-radius:8px;
+                    cursor:pointer;
+                ">
+                ACC
+            </button>
 
-                                                <button
-                                                    onclick="updateDetailStatus(${item.id},'Kosong')"
-                                                    style="
-                                                        background:#f59e0b;
-                                                        color:white;
-                                                        border:none;
-                                                        padding:5px 10px;
-                                                        border-radius:8px;
-                                                        cursor:pointer;
-                                                    ">
-                                                    Kosong
-                                                </button>
-                                            `
-                                            : '<span style="color:#94a3b8;">Menunggu Persetujuan</span>'
-                                        : '<span style="color:#94a3b8;">Selesai</span>'
-                                }
+            <button
+                onclick="updateDetailStatus(${item.id},'Kosong')"
+                style="
+                    background:#f59e0b;
+                    color:white;
+                    border:none;
+                    padding:5px 10px;
+                    border-radius:8px;
+                    cursor:pointer;
+                ">
+                Kosong
+            </button>
+
+            <button
+                onclick="updateDetailStatus(${item.id},'Ditolak')"
+                style="
+                    background:#ef4444;
+                    color:white;
+                    border:none;
+                    padding:5px 10px;
+                    border-radius:8px;
+                    cursor:pointer;
+                ">
+                Tolak
+            </button>
+        `
+        : '<span style="color:#94a3b8;">Menunggu Persetujuan</span>'
+    : '<span style="color:#94a3b8;">Selesai</span>'
+}
 
                             </td>
 
@@ -1066,11 +1121,16 @@ function tambahBaris(){
 
                 }
 
-                function closeDetailModal()
-                {
-                document.getElementById(
-                'detailModal'
-                ).style.display = 'none';
+                function closeDetailModal(){
+
+                    document.getElementById(
+                        'detailContent'
+                    ).innerHTML = '';
+
+                    document.getElementById(
+                        'detailModal'
+                    ).style.display = 'none';
+
                 }
 
 
@@ -1083,11 +1143,9 @@ function tambahBaris(){
                         headers:{
                             'Content-Type':'application/json',
                             'X-CSRF-TOKEN':
-                                document
-                                .querySelector(
+                                document.querySelector(
                                     'meta[name="csrf-token"]'
-                                )
-                                .content
+                                ).content
                         },
 
                         body:JSON.stringify({
@@ -1095,131 +1153,83 @@ function tambahBaris(){
                         })
 
                     })
+
                     .then(res => res.json())
+
                     .then(data => {
 
-                        lihatDetail(data.permintaan_id);
+                        setTimeout(() => {
 
-                            fetch('/permintaan-barang/' + data.permintaan_id)
-                            .then(res => res.json())
-                            .then(permintaan => {
+                            lihatDetail(data.permintaan_id);
 
-                                let badge = '';
+                        }, 300);
 
-                                if(permintaan.status == 'Menunggu'){
-                                    badge = `
-                                        <span style="
-                                            background:#f59e0b;
-                                            color:white;
-                                            padding:5px 12px;
-                                            border-radius:20px;
-                                        ">
-                                            ⟳ Menunggu
-                                        </span>
-                                    `;
-                                }
+                        let badge = '';
 
-                                if(permintaan.status == 'Disetujui'){
-                                    badge = `
-                                        <span style="
-                                            background:#10b981;
-                                            color:white;
-                                            padding:5px 12px;
-                                            border-radius:20px;
-                                        ">
-                                            Disetujui
-                                        </span>
-                                    `;
-                                }
+    if(data.status == 'Disetujui'){
+        badge = `
+            <span style="
+                background:#10b981;
+                color:white;
+                padding:5px 12px;
+                border-radius:20px;
+            ">
+                Disetujui
+            </span>
+        `;
+    }
+    else if(data.status == 'Disetujui Sebagian'){
+        badge = `
+            <span style="
+                background:#8b5cf6;
+                color:white;
+                padding:5px 12px;
+                border-radius:20px;
+            ">
+                Disetujui Sebagian
+            </span>
+        `;
+    }
+    else if(data.status == 'Kosong'){
+        badge = `
+            <span style="
+                background:#f59e0b;
+                color:white;
+                padding:5px 12px;
+                border-radius:20px;
+            ">
+                Kosong
+            </span>
+        `;
+    }
+    else if(data.status == 'Ditolak'){
+        badge = `
+            <span style="
+                background:#ef4444;
+                color:white;
+                padding:5px 12px;
+                border-radius:20px;
+            ">
+                Ditolak
+            </span>
+        `;
+    }
 
-                                if(permintaan.status == 'Disetujui Sebagian'){
-                                    badge = `
-                                        <span style="
-                                            background:#8b5cf6;
-                                            color:white;
-                                            padding:5px 12px;
-                                            border-radius:20px;
-                                        ">
-                                            ∞ Disetujui Sebagian
-                                        </span>
-                                    `;
-                                }
+    const statusCell =
+        document.getElementById(
+            'status-permintaan-' +
+            data.permintaan_id
+        );
 
-                                if(permintaan.status == 'Ditolak'){
-                                    badge = `
-                                        <span style="
-                                            background:#ef4444;
-                                            color:white;
-                                            padding:5px 12px;
-                                            border-radius:20px;
-                                        ">
-                                            ✘ Ditolak
-                                        </span>
-                                    `;
-                                }
+    if(statusCell){
+        statusCell.innerHTML = badge;
+    }
 
-                                if(permintaan.status == 'Sudah Diambil'){
-                                    badge = `
-                                        <span style="
-                                            background:#3b82f6;
-                                            color:white;
-                                            padding:5px 12px;
-                                            border-radius:20px;
-                                        ">
-                                            ✓ Sudah Diambil
-                                        </span>
-                                    `;
-                                }
+})
 
-                                document.getElementById(
-                                    'status-permintaan-' + permintaan.id
-                                ).innerHTML = badge;
+                    .catch(error => {
 
-                                // UPDATE BADGE SIDEBAR
-                                const notif = document.getElementById(
-                                    'notif-permintaan'
-                                );
-
-                                if(notif){
-
-                                    let jumlahSekarang =
-                                        parseInt(notif.innerText);
-
-                                    if(
-                                        permintaan.status != 'Menunggu'
-                                        &&
-                                        jumlahSekarang > 0
-                                    ){
-
-                                        jumlahSekarang--;
-
-                                        if(jumlahSekarang <= 0){
-
-                                            notif.remove();
-
-                                        }else{
-
-                                            notif.innerText =
-                                                jumlahSekarang;
-
-                                        }
-                                    }
-                                }
-
-                                const aksiCell = document.getElementById(
-                                    'aksi-permintaan-' + permintaan.id
-                                );
-
-                                if(
-                                    permintaan.status == 'Disetujui' ||
-                                    permintaan.status == 'Disetujui Sebagian' ||
-                                    permintaan.status == 'Ditolak' ||
-                                    permintaan.status == 'Sudah Diambil'
-                                ){
-                                    location.reload();
-                                }
-
-                            });
+                        console.log(error);
 
                     });
 
@@ -1294,6 +1304,71 @@ function tambahBaris(){
 
                 });
 
+                document
+.getElementById('produk_id')
+.addEventListener(
+'change',
+function(){
+
+    let produkId =
+        this.value;
+
+    fetch(
+        '/komponen-produk/' +
+        produkId
+    )
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        let komponen =
+            document.getElementById(
+                'komponen_id'
+            );
+
+        komponen.innerHTML =
+            '<option value="">Pilih Komponen</option>';
+
+        data.forEach(item => {
+
+            komponen.innerHTML += `
+                <option value="${item.id}">
+                    ${item.nama_komponen}
+                </option>
+            `;
+
+        });
+
+    });
+
+});
+
+function toggleKomponenPermintaan(){
+
+    let mode =
+        document.getElementById(
+            'modePermintaan'
+        ).value;
+
+    let wrapper =
+        document.getElementById(
+            'komponenWrapper'
+        );
+
+    if(mode === 'full'){
+
+        wrapper.style.display = 'none';
+
+    }else{
+
+        wrapper.style.display = 'block';
+
+    }
+
+}
+
+toggleKomponenPermintaan();
 
 </script>
 

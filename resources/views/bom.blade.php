@@ -179,6 +179,49 @@ tbody tr:hover{
     color:#94a3b8;
 }
 
+.select2-container{
+    min-width:335px !important;
+}
+
+.select2-container--default
+.select2-selection--single{
+
+    background:#111827 !important;
+    border:1px solid rgba(255,255,255,0.1) !important;
+    border-radius:10px !important;
+    height:45px !important;
+
+}
+
+.select2-container--default
+.select2-selection--single
+.select2-selection__rendered{
+
+    color:white !important;
+    line-height:45px !important;
+
+}
+
+.select2-dropdown{
+
+    background:#111827 !important;
+    border:1px solid rgba(255,255,255,0.1) !important;
+
+}
+
+.select2-results__option{
+
+    color:white !important;
+
+}
+
+.select2-search__field{
+
+    background:#111827 !important;
+    color:white !important;
+
+}
+
 /* ================= MODAL ================= */
 
 .modal{
@@ -239,6 +282,27 @@ tbody tr:hover{
     outline:none;
 }
 
+.barang-search{
+    width:280px;
+    min-width:280px;
+
+    padding:14px;
+    background:#0f1b3f;
+    border:2px solid #3b82f6;
+    border-radius:12px;
+    color:white;
+    outline:none;
+}
+
+.barang-search::placeholder{
+    color:#94a3b8;
+}
+
+.barang-search:focus{
+    border-color:#60a5fa;
+    box-shadow:0 0 0 3px rgba(59,130,246,.15);
+}
+
 </style>
 
 <!-- ================= HEADER ================= -->
@@ -284,8 +348,9 @@ tbody tr:hover{
 <div class="form-row">
 
     <!-- PRODUK -->
-    <select 
+    <select
         name="produk_id"
+        id="produk_id"
         class="input"
         required>
 
@@ -296,9 +361,7 @@ tbody tr:hover{
         @foreach($produk as $item)
 
         <option value="{{ $item->id }}">
-
             {{ $item->kode }} - {{ $item->nama }}
-
         </option>
 
         @endforeach
@@ -306,12 +369,17 @@ tbody tr:hover{
     </select>
 
     <!-- NAMA KOMPONEN -->
-    <input 
-        type="text"
+    <select
         name="nama_komponen"
+        id="nama_komponen"
         class="input"
-        placeholder="Nama Komponen"
         required>
+
+        <option value="">
+        Pilih Komponen
+        </option>
+
+        </select>
 
     <!-- TANGGAL -->
     <input 
@@ -450,26 +518,20 @@ align-items:flex-end;
 <div class="form-row">
 
     <!-- BAHAN -->
-    <select 
-        name="barang_id"
-        class="input"
-        required>
+    <td>
 
-        <option value="">
-            Pilih Bahan
-        </option>
+<input
+    type="text"
+    class="barang-search"
+    placeholder="Cari bahan..."
+    autocomplete="off">
 
-        @foreach($barang as $bahan)
+<input
+    type="hidden"
+    name="barang_id"
+    class="barang-id">
 
-        <option value="{{ $bahan->id }}">
-
-            {{ $bahan->kode }} - {{ $bahan->nama }}
-
-        </option>
-
-        @endforeach
-
-    </select>
+</td>
 
     <!-- QTY -->
     <input 
@@ -785,6 +847,9 @@ align-items:flex-end;
     </div>
 
 </div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
 
@@ -875,6 +940,11 @@ document
 
 function toggleBom(id){
 
+    localStorage.setItem(
+        'openBom',
+        id
+    );
+
     const detail =
         document.getElementById(
             'bom-detail-' + id
@@ -888,9 +958,155 @@ function toggleBom(id){
 
         detail.style.display = 'none';
 
+        localStorage.removeItem(
+            'openBom'
+        );
+
     }
+
 }
 
-</script>
+document
+.getElementById('produk_id')
+.addEventListener('change', function(){
 
+    let produkId = this.value;
+
+    fetch('/komponen-produk/' + produkId)
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        let komponen =
+        document.getElementById(
+            'nama_komponen'
+        );
+
+        komponen.innerHTML =
+        '<option value="">Pilih Komponen</option>';
+
+        data.forEach(item => {
+
+            komponen.innerHTML += `
+                <option value="${item.nama_komponen}">
+                    ${item.nama_komponen}
+                </option>
+            `;
+
+        });
+
+    });
+
+});
+
+$(document).ready(function(){
+
+    $('.select-bahan').select2({
+
+        placeholder:'Pilih Bahan',
+        width:'100%'
+
+    });
+
+});
+
+$(document).on('input', '.barang-search', function(){
+
+    let input = $(this);
+
+    let keyword = input.val();
+
+    if(keyword.length < 1){
+        return;
+    }
+
+    $.get('/search-barang?q=' + keyword, function(data){
+
+        let listId =
+            'list-' +
+            Math.random()
+                .toString(36)
+                .substring(2,8);
+
+        let datalist =
+            '<datalist id="' + listId + '">';
+
+        data.forEach(function(item){
+
+            datalist += `
+                <option
+                    value="${item.text}"
+                    data-id="${item.id}">
+                </option>
+            `;
+
+        });
+
+        datalist += '</datalist>';
+
+        $('datalist.temp-list').remove();
+
+        $('body').append(
+            $(datalist)
+            .addClass('temp-list')
+        );
+
+        input.attr('list', listId);
+
+        input.off('change').on('change', function(){
+
+            let val = $(this).val();
+
+            let barangId = '';
+
+            data.forEach(function(item){
+
+                if(item.text === val){
+
+                    barangId = item.id;
+
+                }
+
+            });
+
+            input
+            .closest('form')
+            .find('.barang-id')
+            .val(barangId);
+
+        });
+
+    });
+
+});
+
+window.addEventListener(
+'load',
+function(){
+
+    let openBom =
+        localStorage.getItem(
+            'openBom'
+        );
+
+    if(openBom){
+
+        let detail =
+            document.getElementById(
+                'bom-detail-' + openBom
+            );
+
+        if(detail){
+
+            detail.style.display =
+                'block';
+
+        }
+
+    }
+
+});
+
+</script>
 @endsection

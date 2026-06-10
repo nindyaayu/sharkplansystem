@@ -1017,4 +1017,4 @@ document.addEventListener('input', function(e){
 </html>
 
 </body>
-</html>.btn-secondary:hover{
+</html>
