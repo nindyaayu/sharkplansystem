@@ -463,7 +463,6 @@
     width:900px;
     max-width:95%;
 
-    height:auto;
     max-height:95vh;
 
     overflow-y:auto;
@@ -521,10 +520,19 @@
 }
 */
 .modal-header{
+    position:sticky;
+    top:-30px;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:30px;
+
+    background:#08132f;
+
+    z-index:999;
+    padding:15px 0;
+
+    margin-bottom:25px;
 }
 
 .modal-header h2{
