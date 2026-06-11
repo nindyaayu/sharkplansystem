@@ -180,11 +180,11 @@ return redirect()
                 ]);
 
                 return redirect()
-                    ->route('permintaan-barang')
-                    ->with(
-                        'success',
-                        'Status berhasil diperbarui'
-                    );
+                ->route('barang-keluar')
+                ->with(
+                    'success',
+                    'Barang berhasil dikeluarkan'
+                );
 
                 }
 
