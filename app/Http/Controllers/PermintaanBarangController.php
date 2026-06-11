@@ -188,73 +188,68 @@ return redirect()
 
                 }
 
-                public function updateDetailStatus(Request $request, $id)
+            public function updateDetailStatus(Request $request, $id)
 {
-    if (
-        strtolower(auth()->user()->role) != 'admin' &&
-        strtolower(auth()->user()->role) != 'gudang'
-    ) {
-        $permintaan->refresh();
+    try {
+
+        $detail = DetailPermintaanBarang::findOrFail($id);
+
+        // Update status detail barang
+        $detail->status = $request->status;
+        $detail->save();
+
+        $permintaan = PermintaanBarang::findOrFail(
+            $detail->permintaan_barang_id
+        );
+
+        $details = DetailPermintaanBarang::where(
+            'permintaan_barang_id',
+            $permintaan->id
+        )->get();
+
+        $total = $details->count();
+
+        $acc = $details->where('status', 'ACC')->count();
+
+        $kosong = $details->where('status', 'Kosong')->count();
+
+        $tolak = $details->where('status', 'Ditolak')->count();
+
+        // Jika semua detail sudah diproses
+        if (($acc + $kosong + $tolak) == $total) {
+
+            if ($acc == $total) {
+
+                $permintaan->status = 'Disetujui';
+
+            } elseif ($acc > 0) {
+
+                $permintaan->status = 'Disetujui Sebagian';
+
+            } elseif ($kosong == $total) {
+
+                $permintaan->status = 'Kosong';
+
+            } elseif ($tolak == $total) {
+
+                $permintaan->status = 'Ditolak';
+            }
+
+            $permintaan->save();
+        }
+
+        return response()->json([
+            'success' => true,
+            'status' => $permintaan->fresh()->status,
+            'permintaan_id' => $permintaan->id
+        ]);
+
+    } catch (\Exception $e) {
+
         return response()->json([
             'success' => false,
-            'message' => 'Akses ditolak'
-        ], 403);
+            'message' => $e->getMessage()
+        ], 500);
     }
-
-    $detail = DetailPermintaanBarang::findOrFail($id);
-
-        $detail->status = $request->status;
-            $detail->save();
-
-            $detail->refresh();
-
-            $permintaan = PermintaanBarang::with('details')
-                ->findOrFail($detail->permintaan_barang_id);
-
-            $permintaan->load('details');
-
-    $total = $permintaan->details->count();
-
-        $acc = $permintaan->details
-            ->where('status','ACC')
-            ->count();
-
-        $kosong = $permintaan->details
-            ->where('status','Kosong')
-            ->count();
-
-        $ditolak = $permintaan->details
-            ->where('status','Ditolak')
-            ->count();
-
-        if($acc == $total){
-
-            $status = 'Disetujui';
-
-        }
-        elseif($kosong == $total){
-
-            $status = 'Kosong';
-
-        }
-        elseif($ditolak == $total){
-
-            $status = 'Ditolak';
-
-        }
-        elseif($acc > 0){
-
-            $status = 'Disetujui Sebagian';
-
-        }
-        else{
-
-            $status = 'Menunggu';
-
-        }
-
-        $permintaan->update([
-            'status' => $status
-        ]);
 }
 }

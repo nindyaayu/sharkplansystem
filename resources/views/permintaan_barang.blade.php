@@ -95,61 +95,71 @@
 
                     @if($item->status == 'Menunggu')
 
-                        <span style="
-                            background:#f59e0b;
-                            color:white;
-                            padding:5px 12px;
-                            border-radius:20px;
-                        ">
-                           ⟳ Menunggu
-                        </span>
+                    <span style="
+                        background:#f59e0b;
+                        color:white;
+                        padding:5px 12px;
+                        border-radius:20px;
+                    ">
+                        ⟳ Menunggu
+                    </span>
 
-                    @elseif($item->status == 'Disetujui')
+                @elseif($item->status == 'Disetujui')
 
-                        <span style="
-                            background:#10b981;
-                            color:white;
-                            padding:5px 12px;
-                            border-radius:20px;
-                        ">
-                            Disetujui
-                        </span>
+                    <span style="
+                        background:#10b981;
+                        color:white;
+                        padding:5px 12px;
+                        border-radius:20px;
+                    ">
+                        Disetujui
+                    </span>
 
-                        @elseif($item->status == 'Disetujui Sebagian')
+                @elseif($item->status == 'Disetujui Sebagian')
 
-                        <span style="
-                            background:#8b5cf6;
-                            color:white;
-                            padding:5px 12px;
-                            border-radius:20px;
-                        ">
-                           ∞ Disetujui Sebagian
-                        </span>
-                        
+                    <span style="
+                        background:#8b5cf6;
+                        color:white;
+                        padding:5px 12px;
+                        border-radius:20px;
+                    ">
+                        ∞ Disetujui Sebagian
+                    </span>
 
-                    @elseif($item->status == 'Ditolak')
+                @elseif($item->status == 'Ditolak')
 
-                        <span style="
-                            background:#ef4444;
-                            color:white;
-                            padding:5px 12px;
-                            border-radius:20px;
-                        ">
-                           ✘ Ditolak
-                        </span>
+                    <span style="
+                        background:#ef4444;
+                        color:white;
+                        padding:5px 12px;
+                        border-radius:20px;
+                    ">
+                        ✘ Ditolak
+                    </span>
 
-                    @elseif($item->status == 'Sudah Diambil')
+                @elseif($item->status == 'Kosong')
 
-                        <span style="
-                            background:#3b82f6;
-                            color:white;
-                            padding:5px 12px;
-                            border-radius:20px;
-                        ">
-                            ✓ Sudah Diambil
-                        </span>
+                    <span style="
+                        background:#f59e0b;
+                        color:white;
+                        padding:5px 12px;
+                        border-radius:20px;
+                    ">
+                        Kosong
+                    </span>
 
-                    @endif
+                @elseif($item->status == 'Sudah Diambil')
+
+                    <span style="
+                        background:#3b82f6;
+                        color:white;
+                        padding:5px 12px;
+                        border-radius:20px;
+                    ">
+                        ✓ Sudah Diambil
+                    </span>
+
+                @endif
 
                 </td>
 
@@ -838,6 +848,7 @@ function tambahBaris(){
 
         function lihatDetail(id)
             {
+
                 fetch(
                     '/permintaan-barang/' +
                     id +
@@ -1135,7 +1146,6 @@ function tambahBaris(){
 
 
                 function updateDetailStatus(id,status){
-
                     fetch('/permintaan-barang-detail/' + id, {
 
                         method:'PUT',
@@ -1154,15 +1164,28 @@ function tambahBaris(){
 
                     })
 
-                    .then(res => res.json())
+                    .then(res => {
+
+                        console.log(res);
+
+                        return res.json();
+
+                    })
 
                     .then(data => {
 
-                        setTimeout(() => {
+                        console.log('DATA RESPONSE = ', data);
 
-                            lihatDetail(data.permintaan_id);
+                        if(data.permintaan_id){
 
-                        }, 300);
+                            setTimeout(() => {
+
+                                lihatDetail(data.permintaan_id);
+
+                            }, 300);
+
+                        }
+
 
                         let badge = '';
 
@@ -1228,6 +1251,8 @@ function tambahBaris(){
 })
 
                     .catch(error => {
+
+                        alert(error);
 
                         console.log(error);
 
