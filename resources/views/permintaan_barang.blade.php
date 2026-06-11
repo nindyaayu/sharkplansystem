@@ -207,6 +207,7 @@
                                 <button
                                     type="submit"
                                     class="btn-sudah-diambil"
+                                    onclick="setTimeout(() => location.reload(), 1000)"
                                 >
                                     ✓ Sudah Diambil
                                 </button>
@@ -1185,8 +1186,6 @@ function tambahBaris(){
                             }, 300);
 
                         }
-
-
                         let badge = '';
 
     if(data.status == 'Disetujui'){
@@ -1247,6 +1246,13 @@ function tambahBaris(){
     if(statusCell){
         statusCell.innerHTML = badge;
     }
+
+    if(
+    data.status === 'Disetujui' ||
+    data.status === 'Disetujui Sebagian'
+){
+    window.location.reload();
+}
 
 })
 
