@@ -17,10 +17,21 @@ class PermintaanBarangController extends Controller
 
     $produk = Produk::orderBy('nama')->get();
 
-    $permintaan = PermintaanBarang::with([
+    $query = PermintaanBarang::with([
     'produk',
     'komponen'
-])
+]);
+
+if (auth()->user()->cabang) {
+
+    $query->where(
+        'cabang',
+        auth()->user()->cabang
+    );
+
+}
+
+$permintaan = $query
     ->latest()
     ->get();
 
@@ -77,7 +88,9 @@ class PermintaanBarangController extends Controller
                 'nama_penjahit' =>
                     $request->nama_penjahit,
 
-                'status' => 'Menunggu'
+                'status' => 'Menunggu',
+
+                'cabang' => auth()->user()->cabang
             ]);
 
             foreach (
@@ -158,7 +171,9 @@ return redirect()
                                 'INTERNAL - ' .
                                 strtoupper($permintaan->nama_peminta) .
                                 ' - ' .
-                                strtoupper($permintaan->nama_penjahit)
+                                strtoupper($permintaan->nama_penjahit),
+
+                            'cabang' => $permintaan->cabang
 
                         ]);
 

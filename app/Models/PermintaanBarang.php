@@ -14,7 +14,9 @@ class PermintaanBarang extends Model
     'komponen_produk_id',
     'nama_peminta',
     'nama_penjahit',
-    'status'
+    'status',
+    'cabang'
+    
 ];
 
     public function details()

@@ -112,6 +112,8 @@ class BarangKeluarController extends Controller
 
                 'tujuan' => $tujuan,
 
+                'cabang' => auth()->user()->cabang,
+
             ]);
 
             // =========================
@@ -159,6 +161,8 @@ class BarangKeluarController extends Controller
                     $request->tanggal_keluar,
 
                 'tujuan' => $tujuan,
+
+                'cabang' => auth()->user()->cabang,
 
             ]);
 
