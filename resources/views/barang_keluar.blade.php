@@ -126,6 +126,13 @@ td{
     color:white;
 }
 
+.input,
+select.input,
+input.input{
+    width:100%;
+    box-sizing:border-box;
+}
+
 .modal-footer{
     display:flex;
     justify-content:flex-end;
