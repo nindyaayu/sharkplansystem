@@ -1,140 +1,365 @@
 <?php
 
+
+
 namespace App\Http\Controllers;
 
+
+
 use App\Models\Barang;
+
+use App\Models\BarangMasuk;
+
 use App\Models\BarangKeluar;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
+
 
 class PelacakanBarangController extends Controller
+
 {
+
     public function index(Request $request)
+
     {
-    $barangs = Barang::orderBy('nama')->get();
 
-    $barangDipilih = null;
+        $barangs = Barang::orderBy('nama')->get();
 
-    $riwayatKeluar = collect();
 
-    $rekapProduk = collect();
 
-    $rekapPeminta = collect();
+        $barangDipilih = null;
 
-    if ($request->barang_id) {
 
-        $barangDipilih = Barang::find(
-            $request->barang_id
-        );
 
-        $riwayatKeluar = BarangKeluar::with([
-            'barang',
-            'produk'
-        ])
-        ->where(
-            'barang_id',
-            $request->barang_id
-        );
+        $riwayatKeluar = collect();
 
-        // FILTER TANGGAL AWAL
-        if ($request->filled('tgl_awal')) {
 
-            $riwayatKeluar->whereDate(
-                'tanggal_keluar',
-                '>=',
-                $request->tgl_awal
+
+        $riwayatMasuk = collect();
+
+
+
+        $rekapProduk = collect();
+
+
+
+        $rekapPeminta = collect();
+
+
+
+        $rekapPenjahit = collect();
+
+
+
+        if ($request->barang_id) {
+
+
+
+            $barangDipilih = Barang::find(
+
+                $request->barang_id
+
             );
 
-        }
 
-        // FILTER TANGGAL AKHIR
-        if ($request->filled('tgl_akhir')) {
 
-            $riwayatKeluar->whereDate(
-                'tanggal_keluar',
-                '<=',
-                $request->tgl_akhir
-            );
+            // =========================
 
-        }
+            // RIWAYAT KELUAR
 
-        $riwayatKeluar = $riwayatKeluar
-            ->latest('tanggal_keluar')
-            ->get();
+            // =========================
 
-            $rekapProduk = BarangKeluar::query()
 
-            ->select(
-                'produk_id',
-                DB::raw('SUM(jumlah) as total')
-            )
 
-            ->with('produk')
+            $queryKeluar = BarangKeluar::with([
+
+                'barang',
+
+                'produk'
+
+            ])
 
             ->where(
+
                 'barang_id',
+
                 $request->barang_id
+
             );
 
-        if ($request->filled('tgl_awal')) {
 
-            $rekapProduk->whereDate(
-                'tanggal_keluar',
-                '>=',
-                $request->tgl_awal
+
+            if ($request->filled('tgl_awal')) {
+
+
+
+                $queryKeluar->whereDate(
+
+                    'tanggal_keluar',
+
+                    '>=',
+
+                    $request->tgl_awal
+
+                );
+
+
+
+            }
+
+
+
+            if ($request->filled('tgl_akhir')) {
+
+
+
+                $queryKeluar->whereDate(
+
+                    'tanggal_keluar',
+
+                    '<=',
+
+                    $request->tgl_akhir
+
+                );
+
+
+
+            }
+
+
+
+            $riwayatKeluar = $queryKeluar
+
+                ->latest('tanggal_keluar')
+
+                ->get();
+
+
+
+            // =========================
+
+            // RIWAYAT MASUK
+
+            // =========================
+
+
+
+            $queryMasuk = BarangMasuk::where(
+
+                'barang_id',
+
+                $request->barang_id
+
             );
 
-        }
 
-        if ($request->filled('tgl_akhir')) {
 
-            $rekapProduk->whereDate(
-                'tanggal_keluar',
-                '<=',
-                $request->tgl_akhir
-            );
+            if ($request->filled('tgl_awal')) {
 
-        }
 
-        $rekapProduk = $rekapProduk
 
-            ->groupBy('produk_id')
+                $queryMasuk->whereDate(
 
-            ->orderByDesc('total')
+                    'tanggal_masuk',
 
-            ->get();
+                    '>=',
 
-            $rekapPeminta = $riwayatKeluar
-                ->groupBy('tujuan')
+                    $request->tgl_awal
+
+                );
+
+
+
+            }
+
+
+
+            if ($request->filled('tgl_akhir')) {
+
+
+
+                $queryMasuk->whereDate(
+
+                    'tanggal_masuk',
+
+                    '<=',
+
+                    $request->tgl_akhir
+
+                );
+
+
+
+            }
+
+
+
+            $riwayatMasuk = $queryMasuk
+
+                ->latest('tanggal_masuk')
+
+                ->get();
+
+
+
+            // =========================
+
+            // REKAP PRODUK
+
+            // =========================
+
+
+
+            $rekapProduk = $riwayatKeluar
+
+                ->groupBy('produk_id')
+
                 ->map(function ($items) {
+
+
 
                     return (object)[
 
-                        'nama_peminta' =>
-                            str_replace(
-                                'INTERNAL - ',
-                                '',
-                                $items->first()->tujuan
-                            ),
+
+
+                        'produk' =>
+
+                            $items->first()->produk,
+
+
 
                         'total' =>
+
                             $items->sum('jumlah')
+
+
+
                     ];
 
-                })
-                ->sortByDesc('total');
-    }
 
-            return view(
+
+                })
+
+                ->sortByDesc('total');
+
+
+
+            // =========================
+
+            // REKAP PEMINTA
+
+            // =========================
+
+
+
+            $rekapPeminta = $riwayatKeluar
+
+                ->groupBy('nama_peminta')
+
+                ->map(function ($items) {
+
+
+
+                    return (object)[
+
+
+
+                        'nama_peminta' =>
+
+                            $items->first()->nama_peminta
+
+                            ?: '-',
+
+
+
+                        'total' =>
+
+                            $items->sum('jumlah')
+
+
+
+                    ];
+
+
+
+                })
+
+                ->sortByDesc('total');
+
+
+
+            // =========================
+
+            // REKAP PENJAHIT
+
+            // =========================
+
+
+
+            $rekapPenjahit = $riwayatKeluar
+
+                ->groupBy('nama_penjahit')
+
+                ->map(function ($items) {
+
+
+
+                    return (object)[
+
+
+
+                        'nama_penjahit' =>
+
+                            $items->first()->nama_penjahit
+
+                            ?: '-',
+
+
+
+                        'total' =>
+
+                            $items->sum('jumlah')
+
+
+
+                    ];
+
+
+
+                })
+
+                ->sortByDesc('total');
+
+        }
+
+
+
+        return view(
+
             'pelacakan.index',
+
             compact(
+
                 'barangs',
+
                 'barangDipilih',
+
                 'riwayatKeluar',
+
+                'riwayatMasuk',
+
                 'rekapProduk',
-                'rekapPeminta'
+
+                'rekapPeminta',
+
+                'rekapPenjahit'
+
             )
+
         );
+
     }
 
 }

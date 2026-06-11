@@ -721,11 +721,14 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
             'Kain'
         )->get();
 
+        $produks = \App\Models\Produk::all();
+
         return view(
             'barang_keluar',
             compact(
                 'barangKeluars',
-                'barangs'
+                'barangs',
+                'produks'
             )
         );
 
@@ -817,11 +820,14 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
                 'Aksesoris'
             )->get();
 
+            $produks = \App\Models\Produk::all();
+
             return view(
                 'barang_keluar',
                 compact(
                     'barangKeluars',
-                    'barangs'
+                    'barangs',
+                    'produks'
                 )
             );
 

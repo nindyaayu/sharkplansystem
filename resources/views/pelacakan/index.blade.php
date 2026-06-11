@@ -4,305 +4,340 @@
 
 <div class="card" style="padding:30px;">
 
-    <h1 style="color:white;margin-bottom:20px;">
-        Pelacakan Barang
-    </h1>
+```
+<h1 style="color:white;margin-bottom:20px;">
+    Pelacakan Barang
+</h1>
 
-    <form method="GET" id="form-pelacakan">
+<form method="GET" id="form-pelacakan">
 
-        <input
-            type="text"
-            id="barang_search_pelacakan"
-            placeholder="🔍 Cari kode, nama, warna..."
-            autocomplete="off"
-            style="
-                width:100%;
-                padding:14px;
-                border-radius:12px;
-                border:1px solid #334155;
-                background:#0f1b3f;
-                color:white;
-                margin-bottom:15px;
-                box-sizing:border-box;
-            "
-            required
-        >
+    <div
+        style="
+            display:flex;
+            gap:15px;
+            flex-wrap:wrap;
+            margin-bottom:15px;
+        "
+    >
 
         <input
-            type="hidden"
-            name="barang_id"
-            id="barang_id_pelacakan"
-            value="{{ request('barang_id') }}"
-        >
-
-        <datalist id="barang_list_pelacakan"></datalist>
-
-        <button
-            type="submit"
+            type="date"
+            name="tgl_awal"
+            value="{{ request('tgl_awal') }}"
             style="
-                background:#6366f1;
-                color:white;
-                border:none;
-                padding:10px 20px;
+                padding:10px;
                 border-radius:10px;
-                cursor:pointer;
             "
         >
-            🔍 Tampilkan
-        </button>
 
-    </form>
-
-    @if($barangDipilih)
-
-        <div
+        <input
+            type="date"
+            name="tgl_akhir"
+            value="{{ request('tgl_akhir') }}"
             style="
-                background:#111827;
-                padding:20px;
-                border-radius:12px;
-                margin-top:20px;
-                color:white;
+                padding:10px;
+                border-radius:10px;
             "
         >
 
-            <h3 style="margin-bottom:15px;">
+    </div>
+
+    <input
+        type="text"
+        id="barang_search_pelacakan"
+        placeholder="🔍 Cari kode, nama, warna..."
+        autocomplete="off"
+        style="
+            width:100%;
+            padding:14px;
+            border-radius:12px;
+            border:1px solid #334155;
+            background:#0f1b3f;
+            color:white;
+            margin-bottom:15px;
+        "
+        required
+    >
+
+    <input
+        type="hidden"
+        name="barang_id"
+        id="barang_id_pelacakan"
+        value="{{ request('barang_id') }}"
+    >
+
+    <datalist id="barang_list_pelacakan"></datalist>
+
+    <button
+        type="submit"
+        style="
+            background:#6366f1;
+            color:white;
+            border:none;
+            padding:10px 20px;
+            border-radius:10px;
+            cursor:pointer;
+        "
+    >
+        🔍 Tampilkan
+    </button>
+
+</form>
+
+@if($barangDipilih)
+
+<div
+    style="
+        background:#111827;
+        padding:20px;
+        border-radius:12px;
+        margin-top:20px;
+        color:white;
+    "
+>
 
-                {{ $barangDipilih->kode }}
-                -
-                {{ $barangDipilih->nama }}
+    <h3>
+        INFORMASI BARANG
+    </h3>
 
-            </h3>
+    <table style="width:100%;">
 
-            <p>
+        <tr>
+            <td>Kode Barang</td>
+            <td>{{ $barangDipilih->kode }}</td>
+        </tr>
 
-                <b>Stok Saat Ini :</b>
+        <tr>
+            <td>Nama Barang</td>
+            <td>{{ $barangDipilih->nama }}</td>
+        </tr>
 
-                {{ $barangDipilih->stok }}
+        <tr>
+            <td>Satuan</td>
+            <td>{{ strtoupper($barangDipilih->satuan) }}</td>
+        </tr>
 
-            </p>
+        <tr>
+            <td>Stok Saat Ini</td>
+            <td>{{ number_format($barangDipilih->stok,0) }}</td>
+        </tr>
 
-            <p>
+        <tr>
+            <td>Total Masuk</td>
+            <td>{{ number_format($riwayatMasuk->sum('jumlah'),0) }}</td>
+        </tr>
 
-                <b>Total Keluar :</b>
+        <tr>
+            <td>Total Keluar</td>
+            <td>{{ number_format($riwayatKeluar->sum('jumlah'),0) }}</td>
+        </tr>
 
-                {{ $riwayatKeluar->sum('jumlah') }}
+    </table>
 
-            </p>
+    <hr style="margin:20px 0;">
 
-            <hr style="margin:15px 0;border-color:#374151;">
+    <h3>
+        REKAP PEMAKAIAN PER PRODUK
+    </h3>
 
-                <h4 style="margin-bottom:10px;">
-                    Rekap Pemakaian Per Produk
-                </h4>
+    <table style="width:100%;">
 
-                <hr style="margin:15px 0;border-color:#374151;">
+        @foreach($rekapProduk as $item)
 
-                    <h4 style="margin-bottom:10px;">
-                        Rekap Pemakaian Per Peminta
-                    </h4>
+        <tr>
 
-                    <table
-                        style="
-                            width:100%;
-                            color:white;
-                            border-collapse:collapse;
-                        "
-                    >
+            <td>
+                {{ $item->produk->nama ?? '-' }}
+            </td>
 
-                        @forelse($rekapPeminta as $item)
+            <td align="right">
+                {{ number_format($item->total,0) }}
+            </td>
 
-                            <tr>
+        </tr>
 
-                                <td
-                                    style="
-                                        padding:6px 0;
-                                    "
-                                >
+        @endforeach
 
-                                    {{ $item->nama_peminta }}
+    </table>
 
-                                </td>
+    <hr style="margin:20px 0;">
 
-                                <td
-                                    style="
-                                        text-align:right;
-                                    "
-                                >
+    <h3>
+        REKAP PEMAKAIAN PER PEMINTA
+    </h3>
 
-                                    {{ number_format($item->total,0) }}
+    <table style="width:100%;">
 
-                                </td>
+        @foreach($rekapPeminta as $item)
 
-                            </tr>
+        <tr>
 
-                        @empty
+            <td>
+                {{ $item->nama_peminta }}
+            </td>
 
-                            <tr>
+            <td align="right">
+                {{ number_format($item->total,0) }}
+            </td>
 
-                                <td>
+        </tr>
 
-                                    Belum ada data
+        @endforeach
 
-                                </td>
+    </table>
 
-                            </tr>
+    <hr style="margin:20px 0;">
 
-                        @endforelse
+    <h3>
+        REKAP PEMAKAIAN PER PENJAHIT
+    </h3>
 
-                    </table>
+    <table style="width:100%;">
 
-                <table
-                    style="
-                        width:100%;
-                        color:white;
-                        border-collapse:collapse;
-                    "
-                >
+        @foreach($rekapPenjahit as $item)
 
-                    @forelse($rekapProduk as $item)
+        <tr>
 
-                        <tr>
+            <td>
+                {{ $item->nama_penjahit }}
+            </td>
 
-                            <td
-                                style="
-                                    padding:6px 0;
-                                "
-                            >
+            <td align="right">
+                {{ number_format($item->total,0) }}
+            </td>
 
-                                {{ $item->produk->nama ?? '-' }}
+        </tr>
 
-                            </td>
+        @endforeach
 
-                            <td
-                                style="
-                                    text-align:right;
-                                "
-                            >
+    </table>
 
-                                {{ number_format($item->total,0) }}
+</div>
 
-                            </td>
+<div
+    style="
+        margin-top:20px;
+        background:#111827;
+        padding:20px;
+        border-radius:12px;
+        color:white;
+    "
+>
 
-                        </tr>
+    <h3>
+        RIWAYAT BARANG MASUK
+    </h3>
 
-                    @empty
+    <table
+        style="
+            width:100%;
+            border-collapse:collapse;
+        "
+    >
 
-                        <tr>
+        <tr>
 
-                            <td>
+            <th>Tanggal</th>
 
-                                Belum ada data
+            <th>Supplier</th>
 
-                            </td>
+            <th>Qty</th>
 
-                        </tr>
+        </tr>
 
-                    @endforelse
+        @foreach($riwayatMasuk as $item)
 
-                </table>
+        <tr>
 
-        </div>
+            <td>
+                {{ \Carbon\Carbon::parse($item->tanggal_masuk)->format('d/m/Y') }}
+            </td>
 
-        <div
-            style="
-                margin-top:20px;
-                background:#111827;
-                border-radius:12px;
-                overflow:hidden;
-            "
-        >
+            <td>
+                {{ $item->supplier }}
+            </td>
 
-            <table
-                style="
-                    width:100%;
-                    border-collapse:collapse;
-                    color:white;
-                "
-            >
+            <td>
+                {{ number_format($item->jumlah,0) }}
+            </td>
 
-                <thead>
+        </tr>
 
-                    <tr style="background:#1f2937;">
+        @endforeach
 
-                        <th style="padding:12px;">
-                            Tanggal
-                        </th>
+    </table>
 
-                        <th style="padding:12px;">
-                            Produk
-                        </th>
+</div>
 
-                        <th style="padding:12px;">
-                            Tujuan
-                        </th>
+<div
+    style="
+        margin-top:20px;
+        background:#111827;
+        padding:20px;
+        border-radius:12px;
+        color:white;
+    "
+>
 
-                        <th style="padding:12px;">
-                            Qty
-                        </th>
+    <h3>
+        RIWAYAT BARANG KELUAR
+    </h3>
 
-                    </tr>
+    <table
+        style="
+            width:100%;
+            border-collapse:collapse;
+        "
+    >
 
-                </thead>
+        <tr>
 
-                <tbody>
+            <th>Tanggal</th>
 
-                    @forelse($riwayatKeluar as $item)
+            <th>Produk</th>
 
-                        <tr>
+            <th>Peminta</th>
 
-                            <td style="padding:12px;">
+            <th>Penjahit</th>
 
-                                {{ \Carbon\Carbon::parse($item->tanggal_keluar)->format('d/m/Y') }}
+            <th>Qty</th>
 
-                            </td>
+        </tr>
 
-                            <td style="padding:12px;">
+        @foreach($riwayatKeluar as $item)
 
-                                {{ $item->produk->nama ?? '-' }}
+        <tr>
 
-                            </td>
+            <td>
+                {{ \Carbon\Carbon::parse($item->tanggal_keluar)->format('d/m/Y') }}
+            </td>
 
-                            <td style="padding:12px;">
+            <td>
+                {{ $item->produk->nama ?? '-' }}
+            </td>
 
-                                {{ $item->tujuan }}
+            <td>
+                {{ $item->nama_peminta ?? '-' }}
+            </td>
 
-                            </td>
+            <td>
+                {{ $item->nama_penjahit ?? '-' }}
+            </td>
 
-                            <td style="padding:12px;">
+            <td>
+                {{ number_format($item->jumlah,0) }}
+            </td>
 
-                                {{ number_format($item->jumlah,0) }}
+        </tr>
 
-                            </td>
+        @endforeach
 
-                        </tr>
+    </table>
 
-                    @empty
+</div>
 
-                        <tr>
-
-                            <td
-                                colspan="4"
-                                style="
-                                    text-align:center;
-                                    padding:20px;
-                                "
-                            >
-
-                                Belum ada riwayat keluar
-
-                            </td>
-
-                        </tr>
-
-                    @endforelse
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    @endif
+@endif
+```
 
 </div>
 
@@ -325,12 +360,12 @@ document.addEventListener('DOMContentLoaded', function(){
             'barang_list_pelacakan'
         );
 
+    let hasilData = [];
+
     searchInput.setAttribute(
         'list',
         'barang_list_pelacakan'
     );
-
-    let hasilData = [];
 
     searchInput.addEventListener(
         'input',

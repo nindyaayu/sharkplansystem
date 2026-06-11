@@ -942,46 +942,21 @@ window.onload = function(){
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 
 <script src="https://cdn.datatables.net/searchpanes/2.3.0/js/dataTables.searchPanes.min.js"></script>
-<script>
-
-document.addEventListener('DOMContentLoaded', function(){
-
-    if(document.getElementById('laporanTable')){
-
-        $('#laporanTable').DataTable({
-
-            pageLength: 25,
-
-            dom: 'Plfrtip',
-
-            searchPanes: {
-                cascadePanes: true
-            }
-
-        });
-
-    }
-
-});
-
-</script>
 
 <script>
 
 document.addEventListener('DOMContentLoaded', function(){
 
-    if(document.getElementById('laporanTable')){
+    const table =
+        document.getElementById('laporanTable');
+
+    if(
+        table &&
+        !table.querySelector('.filter-row')
+    ){
 
         $('#laporanTable').DataTable({
-
-            pageLength: 25,
-
-            dom: 'Plfrtip',
-
-            searchPanes: {
-                cascadePanes: true
-            }
-
+            pageLength: 25
         });
 
     }

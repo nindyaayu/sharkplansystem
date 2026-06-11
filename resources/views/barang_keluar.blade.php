@@ -448,7 +448,7 @@ td{
 
             @csrf
 
-            <label>Barang</label>
+            <!-- <label>Barang</label> -->
 
                 <input
                     type="text"
@@ -463,12 +463,49 @@ td{
                     name="barang_id"
                     id="barang_id_keluar">
 
+            <select
+                name="mode"
+                class="input"
+            >
+                <option value="INTERNAL">
+                    INTERNAL
+                </option>
+
+                <option value="EKSTERNAL">
+                    EKSTERNAL
+                </option>
+            </select>
+
+            <select
+                name="produk_id"
+                class="input"
+            >
+                <option value="">
+                    Pilih Produk (Opsional)
+                </option>
+
+                @foreach($produks as $produk)
+
+                    <option value="{{ $produk->id }}">
+                        {{ $produk->nama }}
+                    </option>
+
+                @endforeach
+            </select>
+
             <input
                 type="text"
-                name="tujuan"
+                name="nama_peminta"
                 class="input"
-                placeholder="Tujuan"
-                required>
+                placeholder="Nama Peminta (OPSIONAL)"
+            >
+
+            <input
+                type="text"
+                name="nama_penjahit"
+                class="input"
+                placeholder="Nama Penjahit (OPSIONAL)"
+            >
 
             @if(request()->is('barang-keluar-material-utama'))
 

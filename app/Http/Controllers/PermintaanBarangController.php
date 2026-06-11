@@ -116,9 +116,10 @@ return redirect()
 
             public function update(Request $request, $id)
                 {
-                $permintaan = PermintaanBarang::with(
-                'details.barang'
-                )->findOrFail($id);
+                $permintaan = PermintaanBarang::with([
+                    'details.barang',
+                    'produk'
+                ])->findOrFail($id);
 
                 if (
                     $request->status == 'Sudah Diambil'
@@ -161,15 +162,15 @@ return redirect()
 
                         ]);
 
-                        $barang->update([
+                        $stokLama = $barang->stok;
 
-                            'stok' =>
-                                max(
-                                    0,
-                                    $barang->stok - $detail->jumlah
-                                )
-
-                        ]);
+$barang->update([
+    'stok' => max(
+        0,
+        $barang->stok - $detail->jumlah
+    )
+]);
+                        $barang->refresh();
                     }
                 }
 
@@ -180,11 +181,11 @@ return redirect()
                 ]);
 
                 return redirect()
-                ->route('barang-keluar')
-                ->with(
-                    'success',
-                    'Barang berhasil dikeluarkan'
-                );
+                    ->route('barang-keluar-material-pendukung')
+                    ->with(
+                        'success',
+                        'Barang berhasil dikeluarkan'
+                    );
 
                 }
 
