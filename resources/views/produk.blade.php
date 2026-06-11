@@ -671,6 +671,8 @@ Simpan
 
 @if(session('buka_komponen'))
 
+
+
 <script>
 
 window.onload = function(){
