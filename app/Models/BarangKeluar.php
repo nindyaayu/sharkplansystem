@@ -25,7 +25,9 @@ class BarangKeluar extends Model
 
     'tanggal_keluar',
 
-    'tujuan'
+    'tujuan',
+    
+    'cabang'
 
 ];
 
