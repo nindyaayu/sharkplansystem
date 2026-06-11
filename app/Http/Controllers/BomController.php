@@ -179,7 +179,17 @@ public function update(Request $request, $id)
         $produk = Produk::all();
 
         // dropdown komponen
-        $bom = Bom::all();
+        $bom = collect();
+
+        if($request->produk_id){
+
+            $bom = Bom::where(
+                'produk_id',
+                $request->produk_id
+            )
+            ->orderBy('nama_komponen')
+            ->get();
+        }
 
         // hasil
         $hasil = collect();

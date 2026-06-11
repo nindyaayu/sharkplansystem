@@ -485,65 +485,6 @@ color:white;
 
 <tbody id="listKomponen">
 
-@forelse($komponen as $k)
-
-<tr>
-
-<td>
-{{ $loop->iteration }}
-</td>
-
-<td>
-{{ $k->nama_komponen }}
-</td>
-
-<td>
-
-<button
-class="btn-primary"
-onclick="openSubKomponenModal(
-${data.id},
-'{{ $k->nama_komponen }}'
-)">
-Sub Komponen
-</button>
-
-<button
-class="btn-edit"
-onclick="editKomponen(
-${data.id},
-'${namaKomponen}',
-this
-)">
-Edit
-</button>
-
-<button
-class="btn-delete"
-onclick="hapusKomponen(
-${data.id},
-this
-)">
-Hapus
-</button>
-
-</td>
-
-</tr>
-
-@empty
-
-<tr>
-
-<td colspan="3">
-
-Belum ada komponen
-
-</td>
-
-</tr>
-
-@endforelse
 
 </tbody>
 
@@ -632,6 +573,7 @@ margin-top:15px;
 
 <th>No</th>
 <th>Sub Komponen</th>
+<th>Aksi</th>
 
 </tr>
 
@@ -649,20 +591,45 @@ margin-top:15px;
 
 </div>
 
-<!-- MODAL EDIT KOMPONEN -->
-
-<div id="editKomponenModal" class="modal">
+<div id="editKomponenModal"
+class="modal"
+style="display:none;">
 
 <div class="modal-content"
 style="
 width:500px;
 max-width:95%;
 background:#04143d;
+padding:20px;
+border-radius:12px;
 ">
 
-<h3 style="color:white;">
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+">
+
+<h2 style="
+color:white;
+margin:0;
+">
 Edit Komponen
-</h3>
+</h2>
+
+<button
+onclick="closeEditKomponenModal()"
+style="
+background:none;
+border:none;
+color:white;
+font-size:28px;
+cursor:pointer;
+">
+×
+</button>
+
+</div>
 
 <input
 type="hidden"
@@ -671,19 +638,28 @@ id="edit_komponen_id">
 <input
 type="text"
 id="edit_nama_komponen"
-placeholder="Nama Komponen">
+placeholder="Nama Komponen"
+style="
+width:100%;
+margin-top:20px;
+">
 
-<div class="modal-actions">
+<div style="
+margin-top:20px;
+display:flex;
+justify-content:flex-end;
+gap:10px;
+">
 
 <button
-type="button"
-class="btn-cancel">
+class="btn-delete"
+onclick="closeEditKomponenModal()">
 Batal
 </button>
 
 <button
-type="button"
-class="btn-save">
+class="btn-primary"
+id="btnUpdateKomponen">
 Simpan
 </button>
 
@@ -713,6 +689,8 @@ window.onload = function(){
 @endif
 
 <script>
+
+let currentEditRow = null;
 
 function openModal(){
 
@@ -770,6 +748,70 @@ document.getElementById(
 'produk_id'
 ).value = id;
 
+fetch(
+'/komponen-produk/' + id
+)
+.then(response => response.json())
+.then(data => {
+
+let tbody =
+document.getElementById(
+'listKomponen'
+);
+
+tbody.innerHTML = '';
+
+data.forEach((item,index)=>{
+
+tbody.insertAdjacentHTML(
+'beforeend',
+`
+<tr>
+
+<td>${index + 1}</td>
+
+<td>${item.nama_komponen}</td>
+
+<td>
+
+<button
+class="btn-primary"
+onclick="openSubKomponenModal(
+'${item.id}',
+'${item.nama_komponen}'
+)">
+Sub Komponen
+</button>
+
+<button
+class="btn-edit"
+onclick="editKomponen(
+'${item.id}',
+'${item.nama_komponen}',
+this
+)">
+Edit
+</button>
+
+<button
+class="btn-delete"
+onclick="hapusKomponen(
+'${item.id}',
+this
+)">
+Hapus
+</button>
+
+</td>
+
+</tr>
+`
+);
+
+});
+
+});
+
 }
 
 
@@ -818,15 +860,49 @@ tbody.insertAdjacentHTML(
 'beforeend',
 `
 <tr>
+
 <td>${index + 1}</td>
+
 <td>${item.nama_komponen}</td>
-</tr>
-`
-);
+
+    <td>
+
+    <button
+    class="btn-edit"
+    onclick="editSubKomponen(
+    '${item.id}',
+    '${item.nama_komponen}',
+    this
+    )">
+    Edit
+    </button>
+
+    <button
+    class="btn-delete"
+    onclick="hapusSubKomponen(
+    '${item.id}',
+    this
+    )">
+    Hapus
+    </button>
+
+    </td>
+
+    </tr>
+    `
+    );
 
 });
 
 });
+
+}
+
+function closeEditKomponenModal(){
+
+document.getElementById(
+'editKomponenModal'
+).style.display='none';
 
 }
 
@@ -883,6 +959,9 @@ namaLama,
 button
 ){
 
+currentEditRow =
+button.closest('tr');
+
 document.getElementById(
 'editKomponenModal'
 ).style.display='flex';
@@ -894,14 +973,6 @@ document.getElementById(
 document.getElementById(
 'edit_nama_komponen'
 ).value = namaLama;
-
-}
-
-function closeEditKomponenModal(){
-
-document.getElementById(
-'editKomponenModal'
-).style.display='none';
 
 }
 
@@ -978,17 +1049,17 @@ document
         <button
             class="btn-edit"
             onclick="editKomponen(
-            ${data.id},
+            '${data.id}',
             '${namaKomponen}',
             this
             )">
             Edit
             </button>
 
-        <button
+            <button
             class="btn-delete"
             onclick="hapusKomponen(
-            ${data.id},
+            '${data.id}',
             this
             )">
             Hapus
@@ -1074,6 +1145,153 @@ document.getElementById(
 
 });
 
+document
+.getElementById(
+'btnUpdateKomponen'
+)
+.addEventListener(
+'click',
+function(){
+
+let id =
+document.getElementById(
+'edit_komponen_id'
+).value;
+
+let nama =
+document.getElementById(
+'edit_nama_komponen'
+).value;
+
+fetch(
+'/komponen-produk/' + id,
+{
+method:'PUT',
+
+headers:{
+'Content-Type':'application/json',
+
+'X-CSRF-TOKEN':
+document.querySelector(
+'input[name="_token"]'
+).value
+},
+
+body:JSON.stringify({
+nama_komponen:nama
+})
+}
+)
+.then(response=>response.json())
+.then(data=>{
+
+currentEditRow
+.querySelectorAll('td')[1]
+.innerHTML = nama;
+
+closeEditKomponenModal();
+
+});
+
+});
+
+function hapusSubKomponen(
+id,
+button
+){
+
+if(
+!confirm(
+'Hapus sub komponen ini?'
+)
+){
+return;
+}
+
+fetch(
+'/komponen-produk/' + id,
+{
+method:'DELETE',
+
+headers:{
+'X-CSRF-TOKEN':
+document.querySelector(
+'input[name="_token"]'
+).value
+}
+}
+)
+
+.then(response=>response.json())
+
+.then(data=>{
+
+button
+.closest('tr')
+.remove();
+
+});
+
+}
+
+function editSubKomponen(
+id,
+namaLama,
+button
+){
+
+let namaBaru =
+prompt(
+'Nama Sub Komponen',
+namaLama
+);
+
+if(
+!namaBaru
+){
+return;
+}
+
+fetch(
+'/komponen-produk/' + id,
+{
+
+method:'PUT',
+
+headers:{
+'Content-Type':
+'application/json',
+
+'X-CSRF-TOKEN':
+document.querySelector(
+'input[name="_token"]'
+).value
+},
+
+body:JSON.stringify({
+
+nama_komponen:
+namaBaru
+
+})
+
+}
+
+)
+
+.then(response=>response.json())
+
+.then(data=>{
+
+button
+.closest('tr')
+.children[1]
+.innerHTML =
+namaBaru;
+
+});
+
+}
 </script>
 
 @endsection

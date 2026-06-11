@@ -179,9 +179,10 @@ tbody tr:hover{
 <div class="form-row">
 
     <!-- PRODUK -->
-    <select 
+    <select
         name="produk_id"
         class="input"
+        onchange="this.form.submit()"
         required>
 
         <option value="">
@@ -214,7 +215,7 @@ tbody tr:hover{
             value="full"
             {{ request('mode') == 'full' ? 'selected' : '' }}>
 
-            Full Produk
+            Full Sett
 
         </option>
 
