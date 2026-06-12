@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Barang;
 use App\Models\Produk;
 use App\Models\BarangMasuk;
@@ -13,77 +14,149 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // total bahan
-        $totalBahan = Barang::count();
+        $user = Auth::user();
 
-        // bahan baru hari ini
-        $bahanBaru = Barang::whereDate(
-            'created_at',
-            Carbon::today()
-        )->count();
+        // =========================
+        // ADMIN PUSAT
+        // =========================
 
-        // total produk
-        $totalProduk = Produk::count();
+        if (is_null($user->cabang)) {
 
-        // total stok
-        $totalStok = Barang::sum('stok');
+            $totalBahan = Barang::count();
 
-        // total transaksi
-        $totalTransaksi =
-            BarangMasuk::count() +
-            BarangKeluar::count();
+            $bahanBaru = Barang::whereDate(
+                'created_at',
+                Carbon::today()
+            )->count();
 
-        // stok kritis
-        $stokKritis = Barang::where(
-            'stok',
-            '<=',
-            5
-        )->count();
+            $totalProduk = Produk::count();
 
-        // chart barang masuk
-        $barangMasukChart = [];
+            $totalStok = Barang::sum('stok');
 
-        for ($i = 1; $i <= 12; $i++) {
+            $totalTransaksi =
+                BarangMasuk::count() +
+                BarangKeluar::count();
 
-            $barangMasukChart[] =
-                BarangMasuk::whereMonth(
-                    'tanggal_masuk',
-                    $i
-                )->sum('jumlah');
+            $stokKritis = Barang::where(
+                'stok',
+                '<=',
+                5
+            )->count();
+
+            $barangMasukChart = [];
+            $barangKeluarChart = [];
+
+            for ($i = 1; $i <= 12; $i++) {
+
+                $barangMasukChart[] =
+                    BarangMasuk::whereMonth(
+                        'tanggal_masuk',
+                        $i
+                    )->sum('jumlah');
+
+                $barangKeluarChart[] =
+                    BarangKeluar::whereMonth(
+                        'tanggal_keluar',
+                        $i
+                    )->sum('jumlah');
+            }
         }
 
-        // chart barang keluar
-        $barangKeluarChart = [];
+        // =========================
+        // USER CABANG
+        // =========================
 
-        for ($i = 1; $i <= 12; $i++) {
+        else {
 
-            $barangKeluarChart[] =
-                BarangKeluar::whereMonth(
-                    'tanggal_keluar',
-                    $i
-                )->sum('jumlah');
+            $cabang = $user->cabang;
+
+            $totalBahan = Barang::where(
+                'cabang',
+                $cabang
+            )->count();
+
+            $bahanBaru = Barang::where(
+                'cabang',
+                $cabang
+            )
+            ->whereDate(
+                'created_at',
+                Carbon::today()
+            )
+            ->count();
+
+            $totalProduk = Produk::where(
+                'cabang',
+                $cabang
+            )->count();
+
+            $totalStok = Barang::where(
+                'cabang',
+                $cabang
+            )->sum('stok');
+
+            $totalTransaksi =
+                BarangMasuk::where(
+                    'cabang',
+                    $cabang
+                )->count()
+                +
+                BarangKeluar::where(
+                    'cabang',
+                    $cabang
+                )->count();
+
+            $stokKritis = Barang::where(
+                'cabang',
+                $cabang
+            )
+            ->where(
+                'stok',
+                '<=',
+                5
+            )
+            ->count();
+
+            $barangMasukChart = [];
+            $barangKeluarChart = [];
+
+            for ($i = 1; $i <= 12; $i++) {
+
+                $barangMasukChart[] =
+                    BarangMasuk::where(
+                        'cabang',
+                        $cabang
+                    )
+                    ->whereMonth(
+                        'tanggal_masuk',
+                        $i
+                    )
+                    ->sum('jumlah');
+
+                $barangKeluarChart[] =
+                    BarangKeluar::where(
+                        'cabang',
+                        $cabang
+                    )
+                    ->whereMonth(
+                        'tanggal_keluar',
+                        $i
+                    )
+                    ->sum('jumlah');
+            }
         }
 
         return view(
             'dashboard',
             compact(
-
                 'totalBahan',
-
                 'bahanBaru',
-
                 'totalProduk',
-
                 'totalStok',
-
                 'totalTransaksi',
-
                 'stokKritis',
-
                 'barangMasukChart',
-
                 'barangKeluarChart'
-
             )
         );
     }

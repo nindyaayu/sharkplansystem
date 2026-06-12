@@ -68,6 +68,8 @@
 
     <datalist id="barang_list_pelacakan"></datalist>
 
+    <div style="display:flex;gap:10px;">
+
     <button
         type="submit"
         style="
@@ -81,6 +83,26 @@
     >
         🔍 Tampilkan
     </button>
+
+    @if(request('barang_id'))
+
+    <a
+        href="{{ route('pelacakan-barang-pdf', request()->all()) }}"
+        target="_blank"
+        style="
+            background:#16a34a;
+            color:white;
+            text-decoration:none;
+            padding:10px 20px;
+            border-radius:10px;
+        "
+    >
+        📄 Export PDF
+    </a>
+
+    @endif
+
+</div>
 
 </form>
 

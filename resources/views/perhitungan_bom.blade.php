@@ -318,7 +318,7 @@ tbody tr:hover{
         class="btn-primary"
         onclick="openJobOutModal()">
 
-        📦 Job Out
+        📦 Surat Jalan
 
     </button>
 
