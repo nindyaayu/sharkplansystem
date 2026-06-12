@@ -12,12 +12,27 @@ class SuratJalanController extends Controller
     // =========================
 
     public function index()
-    {
-        $data = JobOut::latest()->get();
+{
+    $user = auth()->user();
 
-        return view(
-            'surat_jalan',
-            compact('data')
+    $query = JobOut::query();
+
+    if ($user->cabang) {
+
+        $query->where(
+            'cabang',
+            $user->cabang
         );
+
     }
+
+    $data = $query
+        ->latest()
+        ->get();
+
+    return view(
+        'surat_jalan',
+        compact('data')
+    );
+}
 }

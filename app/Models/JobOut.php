@@ -21,7 +21,9 @@ class JobOut extends Model
 
         'status',
 
-        'catatan'
+        'catatan',
+        
+        'cabang'
 
     ];
 
