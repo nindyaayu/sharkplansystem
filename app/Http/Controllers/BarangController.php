@@ -13,9 +13,20 @@ class BarangController extends Controller
 
 public function index()
 {
-    $data = Barang::orderBy('kategori')
-                  ->orderBy('nama')
-                  ->get();
+    $query = Barang::query();
+
+    if (auth()->user()->cabang) {
+
+        $query->where(
+            'cabang',
+            auth()->user()->cabang
+        );
+
+    }
+
+    $data = $query
+        ->latest()
+        ->get();
 
     return view('bahan', compact('data'));
 }
@@ -35,6 +46,8 @@ public function index()
             'nama' => 'required',
 
             'kategori' => 'required',
+
+            'cabang' => auth()->user()->cabang,
 
             'satuan' => 'required'
 
@@ -99,17 +112,11 @@ public function index()
 
             'kategori' => $request->kategori,
 
+            'cabang' => auth()->user()->cabang,
+
             'warna' => $request->warna,
 
             'satuan' => $request->satuan,
-
-            /*
-            =========================
-            STOK AWAL = 0
-            STOK BERASAL DARI
-            TRANSAKSI MASUK/KELUAR
-            =========================
-            */
 
             'jumlah_roll' => 0,
 

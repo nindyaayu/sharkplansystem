@@ -255,8 +255,22 @@ href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
     <div class="sidebar">
 
         <div class="logo">
-
             SHARKPLAN
+
+            <div style="
+                margin-top:10px;
+                padding:8px 10px;
+                background:rgba(255,255,255,0.05);
+                border-radius:8px;
+                font-size:12px;
+                color:#94a3b8;
+                width:fit-content;
+            ">
+                Cabang :
+                <span style="color:#fff;font-weight:600;">
+                    {{ auth()->user()->cabang }}
+                </span>
+            </div>
 
         </div>
 

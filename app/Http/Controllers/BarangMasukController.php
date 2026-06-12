@@ -114,6 +114,8 @@ class BarangMasukController extends Controller
                 'supplier' =>
                     $request->supplier,
 
+                'cabang' => auth()->user()->cabang,
+
             ]);
 
             // tambah stok kain
@@ -145,6 +147,8 @@ class BarangMasukController extends Controller
 
                 'supplier' =>
                     $request->supplier,
+
+                'cabang' => auth()->user()->cabang,
 
             ]);
 

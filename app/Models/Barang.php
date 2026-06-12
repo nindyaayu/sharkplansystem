@@ -14,6 +14,8 @@ class Barang extends Model
 
         'kategori',
 
+        'cabang',
+
         'warna',
 
         'satuan',

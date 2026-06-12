@@ -88,6 +88,15 @@ class PelacakanBarangController extends Controller
 
             );
 
+            if (auth()->user()->cabang) {
+
+                $queryKeluar->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+
 
 
             if ($request->filled('tgl_awal')) {
@@ -153,6 +162,15 @@ class PelacakanBarangController extends Controller
                 $request->barang_id
 
             );
+
+            if (auth()->user()->cabang) {
+
+                $queryMasuk->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
 
 
 
