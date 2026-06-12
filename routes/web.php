@@ -361,6 +361,15 @@ Route::middleware('auth')->group(function () {
 
         });
 
+        if (auth()->user()->cabang) {
+
+        $query->where(
+            'cabang',
+            auth()->user()->cabang
+        );
+
+    }
+
     // FILTER PERIODE
 
     if (
@@ -515,6 +524,15 @@ Route::get('/barang-masuk-material-utama-pdf', function (Request $request) {
                 $q->where('kategori', 'Aksesoris');
 
             });
+
+            if (auth()->user()->cabang) {
+
+            $query->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
 
         // FILTER TANGGAL
 
@@ -696,6 +714,15 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
             });
 
+            if (auth()->user()->cabang) {
+
+                $query->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+
         if (
             $request->filled('tanggal_awal')
             &&
@@ -747,6 +774,15 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
                 });
 
+                if (auth()->user()->cabang) {
+
+                $query->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+
             if (
                 $request->filled('tanggal_awal')
                 &&
@@ -794,6 +830,14 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
                     $q->where('kategori', 'Aksesoris');
 
                 });
+                if (auth()->user()->cabang) {
+
+                    $query->where(
+                        'cabang',
+                        auth()->user()->cabang
+                    );
+
+                }
 
             if (
                 $request->filled('tanggal_awal')
@@ -845,6 +889,14 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
                     $q->where('kategori', 'Aksesoris');
 
                 });
+                if (auth()->user()->cabang) {
+
+                $query->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
 
             if (
                 $request->filled('tanggal_awal')
