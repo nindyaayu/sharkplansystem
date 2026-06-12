@@ -15,12 +15,23 @@ class BarangKeluarController extends Controller
 
     public function index()
     {
-        $barangKeluars = BarangKeluar::with([
+        $query = BarangKeluar::with([
             'barang',
             'produk'
-        ])
-        ->latest()
-        ->get();
+        ]);
+
+        if (auth()->user()->cabang) {
+
+            $query->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
+
+        $barangKeluars = $query
+            ->latest()
+            ->get();
 
         $barangs = Barang::all();
 

@@ -696,6 +696,15 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
             });
 
+            if (auth()->user()->cabang) {
+
+                $query->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+
         if (
             $request->filled('tanggal_awal')
             &&
@@ -747,6 +756,15 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
                 });
 
+                if (auth()->user()->cabang) {
+
+                    $query->where(
+                        'cabang',
+                        auth()->user()->cabang
+                    );
+
+                }
+
             if (
                 $request->filled('tanggal_awal')
                 &&
@@ -794,6 +812,15 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
                     $q->where('kategori', 'Aksesoris');
 
                 });
+
+                if (auth()->user()->cabang) {
+
+                    $query->where(
+                        'cabang',
+                        auth()->user()->cabang
+                    );
+
+                }
 
             if (
                 $request->filled('tanggal_awal')
@@ -845,6 +872,15 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
                     $q->where('kategori', 'Aksesoris');
 
                 });
+
+                if (auth()->user()->cabang) {
+
+                $query->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
 
             if (
                 $request->filled('tanggal_awal')
