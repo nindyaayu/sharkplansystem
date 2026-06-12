@@ -62,6 +62,16 @@ Route::middleware('auth')->group(function () {
         ->name('dashboard');
 
     // =========================
+    // LAPORAN
+    // =========================
+
+    Route::get('/laporan', function () {
+
+        return view('laporan');
+
+    })->name('laporan');
+
+    // =========================
     // BAHAN
     // =========================
 
@@ -1046,6 +1056,11 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
     '/pelacakan-barang',
     [PelacakanBarangController::class, 'index']
 );
+
+Route::get(
+    '/pelacakan-barang-pdf',
+    [PelacakanBarangController::class, 'exportPdf']
+)->name('pelacakan-barang-pdf');
 // =========================
 // LAPORAN MATERIAL UTAMA
 // =========================
@@ -1053,19 +1068,21 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
     $tanggal = $request->tanggal;
 
-    $data = Barang::where(
-        'kategori',
-        'Kain'
-    )->get();
+        $query = Barang::where(
+            'kategori',
+            'Kain'
+        );
 
-    if (auth()->user()->cabang) {
+        if (auth()->user()->cabang) {
 
-    $query->where(
-        'cabang',
-        auth()->user()->cabang
-    );
+            $query->where(
+                'cabang',
+                auth()->user()->cabang
+            );
 
-}
+        }
+
+        $data = $query->get();
 
     // =========================
     // HITUNG STOK BERDASARKAN TANGGAL

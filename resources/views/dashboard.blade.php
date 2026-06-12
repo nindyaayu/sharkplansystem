@@ -178,13 +178,13 @@ body{
 
         <h2>Dashboard</h2>
 
-        <p 
+        <p
             style="
                 color:#64748b;
                 font-size:13px;
             ">
 
-            Welcome back, Admin 👋
+            Welcome back, {{ Auth::user()->name }} 👋
 
         </p>
 

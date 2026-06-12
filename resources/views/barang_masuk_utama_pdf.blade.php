@@ -2,19 +2,33 @@
 <html>
 <head>
 
+    <meta charset="utf-8">
+
     <title>
-        Laporan Barang (Material Utama) Masuk
+        Laporan Barang Masuk (Material Utama)
     </title>
 
     <style>
 
         body{
-            font-family:sans-serif;
+            font-family: DejaVu Sans;
+            font-size:12px;
+            color:#1e293b;
         }
 
-        h2{
-            text-align:center;
+        .header-line{
+            border:none;
+            border-top:3px solid #1e40af;
+            margin-top:10px;
             margin-bottom:20px;
+        }
+
+        .judul-tabel{
+            background:#1e40af;
+            color:white;
+            padding:8px;
+            font-weight:bold;
+            margin-bottom:0;
         }
 
         table{
@@ -24,13 +38,18 @@
 
         table th,
         table td{
-            border:1px solid #000;
+            border:1px solid #64748b;
             padding:8px;
-            font-size:12px;
+            font-size:11px;
         }
 
         table th{
-            background:#f3f4f6;
+            background:#1e40af;
+            color:white;
+        }
+
+        .text-right{
+            text-align:right;
         }
 
     </style>
@@ -39,15 +58,84 @@
 
 <body>
 
-<h2>
-    Laporan Barang (Material Utama) Masuk
-</h2>
+<table style="width:100%;border:none;">
+
+<tr>
+
+<td style="border:none;width:90px;">
+
+    <img
+        src="{{ public_path('images/logo-shark.png') }}"
+        width="70">
+
+</td>
+
+<td style="border:none;">
+
+    <div style="
+        font-size:28px;
+        font-weight:bold;
+        color:#1e3a8a;
+    ">
+        SHARKPLAN
+    </div>
+
+    <div style="
+        font-size:14px;
+        color:#64748b;
+    ">
+        Inventory & Production System
+    </div>
+
+    <div style="
+        font-size:20px;
+        font-weight:bold;
+        margin-top:8px;
+    ">
+        LAPORAN BARANG MASUK
+    </div>
+
+    <div style="
+        font-size:12px;
+        color:#475569;
+    ">
+        Material Utama
+    </div>
+
+</td>
+
+<td
+    align="right"
+    style="
+        border:none;
+        font-size:11px;
+    ">
+
+    <b>Tanggal Cetak</b><br>
+    {{ now()->format('d/m/Y H:i') }}
+
+    <br><br>
+
+    <b>Cabang</b><br>
+    {{ auth()->user()->cabang ?? 'PUSAT' }}
+
+</td>
+
+</tr>
+
+</table>
+
+<hr class="header-line">
 
 @if(!empty($tanggal_awal) && !empty($tanggal_akhir))
 
-<p style="text-align:center;">
+<div style="
+    text-align:center;
+    margin-bottom:15px;
+    font-size:12px;
+">
 
-    Periode :
+    <b>Periode :</b>
 
     {{ \Carbon\Carbon::parse($tanggal_awal)->format('d-m-Y') }}
 
@@ -55,9 +143,13 @@
 
     {{ \Carbon\Carbon::parse($tanggal_akhir)->format('d-m-Y') }}
 
-</p>
+</div>
 
 @endif
+
+<div class="judul-tabel">
+    DATA BARANG MASUK MATERIAL UTAMA
+</div>
 
 <table>
 
@@ -65,12 +157,12 @@
 
 <tr>
 
-<th>No</th>
-<th>Kode</th>
+<th width="5%">No</th>
+<th width="12%">Kode</th>
 <th>Nama Barang</th>
-<th>Supplier</th>
-<th>Total Roll</th>
-<th>Total Meter</th>
+<th width="20%">Supplier</th>
+<th width="12%">Total Roll</th>
+<th width="15%">Total Meter</th>
 
 </tr>
 
@@ -78,29 +170,86 @@
 
 <tbody>
 
-@foreach($data as $item)
+@forelse($data as $item)
 
 <tr>
 
-<td>{{ $loop->iteration }}</td>
+<td>
+    {{ $loop->iteration }}
+</td>
 
-<td>{{ $item->kode }}</td>
+<td>
+    {{ $item->kode }}
+</td>
 
-<td>{{ $item->nama }}</td>
+<td>
+    {{ $item->nama }}
+</td>
 
-<td>{{ $item->supplier }}</td>
+<td>
+    {{ $item->supplier }}
+</td>
 
-<td>{{ $item->roll }}</td>
+<td class="text-right">
+    {{ number_format($item->roll,0) }}
+</td>
 
-<td>{{ $item->meter }}</td>
+<td class="text-right">
+    {{ number_format($item->meter,0) }}
+</td>
 
 </tr>
 
-@endforeach
+@empty
+
+<tr>
+
+<td colspan="6" align="center">
+
+    Tidak ada data
+
+</td>
+
+</tr>
+
+@endforelse
 
 </tbody>
 
+<tfoot>
+
+<tr>
+
+<th colspan="4" style="text-align:right;">
+    TOTAL
+</th>
+
+<th class="text-right">
+    {{ number_format($data->sum('roll'),0) }}
+</th>
+
+<th class="text-right">
+    {{ number_format($data->sum('meter'),0) }}
+</th>
+
+</tr>
+
+</tfoot>
+
 </table>
+
+<br><br>
+
+<div style="
+    text-align:center;
+    font-size:10px;
+    color:#64748b;
+">
+
+    Dicetak dari sistem SHARKPLAN -
+    Inventory & Production System
+
+</div>
 
 </body>
 </html>
