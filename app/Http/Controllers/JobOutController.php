@@ -229,34 +229,38 @@ class JobOutController extends Controller
             ];
         }
 
-        $pdf = Pdf::loadView(
-            'job_out_pdf_hitung',
-            [
+            $pdf = Pdf::loadView(
+                'job_out_pdf',
+                [
 
-                'job' => $job,
+                    'job' => $job,
 
-                'produk' =>
-                    $job->produk,
+                    'produk' =>
+                        $job->produk,
 
-                'hasil' =>
-                    $hasil,
+                    'hasil' =>
+                        $hasil,
 
-                'vendor' =>
-                    $job->vendor,
+                    'vendor' =>
+                        $job->vendor,
 
-                'ekspedisi' =>
-                    $job->ekspedisi,
+                    'ekspedisi' =>
+                        $job->ekspedisi,
 
-                'catatan' =>
-                    $job->catatan,
+                    'catatan' =>
+                        $job->catatan,
 
-                'qty_produksi' => 0
-            ]
-        );
+                    'qty_produksi' => 0
+                ]
+            )->setPaper(
+                'A5',
+                'landscape'
+            );
 
-        return $pdf->download(
-            $job->no_surat . '.pdf'
-        );
+
+            return $pdf->download(
+                $job->no_surat . '.pdf'
+            );
     }
 
     // =========================
@@ -465,32 +469,36 @@ class JobOutController extends Controller
         // GENERATE PDF
         // =========================
 
-        $pdf = Pdf::loadView(
-            'job_out_pdf_hitung',
-            [
+            $pdf = Pdf::loadView(
+                'job_out_pdf',
+                [
 
-                'job' => $job,
+                    'job' => $job,
 
-                'produk' => $produk,
+                    'produk' =>
+                        $job->produk,
 
-                'hasil' => $hasil,
+                    'hasil' =>
+                        $hasil,
 
-                'vendor' =>
-                    $request->vendor,
+                    'vendor' =>
+                        $job->vendor,
 
-                'ekspedisi' =>
-                    $request->ekspedisi,
+                    'ekspedisi' =>
+                        $job->ekspedisi,
 
-                'catatan' =>
-                    $request->catatan,
+                    'catatan' =>
+                        $job->catatan,
 
-                'qty_produksi' =>
-                    $request->qty_produksi
-            ]
-        );
+                    'qty_produksi' => 0
+                ]
+            )->setPaper(
+                'A5',
+                'landscape'
+            );
 
-        return $pdf->download(
-            $kode . '.pdf'
-        );
+            return $pdf->download(
+                $job->no_surat . '.pdf'
+            );
     }
 }
