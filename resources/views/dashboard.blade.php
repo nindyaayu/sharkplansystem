@@ -190,11 +190,9 @@ body{
 
     </div>
 
-    <div class="admin">
-
-        👤 Admin
-
-    </div>
+        <div class="admin">
+            👤 {{ ucfirst(Auth::user()->role) }} ({{ Auth::user()->cabang }})
+        </div>
 
 </div>
 

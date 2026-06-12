@@ -144,8 +144,8 @@ tbody tr:hover {
     <h2>Barang Masuk</h2>
 
     <div class="admin">
-        👤 Admin
-    </div>
+    👤 {{ ucfirst(Auth::user()->role) }} ({{ Auth::user()->cabang }})
+</div>
 </div>
 
 <!-- ===== FILTER ===== -->

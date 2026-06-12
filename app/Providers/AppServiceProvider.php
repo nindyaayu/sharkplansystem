@@ -20,20 +20,34 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {
-        View::composer('*', function ($view) {
+        {
+            View::composer('*', function ($view) {
 
-            $jumlahPermintaan =
-                PermintaanBarang::where(
+                $query = PermintaanBarang::where(
                     'status',
                     'Menunggu'
-                )->count();
+                );
 
-            $view->with(
-                'jumlahPermintaan',
-                $jumlahPermintaan
-            );
+                if (
+                    auth()->check()
+                    &&
+                    auth()->user()->cabang
+                ) {
 
-        });
-    }
+                    $query->where(
+                        'cabang',
+                        auth()->user()->cabang
+                    );
+
+                }
+
+                $jumlahPermintaan = $query->count();
+
+                $view->with(
+                    'jumlahPermintaan',
+                    $jumlahPermintaan
+                );
+
+            });
+        }
 }

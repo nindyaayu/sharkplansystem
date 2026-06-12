@@ -13,7 +13,19 @@ class PermintaanBarangController extends Controller
 {
     public function index()
 {
-    $barang = Barang::orderBy('nama')->get();
+    $barang = Barang::when(
+        auth()->user()->cabang,
+        function ($q) {
+
+            $q->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
+    )
+    ->orderBy('nama')
+    ->get();
 
     $produk = Produk::orderBy('nama')->get();
 
@@ -232,27 +244,32 @@ $barang->update([
         $tolak = $details->where('status', 'Ditolak')->count();
 
         // Jika semua detail sudah diproses
-        if (($acc + $kosong + $tolak) == $total) {
+            if (($acc + $kosong + $tolak) == $total) {
 
-            if ($acc == $total) {
+                if ($acc == $total) {
 
-                $permintaan->status = 'Disetujui';
+                    $permintaan->status = 'Disetujui';
 
-            } elseif ($acc > 0) {
+                } elseif ($acc > 0) {
 
-                $permintaan->status = 'Disetujui Sebagian';
+                    $permintaan->status = 'Disetujui Sebagian';
 
-            } elseif ($kosong == $total) {
+                } elseif ($kosong == $total) {
 
-                $permintaan->status = 'Kosong';
+                    $permintaan->status = 'Kosong';
 
-            } elseif ($tolak == $total) {
+                } elseif ($tolak == $total) {
 
-                $permintaan->status = 'Ditolak';
+                    $permintaan->status = 'Ditolak';
+
+                } elseif ($kosong > 0) {
+
+                    // campuran Kosong + Ditolak
+                    $permintaan->status = 'Kosong';
+                }
+
+                $permintaan->save();
             }
-
-            $permintaan->save();
-        }
 
         return response()->json([
             'success' => true,
