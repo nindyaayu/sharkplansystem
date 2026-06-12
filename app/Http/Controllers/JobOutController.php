@@ -57,146 +57,56 @@ class JobOutController extends Controller
         // NOMOR SURAT
         // =========================
 
-        $last = JobOut::latest()->first();
+        $last = JobOut::orderBy('id', 'desc')->first();
 
-        if($last){
+        if ($last) {
 
-            $nomor =
-                (int) substr(
-                    $last->no_surat,
-                    3
-                ) + 1;
+            $pecah = explode('/', $last->no_surat);
 
-        }else{
+            $nomor = (int) end($pecah) + 1;
+
+        } else {
 
             $nomor = 1;
         }
 
+        $bulanRomawi = [
+            1 => 'I',
+            2 => 'II',
+            3 => 'III',
+            4 => 'IV',
+            5 => 'V',
+            6 => 'VI',
+            7 => 'VII',
+            8 => 'VIII',
+            9 => 'IX',
+            10 => 'X',
+            11 => 'XI',
+            12 => 'XII'
+        ];
+
+        $cabang = auth()->user()->cabang;
+
+        $kodeCabang = match ($cabang) {
+
+            'Lawang'  => 'LWG',
+
+            'Pandaan' => 'PDN',
+
+            default   => strtoupper(substr($cabang, 0, 3))
+        };
+
         $kode =
-            'SJ-' .
+            'SJ/' .
+            $kodeCabang .
+            '/' .
+            $bulanRomawi[now()->month] .
+            '/' .
             str_pad(
                 $nomor,
-                3,
+                4,
                 '0',
                 STR_PAD_LEFT
-            );
-
-        // =========================
-        // SIMPAN HEADER
-        // =========================
-
-        $job = JobOut::create([
-
-            'no_surat' => $kode,
-
-            'produk_id' =>
-                $request->produk_id,
-
-            'vendor' =>
-                $request->vendor,
-
-            'ekspedisi' =>
-                $request->ekspedisi,
-
-            'tanggal' =>
-                $request->tanggal,
-
-            'status' => 'Dikirim',
-
-            'catatan' =>
-                $request->catatan
-
-        ]);
-
-        // =========================
-        // AMBIL BOM
-        // =========================
-
-        $bom = Bom::with(
-            'details.barang'
-        )
-        ->where(
-            'produk_id',
-            $request->produk_id
-        )
-        ->get();
-
-        // =========================
-        // LOOP MATERIAL
-        // =========================
-
-        foreach($bom as $item){
-
-            foreach($item->details as $detail){
-
-                JobOutDetail::create([
-
-                    'job_out_id' =>
-                        $job->id,
-
-                    'barang_id' =>
-                        $detail->barang_id,
-
-                    'qty' =>
-                        $detail->qty,
-
-                    'satuan' =>
-                        $detail->satuan_pakai
-
-                ]);
-
-                $barang = Barang::find(
-                    $detail->barang_id
-                );
-
-                if($barang){
-
-                    if(
-                        $detail->satuan_pakai
-                        == 'ROLL'
-                    ){
-
-                        $barang->jumlah_roll -=
-                            $detail->qty;
-
-                        if(
-                            $barang->jumlah_roll < 0
-                        ){
-
-                            $barang->jumlah_roll = 0;
-                        }
-                    }
-
-                    $barang->save();
-                }
-
-                BarangKeluar::create([
-
-                    'barang_id' =>
-                        $detail->barang_id,
-
-                    'jumlah' =>
-                        0,
-
-                    'jumlah_roll' =>
-                        $detail->qty,
-
-                    'tanggal_keluar' =>
-                        $request->tanggal,
-
-                    'tujuan' =>
-                        'JOB OUT - ' .
-                        $request->vendor
-
-                ]);
-            }
-        }
-
-        return redirect()
-            ->back()
-            ->with(
-                'success',
-                'Job Out berhasil dibuat'
             );
     }
 
@@ -235,22 +145,12 @@ class JobOutController extends Controller
 
                     'job' => $job,
 
-                    'produk' =>
-                        $job->produk,
+                    'produk' => $job->produk,
 
-                    'hasil' =>
-                        $hasil,
-
-                    'vendor' =>
-                        $job->vendor,
-
-                    'ekspedisi' =>
-                        $job->ekspedisi,
-
-                    'catatan' =>
-                        $job->catatan,
+                    'hasil' => $hasil,
 
                     'qty_produksi' => 0
+
                 ]
             )->setPaper(
                 'A5',
@@ -259,7 +159,7 @@ class JobOutController extends Controller
 
 
             return $pdf->download(
-                $job->no_surat . '.pdf'
+                str_replace('/', '-', $job->no_surat) . '.pdf'
             );
     }
 
@@ -288,26 +188,54 @@ class JobOutController extends Controller
         // NOMOR SURAT
         // =========================
 
-        $last = JobOut::latest()->first();
+        $last = JobOut::orderBy('id', 'desc')->first();
 
-        if($last){
+            if ($last) {
 
-            $nomor =
-                (int) substr(
-                    $last->no_surat,
-                    3
-                ) + 1;
+                $pecah = explode('/', $last->no_surat);
 
-        }else{
+                $nomor = (int) end($pecah) + 1;
 
-            $nomor = 1;
-        }
+            } else {
+
+                $nomor = 1;
+            }
+
+        $bulanRomawi = [
+            1 => 'I',
+            2 => 'II',
+            3 => 'III',
+            4 => 'IV',
+            5 => 'V',
+            6 => 'VI',
+            7 => 'VII',
+            8 => 'VIII',
+            9 => 'IX',
+            10 => 'X',
+            11 => 'XI',
+            12 => 'XII'
+        ];
+
+        $cabang = auth()->user()->cabang;
+
+        $kodeCabang = match ($cabang) {
+
+            'Lawang'  => 'LWG',
+
+            'Pandaan' => 'PDN',
+
+            default   => strtoupper(substr($cabang, 0, 3))
+        };
 
         $kode =
-            'SJ-' .
+            'SJ/' .
+            $kodeCabang .
+            '/' .
+            $bulanRomawi[now()->month] .
+            '/' .
             str_pad(
                 $nomor,
-                3,
+                4,
                 '0',
                 STR_PAD_LEFT
             );
@@ -323,19 +251,19 @@ class JobOutController extends Controller
             'produk_id' =>
                 $request->produk_id,
 
-            'vendor' =>
-                $request->vendor,
+            'vendor' => $request->kepada,
 
-            'ekspedisi' =>
-                $request->ekspedisi,
+            'ekspedisi' => $request->no_polisi,
 
             'tanggal' =>
-                now(),
+                now()->toDateString(),
 
             'status' => 'Dikirim',
 
-            'catatan' =>
-                $request->catatan
+            'catatan' => $request->alamat,
+
+            'cabang' =>
+                auth()->user()->cabang
 
         ]);
 
@@ -444,7 +372,7 @@ class JobOutController extends Controller
 
                     'tujuan' =>
                         'SURAT JALAN - ' .
-                        $request->vendor
+                        $request->kepada
                 ]);
 
                 // =========================
@@ -472,23 +400,23 @@ class JobOutController extends Controller
             $pdf = Pdf::loadView(
                 'job_out_pdf',
                 [
-
                     'job' => $job,
 
-                    'produk' =>
-                        $job->produk,
+                    'produk' => $job->produk,
 
-                    'hasil' =>
-                        $hasil,
+                    'hasil' => $hasil,
 
-                    'vendor' =>
-                        $job->vendor,
+                    'kepada' => $request->kepada,
 
-                    'ekspedisi' =>
-                        $job->ekspedisi,
+                    'alamat' => $request->alamat,
 
-                    'catatan' =>
-                        $job->catatan,
+                    'no_polisi' => $request->no_polisi,
+
+                    'dibuat_oleh' =>
+                        $request->dibuat_oleh,
+
+                    'tanggal_jam' =>
+                        now()->format('d-m-Y H:i'),
 
                     'qty_produksi' => 0
                 ]
@@ -498,7 +426,7 @@ class JobOutController extends Controller
             );
 
             return $pdf->download(
-                $job->no_surat . '.pdf'
+                str_replace('/', '-', $job->no_surat) . '.pdf'
             );
     }
 }

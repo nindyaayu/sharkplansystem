@@ -668,7 +668,7 @@ tbody tr:hover{
 
         <h3 style="margin-bottom:20px;">
 
-            Job Out
+            Form Surat Jalan
 
         </h3>
 
@@ -696,44 +696,57 @@ tbody tr:hover{
                 name="komponen"
                 value="{{ request('komponen') }}">
 
-            <label>Vendor</label>
+            <label>Kepada</label>
 
             <input
                 type="text"
-                name="vendor"
+                name="kepada"
                 class="input"
-                placeholder="Nama Vendor"
+                placeholder="Nama Penerima"
                 style="
                     width:100%;
                     margin-top:5px;
                     margin-bottom:15px;
                 ">
 
-            <label>Ekspedisi</label>
-
-            <input
-                type="text"
-                name="ekspedisi"
-                class="input"
-                placeholder="Ekspedisi"
-                style="
-                    width:100%;
-                    margin-top:5px;
-                    margin-bottom:15px;
-                ">
-
-            <label>Catatan</label>
+            <label>Alamat</label>
 
             <textarea
-                name="catatan"
+                name="alamat"
                 class="input"
-                placeholder="Catatan"
+                placeholder="Alamat Tujuan"
                 style="
                     width:100%;
                     margin-top:5px;
                     margin-bottom:15px;
                     height:80px;
                 "></textarea>
+
+            <label>No. Pol Kendaraan</label>
+
+            <input
+                type="text"
+                name="no_polisi"
+                class="input"
+                placeholder="N 1234 XX"
+                style="
+                    width:100%;
+                    margin-top:5px;
+                    margin-bottom:15px;
+                ">
+
+            <label>Dibuat Oleh</label>
+
+            <input
+                type="text"
+                name="dibuat_oleh"
+                class="input"
+                placeholder="Nama Pembuat"
+                style="
+                    width:100%;
+                    margin-top:5px;
+                    margin-bottom:15px;
+                ">
 
             <div
                 style="

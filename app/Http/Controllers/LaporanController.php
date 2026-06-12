@@ -115,10 +115,34 @@ class LaporanController extends Controller
             }
         }
 
-        $pdf = Pdf::loadView(
-            'laporan_pdf',
-            compact('data')
-        );
+   $pdf = Pdf::loadView(
+        'job_out_pdf',
+        [
+
+            'job' => $job,
+
+            'produk' => $job->produk,
+
+            'hasil' => $hasil,
+
+            'kepada' => $request->kepada,
+
+            'alamat' => $request->alamat,
+
+            'no_polisi' => $request->no_polisi,
+
+            'dibuat_oleh' => $request->dibuat_oleh,
+
+            'tanggal_jam' =>
+                now()->format('d-m-Y H:i'),
+
+            'qty_produksi' => 0
+
+        ]
+    )->setPaper(
+        'A5',
+        'landscape'
+    );
 
         return $pdf->download(
             'laporan-material-utama.pdf'

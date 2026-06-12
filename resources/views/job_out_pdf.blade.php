@@ -172,55 +172,43 @@ SURAT JALAN
 
 </div>
 
-<!-- INFO -->
+        <!-- INFO -->
 
-<div class="info">
+        <div class="info">
 
-<table>
+        <table>
 
-<tr>
+        <tr>
 
-<td width="12%">Kepada</td>
-<td width="38%">: {{ $job->vendor }}</td>
+        <td width="12%">Kepada</td>
+        <td width="38%">: {{ $kepada }}</td>
 
-<td width="18%">Tgl / Jam Berangkat</td>
-<td>: {{ date('d/m/Y', strtotime($job->tanggal)) }}</td>
+        <td width="18%">Tgl / Jam</td>
+        <td>: {{ $tanggal_jam }}</td>
 
-</tr>
+        </tr>
 
-<tr>
+        <tr>
 
-<td>Alamat</td>
-<td>: </td>
+        <td>Alamat</td>
+        <td>: {{ $alamat }}</td>
 
-<td>Tanggal Kedatangan</td>
-<td>: </td>
+        <td>No. Surat Jalan</td>
+        <td>: {{ $job->no_surat }}</td>
 
-</tr>
+        </tr>
 
-<tr>
+        <tr>
 
-<td></td>
-<td></td>
+        <td></td>
+        <td></td>
 
-<td>No. Surat Jalan</td>
-<td>: {{ $job->no_surat }}</td>
+        <td>No. Polisi</td>
+        <td>: {{ $no_polisi }}</td>
 
-</tr>
+        </table>
 
-<tr>
-
-<td></td>
-<td></td>
-
-<td>No. Pol Kendaraan</td>
-<td>: </td>
-
-</tr>
-
-</table>
-
-</div>
+        </div>
 
 <!-- TABEL BARANG -->
 
@@ -294,73 +282,65 @@ Kurang Barang
 
 </table>
 
-<!-- TTD -->
+        <!-- TTD -->
 
-<table class="ttd">
+        <table class="ttd">
 
-    <!-- Header -->
-
-    <tr>
+        <tr>
 
         <td colspan="2" class="ttd-head">
-            Diterima Oleh,
+        Diterima Oleh
         </td>
 
         <td class="ttd-head">
-            Diperiksa Oleh,
+        Diperiksa Oleh
         </td>
 
         <td class="ttd-head">
-            Dibuat Oleh
+        Dibuat Oleh
         </td>
 
-    </tr>
+        </tr>
 
-    <!-- Tanggal & Jam -->
+        <tr>
 
-    <tr>
+<td style="padding:5px;">
+Tanggal :
+</td>
 
-        <td style="padding:5px;">
-            Tanggal :
-        </td>
-
-        <td style="padding:5px;">
-            Jam :
-        </td>
+<td style="padding:5px;">
+Jam :
+</td>
 
         <td rowspan="2"></td>
 
         <td rowspan="2"></td>
 
-    </tr>
+        </tr>
 
-    <!-- Area Tanda Tangan -->
-
-    <tr>
+        <tr>
 
         <td colspan="2" class="ttd-body"></td>
 
-    </tr>
+        </tr>
 
-    <!-- Nama Penanda Tangan -->
-
-    <tr>
+        <tr>
 
         <td colspan="2" class="center">
-            Penerima
+        Penerima
         </td>
 
         <td class="center">
-            Ekspedisi / Security
+        Ekspedisi / Security
         </td>
 
         <td class="center">
-            &nbsp;
+        {{ $dibuat_oleh }}
         </td>
 
-    </tr>
+        </tr>
 
-</table>
+        </table>
 
 </td>
 </body>
