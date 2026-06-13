@@ -778,11 +778,11 @@ href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 
                 </a>
 
-                <a href="/hasil-cutting">
+                <!-- <a href="/hasil-cutting">
 
                     ✂️ Hasil Cutting
 
-                </a>
+                </a> -->
 
             </div>
 
