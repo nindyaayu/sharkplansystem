@@ -1231,6 +1231,15 @@ Route::get('/laporan-material-utama-pdf', function (Request $request) {
         'Kain'
     );
 
+    if (auth()->user()->cabang) {
+
+    $query->where(
+        'cabang',
+        auth()->user()->cabang
+    );
+
+}
+
     if ($kode) {
         $query->where(
             'kode',
@@ -1546,6 +1555,15 @@ $query = Barang::where(
     'kategori',
     'Aksesoris'
 );
+
+if (auth()->user()->cabang) {
+
+    $query->where(
+        'cabang',
+        auth()->user()->cabang
+    );
+
+}
 
 if ($kode) {
     $query->where(
