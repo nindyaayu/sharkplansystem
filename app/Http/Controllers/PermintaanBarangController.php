@@ -27,7 +27,20 @@ class PermintaanBarangController extends Controller
     ->orderBy('nama')
     ->get();
 
+    if (auth()->user()->cabang == 'Pusat') {
+
     $produk = Produk::orderBy('nama')->get();
+
+} else {
+
+    $produk = Produk::where(
+        'cabang',
+        auth()->user()->cabang
+    )
+    ->orderBy('nama')
+    ->get();
+
+}
 
     $query = PermintaanBarang::with([
     'produk',

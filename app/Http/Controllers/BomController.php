@@ -14,7 +14,20 @@ class BomController extends Controller
     // TAMPIL HALAMAN MASTER BOM
     // =========================
     public function index()
-    {
+{
+    if (auth()->user()->cabang == null) {
+
+        $produk = Produk::all();
+
+        $barang = Barang::all();
+
+        $bom = Bom::with([
+            'produk',
+            'details.barang'
+        ])->latest()->get();
+
+    } else {
+
         $produk = Produk::where(
             'cabang',
             auth()->user()->cabang
@@ -35,13 +48,14 @@ class BomController extends Controller
         )
         ->latest()
         ->get();
-
-        return view('bom', compact(
-            'produk',
-            'barang',
-            'bom'
-        ));
     }
+
+    return view('bom', compact(
+        'produk',
+        'barang',
+        'bom'
+    ));
+}
 // =========================
 // UPDATE HEADER BOM
 // =========================
@@ -191,27 +205,37 @@ public function update(Request $request, $id)
     public function perhitungan(Request $request)
     {
         // produk
-        $produk = Produk::where(
-            'cabang',
-            auth()->user()->cabang
-        )->get();
+        if (auth()->user()->cabang == null) {
 
-        // dropdown komponen
-        $bom = collect();
+            $produk = Produk::all();
 
-        if($request->produk_id){
+        } else {
 
-            $bom = Bom::where(
-                'produk_id',
-                $request->produk_id
-            )
-            ->where(
+            $produk = Produk::where(
                 'cabang',
                 auth()->user()->cabang
-            )
+            )->get();
+
+        }
+
+        // dropdown komponen
+        $queryBom = Bom::where(
+            'produk_id',
+            $request->produk_id
+        );
+
+        if (auth()->user()->cabang != null) {
+
+            $queryBom->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
+
+        $bom = $queryBom
             ->orderBy('nama_komponen')
             ->get();
-        }
 
         // hasil
         $hasil = collect();
@@ -221,14 +245,16 @@ public function update(Request $request, $id)
 
             // query bom
             $query = Bom::with('details.barang')
-                ->where('produk_id', $request->produk_id
-                
-                                )
-                ->where(
+                ->where('produk_id', $request->produk_id);
+
+            if (auth()->user()->cabang != null) {
+
+                $query->where(
                     'cabang',
                     auth()->user()->cabang
-                    
-                    );
+                );
+
+            }
 
             // mode komponen
             if (
