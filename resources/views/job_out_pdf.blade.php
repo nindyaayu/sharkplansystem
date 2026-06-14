@@ -122,6 +122,12 @@ body{
 
 <body>
 
+@php
+$chunks = $job->details->chunk(6);
+@endphp
+
+@foreach($chunks as $pageIndex => $details)
+
 <!-- HEADER -->
 
 <div class="header">
@@ -132,8 +138,7 @@ body{
 
 <td width="15%">
 
-@if(file_exists(public_path('images/logo-shark.png')))
-<img
+@if(file_exists(public_path('images/logo-shark.png'))) <img
 src="{{ public_path('images/logo-shark.png') }}"
 style="height:55px;">
 @endif
@@ -164,6 +169,12 @@ Telepon : 0812 7203 1999
 
 SURAT JALAN
 
+<br>
+
+<small>
+Hal {{ $pageIndex + 1 }}
+</small>
+
 </td>
 
 </tr>
@@ -172,45 +183,43 @@ SURAT JALAN
 
 </div>
 
-        <!-- INFO -->
+<div class="info">
 
-        <div class="info">
+<table>
 
-        <table>
+<tr>
 
-        <tr>
+<td width="12%">Kepada</td>
+<td width="38%">: {{ $kepada }}</td>
 
-        <td width="12%">Kepada</td>
-        <td width="38%">: {{ $kepada }}</td>
+<td width="18%">Tgl / Jam</td>
+<td>: {{ $tanggal_jam }}</td>
 
-        <td width="18%">Tgl / Jam</td>
-        <td>: {{ $tanggal_jam }}</td>
+</tr>
 
-        </tr>
+<tr>
 
-        <tr>
+<td>Alamat</td>
+<td>: {{ $alamat }}</td>
 
-        <td>Alamat</td>
-        <td>: {{ $alamat }}</td>
+<td>No. Surat Jalan</td>
+<td>: {{ $job->no_surat }}</td>
 
-        <td>No. Surat Jalan</td>
-        <td>: {{ $job->no_surat }}</td>
+</tr>
 
-        </tr>
+<tr>
 
-        <tr>
+<td></td>
+<td></td>
 
-        <td></td>
-        <td></td>
+<td>No. Polisi</td>
+<td>: {{ $no_polisi }}</td>
 
-        <td>No. Polisi</td>
-        <td>: {{ $no_polisi }}</td>
+</tr>
 
-        </table>
+</table>
 
-        </div>
-
-<!-- TABEL BARANG -->
+</div>
 
 <table class="table-barang">
 
@@ -218,25 +227,11 @@ SURAT JALAN
 
 <tr>
 
-<th width="40%">
-Nama Barang
-</th>
-
-<th width="15%">
-Jumlah Pengiriman
-</th>
-
-<th width="15%">
-Barang Diterima
-</th>
-
-<th width="15%">
-Barang Ditolak
-</th>
-
-<th width="15%">
-Kurang Barang
-</th>
+<th width="40%">Nama Barang</th>
+<th width="15%">Jumlah Pengiriman</th>
+<th width="15%">Barang Diterima</th>
+<th width="15%">Barang Ditolak</th>
+<th width="15%">Kurang Barang</th>
 
 </tr>
 
@@ -244,7 +239,7 @@ Kurang Barang
 
 <tbody>
 
-@foreach($job->details as $detail)
+@foreach($details as $detail)
 
 <tr>
 
@@ -264,7 +259,7 @@ Kurang Barang
 
 @endforeach
 
-@for($i=0; $i<5; $i++)
+@for($i = 0; $i < (6 - $details->count()); $i++)
 
 <tr>
 
@@ -282,27 +277,25 @@ Kurang Barang
 
 </table>
 
-        <!-- TTD -->
+<table class="ttd">
 
-        <table class="ttd">
+<tr>
 
-        <tr>
+<td colspan="2" class="ttd-head">
+Diterima Oleh
+</td>
 
-        <td colspan="2" class="ttd-head">
-        Diterima Oleh
-        </td>
+<td colspan="2" class="ttd-head">
+Diperiksa Oleh
+</td>
 
-        <td class="ttd-head">
-        Diperiksa Oleh
-        </td>
+<td class="ttd-head">
+Dibuat Oleh
+</td>
 
-        <td class="ttd-head">
-        Dibuat Oleh
-        </td>
+</tr>
 
-        </tr>
-
-        <tr>
+<tr>
 
 <td style="padding:5px;">
 Tanggal :
@@ -312,36 +305,48 @@ Tanggal :
 Jam :
 </td>
 
-        <td rowspan="2"></td>
+<td rowspan="2"></td>
 
-        <td rowspan="2"></td>
+<td rowspan="2"></td>
 
-        </tr>
+<td rowspan="2"></td>
 
-        <tr>
+</tr>
 
-        <td colspan="2" class="ttd-body"></td>
+<tr>
 
-        </tr>
+<td colspan="2" class="ttd-body"></td>
 
-        <tr>
+</tr>
 
-        <td colspan="2" class="center">
-        Penerima
-        </td>
+<tr>
 
-        <td class="center">
-        Ekspedisi / Security
-        </td>
-
-        <td class="center">
-        {{ $dibuat_oleh }}
-        </td>
-
-        </tr>
-
-        </table>
-
+<td colspan="2" class="center">
+Penerima
 </td>
+
+<td class="center">
+Ekspedisi
+</td>
+
+<td class="center">
+Security
+</td>
+
+<td class="center">
+{{ $dibuat_oleh }}
+</td>
+
+</tr>
+
+</table>
+
+@if(!$loop->last)
+
+<div style="page-break-after:always;"></div>
+@endif
+
+@endforeach
+
 </body>
 </html>
