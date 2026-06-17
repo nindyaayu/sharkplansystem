@@ -42,13 +42,15 @@ class ProdukController extends Controller
 
     public function store(Request $request)
     {
-        $prefix = strtoupper($request->prefix);
+        $prefix = strtoupper(substr($request->nama, 0, 1));
 
         $lastProduk = Produk::where(
             'kode',
             'like',
             $prefix . '%'
-        )->latest()->first();
+        )
+        ->orderBy('kode', 'desc')
+        ->first();
 
         if ($lastProduk) {
 
