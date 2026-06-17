@@ -118,6 +118,8 @@ public function index()
 
             'satuan' => $request->satuan,
 
+            'tanggal' => $request->tanggal_input,
+
             'jumlah_roll' => 0,
 
             'jumlah_meter' => 0,

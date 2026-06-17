@@ -297,7 +297,7 @@ tbody tr:hover{
 
 <td>
 
-    {{ $d->created_at->format('d/m/Y') }}
+    {{ \Carbon\Carbon::parse($d->tanggal)->format('d/m/Y') }}
 
 </td>
 
