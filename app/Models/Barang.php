@@ -22,6 +22,8 @@ class Barang extends Model
 
         'stok',
 
+        'tanggal',
+
         'isi_per_satuan',
 
         'satuan_konversi',
