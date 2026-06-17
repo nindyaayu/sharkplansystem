@@ -469,7 +469,7 @@ name="isi_per_satuan"
 placeholder="Isi per satuan">
 <input 
 type="date"
-name="created_at"
+name="tanggal_input"
 value="{{ date('Y-m-d') }}">
 <input 
 name="satuan_konversi"
