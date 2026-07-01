@@ -87,14 +87,7 @@ $permintaan = $query
 
             $permintaan = PermintaanBarang::create([
 
-                'nomor_permintaan' =>
-                    'PB-' .
-                    str_pad(
-                        $nextNumber,
-                        4,
-                        '0',
-                        STR_PAD_LEFT
-                    ),
+                'nomor_permintaan' => $nomorPermintaan,
 
                 'tanggal' => now(),
 
