@@ -72,22 +72,18 @@ $permintaan = $query
 
     public function store(Request $request)
         {
-            $last = PermintaanBarang::latest()->first();
+            $max = PermintaanBarang::selectRaw("
+                MAX(CAST(SUBSTRING(nomor_permintaan,4) AS UNSIGNED)) as nomor
+            ")->first();
 
-            if ($last) {
+            $nextNumber = ($max->nomor ?? 0) + 1;
 
-                $lastNumber = (int) str_replace(
-                    'PB-',
-                    '',
-                    $last->nomor_permintaan
-                );
-
-                $nextNumber = $lastNumber + 1;
-
-            } else {
-
-                $nextNumber = 1;
-            }
+            $nomorPermintaan = 'PB-' . str_pad(
+                $nextNumber,
+                4,
+                '0',
+                STR_PAD_LEFT
+            );
 
             $permintaan = PermintaanBarang::create([
 
