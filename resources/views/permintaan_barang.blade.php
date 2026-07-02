@@ -168,6 +168,8 @@
                         style="padding:12px;text-align:center;"
                     >
 
+                    @if(auth()->user()->role == 'admin')
+
                     <button
                         onclick="lihatDetail({{ $item->id }})"
                         style="
@@ -178,12 +180,47 @@
                             border-radius:6px;
                             cursor:pointer;
                             margin-right:5px;
-                        "
-                    >
-                       ✉ Detail
+                        ">
+                        ✉ Detail
                     </button>
 
-                    
+                    @if($item->status == 'Menunggu')
+
+
+
+                            <button
+                                type="button"
+                                onclick="konfirmasiHapus({{ $item->id }})"
+                                style="
+                                    background:#ef4444;
+                                    color:white;
+                                    border:none;
+                                    padding:6px 12px;
+                                    border-radius:8px;
+                                    cursor:pointer;
+                                ">
+                                🗑️
+                            </button>
+
+                        </form>
+
+                    @endif
+
+                @else
+
+                        <button
+                            onclick="lihatDetail({{ $item->id }})"
+                            style="
+                                background:#10b981;
+                                color:white;
+                                border:none;
+                                padding:6px 12px;
+                                border-radius:6px;
+                                cursor:pointer;
+                                margin-right:5px;
+                            ">
+                            ✉ Detail
+                        </button>
 
                         @if(
                             $item->status == 'Disetujui' ||
@@ -206,9 +243,7 @@
 
                                 <button
                                     type="submit"
-                                    class="btn-sudah-diambil"
-                                    onclick="setTimeout(() => location.reload(), 1000)"
-                                >
+                                    class="btn-sudah-diambil">
                                     ✓ Sudah Diambil
                                 </button>
 
@@ -216,8 +251,9 @@
 
                         @endif
 
+                    @endif
 
-                </td>
+                    </td>
 
 
             </tr>
@@ -227,7 +263,7 @@
                 <tr>
 
                 <td
-                    colspan="7"
+                    colspan="9"
                     style="
                         text-align:center;
                         padding:30px;
@@ -1409,30 +1445,94 @@ function toggleKomponenPermintaan(){
 
 toggleKomponenPermintaan();
 
+function konfirmasiHapus(id){
+
+    document.getElementById('formHapus').action =
+        '/permintaan-barang/' + id;
+
+    document.getElementById('hapusModal').style.display =
+        'block';
+
+}
+
+function closeHapusModal(){
+
+    document.getElementById('hapusModal').style.display =
+        'none';
+
+}
+
 </script>
 
 
         <div id="detailModal" class="modal">
 
-        <div class="modal-content">
+    <div class="modal-content">
 
-            <div class="modal-header">
+        <div class="modal-header">
 
-                <h2>📋 Detail Permintaan Barang</h2>
+            <h2>📋 Detail Permintaan Barang</h2>
+
+            <button
+                class="close-btn"
+                onclick="closeDetailModal()">
+                ✕
+            </button>
+
+        </div>
+
+        <div id="detailContent"></div>
+
+    </div>
+
+</div>
+
+
+<!-- MODAL HAPUS (DI LUAR DETAIL MODAL) -->
+<div id="hapusModal" class="modal">
+
+    <div class="modal-content" style="max-width:420px;">
+
+        <h2 style="margin-bottom:15px;">
+            🗑️ Hapus Permintaan
+        </h2>
+
+        <p style="color:#cbd5e1;">
+            Apakah Anda yakin ingin menghapus permintaan ini?
+        </p>
+
+        <form id="formHapus" method="POST">
+
+            @csrf
+            @method('DELETE')
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:flex-end;
+                    gap:10px;
+                    margin-top:30px;
+                ">
 
                 <button
-                    class="close-btn"
-                    onclick="closeDetailModal()"
-                >
-                    ✕
+                    type="button"
+                    class="btn-batal"
+                    onclick="closeHapusModal()">
+                    Batal
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-hapus">
+                    Ya, Hapus
                 </button>
 
             </div>
-            <div id="detailContent">
 
-            </div>
+        </form>
 
-        </div>
-        </div>
+    </div>
+
+</div>
 
 @endsection

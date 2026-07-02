@@ -73,17 +73,17 @@ $permintaan = $query
     public function store(Request $request)
         {
             $max = PermintaanBarang::selectRaw("
-                MAX(CAST(SUBSTRING(nomor_permintaan,4) AS UNSIGNED)) as nomor
-            ")->first();
+    MAX(CAST(SUBSTRING(nomor_permintaan,4) AS UNSIGNED)) as nomor
+        ")->first();
 
-            $nextNumber = ($max->nomor ?? 0) + 1;
+        $nextNumber = ($max->nomor ?? 0) + 1;
 
-            $nomorPermintaan = 'PB-' . str_pad(
-                $nextNumber,
-                4,
-                '0',
-                STR_PAD_LEFT
-            );
+        $nomorPermintaan = 'PB-' . str_pad(
+            $nextNumber,
+            4,
+            '0',
+            STR_PAD_LEFT
+        );
 
             $permintaan = PermintaanBarang::create([
 
@@ -139,6 +139,80 @@ return redirect()
                     ])->findOrFail($id);
 
                     return response()->json($permintaan);
+                }
+
+            public function edit($id)
+                {
+                    $permintaan = PermintaanBarang::with('details')->findOrFail($id);
+
+                    return response()->json($permintaan);
+                }
+            
+            public function updateData(Request $request, $id)
+                {
+                    $permintaan = PermintaanBarang::findOrFail($id);
+
+                    if ($permintaan->status != 'Menunggu') {
+                        return back()->with(
+                            'error',
+                            'Permintaan yang sudah diproses tidak dapat diubah.'
+                        );
+                    }
+
+                    $permintaan->update([
+                        'produk_id' => $request->produk_id,
+                        'komponen_produk_id' => $request->komponen_produk_id,
+                        'nama_peminta' => $request->nama_peminta,
+                        'nama_penjahit' => $request->nama_penjahit,
+                    ]);
+
+                    DetailPermintaanBarang::where(
+                        'permintaan_barang_id',
+                        $permintaan->id
+                    )->delete();
+
+                    foreach ($request->barang_id as $i => $barangId) {
+
+                        DetailPermintaanBarang::create([
+                            'permintaan_barang_id' => $permintaan->id,
+                            'barang_id' => $barangId,
+                            'jumlah' => $request->jumlah[$i],
+                            'status' => 'Menunggu'
+                        ]);
+
+                    }
+
+                    return redirect()
+                        ->route('permintaan-barang')
+                        ->with('success', 'Permintaan berhasil diperbarui.');
+                }
+
+            public function destroy($id)
+                {
+                    $permintaan = PermintaanBarang::findOrFail($id);
+
+                    if ($permintaan->status != 'Menunggu') {
+                        return redirect()
+                            ->route('permintaan-barang')
+                            ->with(
+                                'error',
+                                'Permintaan yang sudah diproses tidak dapat dihapus.'
+                            );
+                    }
+
+                    DetailPermintaanBarang::where(
+                        'permintaan_barang_id',
+                        $permintaan->id
+                    )->delete();
+
+                    $permintaan->delete();
+
+                    return redirect()
+                        ->route('permintaan-barang')
+                        ->with(
+                            'success',
+                            'Permintaan berhasil dihapus.'
+                        );
                 }
 
             public function update(Request $request, $id)
