@@ -301,6 +301,16 @@ Route::middleware('auth')->group(function () {
             [PermintaanBarangController::class, 'destroy']
         )->name('permintaan-barang.destroy');
 
+        Route::get(
+            '/permintaan-barang/{id}/edit',
+            [PermintaanBarangController::class, 'edit']
+        )->name('permintaan-barang.edit');
+
+        Route::put(
+            '/permintaan-barang/{id}/update-data',
+            [PermintaanBarangController::class, 'updateData']
+        )->name('permintaan-barang.update-data');
+
 
         Route::get(
             '/permintaan-barang/{id}',
