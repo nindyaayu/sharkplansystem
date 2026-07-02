@@ -15,6 +15,43 @@
         📋 Permintaan Barang
     </h2>
 
+    <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+">
+
+    <div style="position:relative;">
+
+    <span
+        style="
+            position:absolute;
+            left:15px;
+            top:50%;
+            transform:translateY(-50%);
+            color:#94a3b8;
+        ">
+        🔍
+    </span>
+
+    <input
+        id="searchPermintaan"
+        type="text"
+        placeholder="Cari No PB, Produk, Peminta..."
+        style="
+            width:380px;
+            padding:12px 16px 12px 42px;
+            background:#0f1b3f;
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:10px;
+            color:white;
+        ">
+
+</div>
+
+</div>
+
     <button onclick="openModal()" style="
     background:#2563eb;
     color:white;
@@ -54,7 +91,7 @@
 
         </thead>
 
-        <tbody>
+        <tbody id="permintaanTable">
 
             @forelse($permintaan as $item)
 
@@ -1461,6 +1498,31 @@ function closeHapusModal(){
         'none';
 
 }
+
+document
+.getElementById('searchPermintaan')
+.addEventListener('input', function(){
+
+    let keyword = this.value
+        .toLowerCase()
+        .trim();
+
+    let rows = document.querySelectorAll(
+        '#permintaanTable tr'
+    );
+
+    rows.forEach(function(row){
+
+        let semua = row.innerText.toLowerCase();
+
+        row.style.display =
+            semua.includes(keyword)
+            ? ''
+            : 'none';
+
+    });
+
+});
 
 </script>
 
