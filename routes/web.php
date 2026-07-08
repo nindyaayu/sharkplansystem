@@ -323,56 +323,60 @@ Route::middleware('auth')->group(function () {
         )->name('permintaan-barang-detail.update');
 
             // =========================
-            // ketik barang di permimntaan barang
+            // ketik barang di permintaan barang
             // =========================
 
-        Route::get('/search-barang', function () {
+            Route::get('/search-barang', function () {
 
-            $barangs = \App\Models\Barang::where('kategori', 'Aksesoris');
+                $barangs = \App\Models\Barang::query();
 
-            if (auth()->user()->cabang) {
-                $barangs->where('cabang', auth()->user()->cabang);
-            }
+                if (request('kategori')) {
+                    $barangs->where('kategori', request('kategori'));
+                }
 
-            if (request('q')) {
-                $barangs->where(function ($q) {
-                    $q->where('nama', 'like', '%' . request('q') . '%')
-                    ->orWhere('kode', 'like', '%' . request('q') . '%');
+                if (auth()->user()->cabang) {
+                    $barangs->where('cabang', auth()->user()->cabang);
+                }
+
+                if (request('q')) {
+                    $barangs->where(function ($q) {
+                        $q->where('nama', 'like', '%' . request('q') . '%')
+                        ->orWhere('kode', 'like', '%' . request('q') . '%');
+                    });
+                }
+
+                return $barangs->limit(20)->get()->map(function ($item) {
+
+                    $totalMasuk = $item->barangMasuk()
+                        ->when(auth()->user()->cabang, function ($q) {
+                            $q->where('cabang', auth()->user()->cabang);
+                        })
+                        ->sum('jumlah');
+
+                    $totalKeluar = $item->barangKeluar()
+                        ->when(auth()->user()->cabang, function ($q) {
+                            $q->where('cabang', auth()->user()->cabang);
+                        })
+                        ->sum('jumlah');
+
+                    $stok = $totalMasuk - $totalKeluar;
+
+                    return [
+                        'id' => $item->id,
+                        'text' =>
+                            $item->kode .
+                            ' | ' .
+                            $item->nama .
+                            ' | ' .
+                            $item->warna .
+                            ' | ' .
+                            number_format($stok) .
+                            ' ' .
+                            strtoupper($item->satuan)
+                    ];
                 });
-            }
 
-            return $barangs->limit(20)->get()->map(function ($item) {
-
-                $totalMasuk = $item->barangMasuk()
-                    ->when(auth()->user()->cabang, function ($q) {
-                        $q->where('cabang', auth()->user()->cabang);
-                    })
-                    ->sum('jumlah');
-
-                $totalKeluar = $item->barangKeluar()
-                    ->when(auth()->user()->cabang, function ($q) {
-                        $q->where('cabang', auth()->user()->cabang);
-                    })
-                    ->sum('jumlah');
-
-                $stok = $totalMasuk - $totalKeluar;
-
-                return [
-                    'id' => $item->id,
-                    'text' =>
-                        $item->kode .
-                        ' | ' .
-                        $item->nama .
-                        ' | ' .
-                        $item->warna .
-                        ' | ' .
-                        number_format($stok) .
-                        ' ' .
-                        strtoupper($item->satuan)
-                ];
             });
-
-        });
     // =========================
     // INVENTORI
     // =========================
