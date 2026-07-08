@@ -207,80 +207,110 @@
 
                     @if(auth()->user()->role == 'admin')
 
-                    <button
-                        onclick="lihatDetail({{ $item->id }})"
-                        style="
-                            background:#10b981;
-                            color:white;
-                            border:none;
-                            padding:6px 12px;
-                            border-radius:6px;
-                            cursor:pointer;
-                            margin-right:5px;
-                        ">
-                        ✉ Detail
-                    </button>
+                <button
+                    onclick="lihatDetail({{ $item->id }})"
+                    style="
+                        background:#10b981;
+                        color:white;
+                        border:none;
+                        padding:6px 12px;
+                        border-radius:6px;
+                        cursor:pointer;
+                        margin-right:5px;
+                    ">
+                    ✉ Detail
+                </button>
+
+                <button
+                    type="button"
+                    onclick="konfirmasiHapus({{ $item->id }})"
+                    style="
+                        background:#ef4444;
+                        color:white;
+                        border:none;
+                        padding:6px 12px;
+                        border-radius:8px;
+                        cursor:pointer;
+                    ">
+                    🗑️ Delete
+                </button>
+
+                @if(
+                    $item->status == 'Disetujui' ||
+                    $item->status == 'Disetujui Sebagian'
+                )
+
+                <form
+                    action="{{ route('permintaan-barang.update',$item->id) }}"
+                    method="POST"
+                    style="display:inline;"
+                >
+                    @csrf
+                    @method('PUT')
+
+                    <input
+                        type="hidden"
+                        name="status"
+                        value="Sudah Diambil"
+                    >
 
                     <button
-                        type="button"
-                        onclick="konfirmasiHapus({{ $item->id }})"
-                        style="
-                            background:#ef4444;
-                            color:white;
-                            border:none;
-                            padding:6px 12px;
-                            border-radius:8px;
-                            cursor:pointer;
-                        ">
-                        🗑️ Delete
+                        type="submit"
+                        class="btn-sudah-diambil"
+                    >
+                        ✓ Sudah Diambil
                     </button>
 
-                @else
+                </form>
+
+                @endif
+
+            @else
+
+                <button
+                    onclick="lihatDetail({{ $item->id }})"
+                    style="
+                        background:#10b981;
+                        color:white;
+                        border:none;
+                        padding:6px 12px;
+                        border-radius:6px;
+                        cursor:pointer;
+                        margin-right:5px;
+                    ">
+                    ✉ Detail
+                </button>
+
+                @if(
+                    $item->status == 'Disetujui' ||
+                    $item->status == 'Disetujui Sebagian'
+                )
+
+                    <form
+                        action="{{ route('permintaan-barang.update',$item->id) }}"
+                        method="POST"
+                        style="display:inline;"
+                    >
+                        @csrf
+                        @method('PUT')
+
+                        <input
+                            type="hidden"
+                            name="status"
+                            value="Sudah Diambil"
+                        >
 
                         <button
-                            onclick="lihatDetail({{ $item->id }})"
-                            style="
-                                background:#10b981;
-                                color:white;
-                                border:none;
-                                padding:6px 12px;
-                                border-radius:6px;
-                                cursor:pointer;
-                                margin-right:5px;
-                            ">
-                            ✉ Detail
+                            type="submit"
+                            class="btn-sudah-diambil">
+                            ✓ Sudah Diambil
                         </button>
 
-                        @if(
-                            $item->status == 'Disetujui' ||
-                            $item->status == 'Disetujui Sebagian'
-                        )
+                    </form>
 
-                            <form
-                                action="{{ route('permintaan-barang.update',$item->id) }}"
-                                method="POST"
-                                style="display:inline;"
-                            >
-                                @csrf
-                                @method('PUT')
+                @endif
 
-                                <input
-                                    type="hidden"
-                                    name="status"
-                                    value="Sudah Diambil"
-                                >
-
-                                <button
-                                    type="submit"
-                                    class="btn-sudah-diambil">
-                                    ✓ Sudah Diambil
-                                </button>
-
-                            </form>
-
-                        @endif
-
-                    @endif
+            @endif
 
                     </td>
 
