@@ -188,32 +188,28 @@ return redirect()
                 }
 
             public function destroy($id)
-                {
-                    $permintaan = PermintaanBarang::findOrFail($id);
-
-                    if ($permintaan->status != 'Menunggu') {
-                        return redirect()
-                            ->route('permintaan-barang')
-                            ->with(
-                                'error',
-                                'Permintaan yang sudah diproses tidak dapat dihapus.'
-                            );
-                    }
-
-                    DetailPermintaanBarang::where(
-                        'permintaan_barang_id',
-                        $permintaan->id
-                    )->delete();
-
-                    $permintaan->delete();
-
-                    return redirect()
-                        ->route('permintaan-barang')
-                        ->with(
-                            'success',
-                            'Permintaan berhasil dihapus.'
-                        );
+            {
+                // Hanya admin yang boleh menghapus
+                if (auth()->user()->role != 'admin') {
+                    abort(403, 'Anda tidak memiliki akses.');
                 }
+
+                $permintaan = PermintaanBarang::findOrFail($id);
+
+                DetailPermintaanBarang::where(
+                    'permintaan_barang_id',
+                    $permintaan->id
+                )->delete();
+
+                $permintaan->delete();
+
+                return redirect()
+                    ->route('permintaan-barang')
+                    ->with(
+                        'success',
+                        'Permintaan berhasil dihapus.'
+                    );
+            }
 
             public function update(Request $request, $id)
                 {

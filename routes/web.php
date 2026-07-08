@@ -328,62 +328,49 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/search-barang', function () {
 
-            $query = \App\Models\Barang::select(
-                'id',
-                'kode',
-                'nama',
-                'warna',
-                'stok',
-                'satuan'
-            );
+            $barangs = \App\Models\Barang::where('kategori', 'Aksesoris');
 
             if (auth()->user()->cabang) {
-
-                $query->where(
-                    'cabang',
-                    auth()->user()->cabang
-                );
-
+                $barangs->where('cabang', auth()->user()->cabang);
             }
 
-            $query->where(function($q){
-
-                $q->where(
-                    'nama',
-                    'like',
-                    '%' . request('q') . '%'
-                )
-                ->orWhere(
-                    'kode',
-                    'like',
-                    '%' . request('q') . '%'
-                );
-
-            });
-
-            return $query
-                ->limit(20)
-                ->get()
-                ->map(function($item){
-
-                    return [
-
-                        'id' => $item->id,
-
-                        'text' =>
-                            $item->kode .
-                            ' | ' .
-                            $item->nama .
-                            ' | ' .
-                            $item->warna .
-                            ' | ' .
-                            number_format($item->stok) .
-                            ' ' .
-                            strtoupper($item->satuan)
-
-                    ];
-
+            if (request('q')) {
+                $barangs->where(function ($q) {
+                    $q->where('nama', 'like', '%' . request('q') . '%')
+                    ->orWhere('kode', 'like', '%' . request('q') . '%');
                 });
+            }
+
+            return $barangs->limit(20)->get()->map(function ($item) {
+
+                $totalMasuk = $item->barangMasuk()
+                    ->when(auth()->user()->cabang, function ($q) {
+                        $q->where('cabang', auth()->user()->cabang);
+                    })
+                    ->sum('jumlah');
+
+                $totalKeluar = $item->barangKeluar()
+                    ->when(auth()->user()->cabang, function ($q) {
+                        $q->where('cabang', auth()->user()->cabang);
+                    })
+                    ->sum('jumlah');
+
+                $stok = $totalMasuk - $totalKeluar;
+
+                return [
+                    'id' => $item->id,
+                    'text' =>
+                        $item->kode .
+                        ' | ' .
+                        $item->nama .
+                        ' | ' .
+                        $item->warna .
+                        ' | ' .
+                        number_format($stok) .
+                        ' ' .
+                        strtoupper($item->satuan)
+                ];
+            });
 
         });
     // =========================
