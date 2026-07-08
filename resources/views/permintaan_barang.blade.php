@@ -232,7 +232,7 @@
                             border-radius:8px;
                             cursor:pointer;
                         ">
-                        🗑️
+                        🗑️ Delete
                     </button>
 
                 @else
