@@ -221,27 +221,19 @@
                         ✉ Detail
                     </button>
 
-                    @if($item->status == 'Menunggu')
-
-
-
-                            <button
-                                type="button"
-                                onclick="konfirmasiHapus({{ $item->id }})"
-                                style="
-                                    background:#ef4444;
-                                    color:white;
-                                    border:none;
-                                    padding:6px 12px;
-                                    border-radius:8px;
-                                    cursor:pointer;
-                                ">
-                                🗑️
-                            </button>
-
-                        </form>
-
-                    @endif
+                    <button
+                        type="button"
+                        onclick="konfirmasiHapus({{ $item->id }})"
+                        style="
+                            background:#ef4444;
+                            color:white;
+                            border:none;
+                            padding:6px 12px;
+                            border-radius:8px;
+                            cursor:pointer;
+                        ">
+                        🗑️
+                    </button>
 
                 @else
 
