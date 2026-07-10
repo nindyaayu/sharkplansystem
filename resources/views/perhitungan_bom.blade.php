@@ -47,6 +47,20 @@ body{
     min-width:220px;
 }
 
+.modal-content .input{
+    width:100%;
+    min-width:100%;
+    box-sizing:border-box;
+}
+
+.modal-content select{
+    width:100%;
+}
+
+.modal-content input{
+    width:100%;
+}
+
 select.input option{
     background:#111827;
 }
@@ -159,6 +173,19 @@ tbody tr:hover{
     width:400px;
     border:1px solid rgba(255,255,255,0.05);
 }
+
+.form-label{
+    display:block;
+    margin-bottom:10px;
+    color:#e5e7eb;
+    font-size:16px;
+    font-weight:500;
+}
+
+.form-group{
+    margin-bottom:24px;
+}
+
 
 </style>
 
@@ -291,7 +318,7 @@ tbody tr:hover{
         class="btn-primary"
         onclick="openJobOutModal()">
 
-        📦 Job Out
+        📦 Surat Jalan
 
     </button>
 
@@ -469,7 +496,12 @@ tbody tr:hover{
 
     <div class="modal-content">
 
-        <h3 style="margin-bottom:20px;">
+        <h3 style="
+            margin-bottom:30px;
+            font-size:18px;
+            font-weight:700;
+            color:white;
+        ">
 
             Proses Produksi
 
@@ -511,7 +543,7 @@ tbody tr:hover{
                     background:rgba(99,102,241,0.1);
                     padding:12px;
                     border-radius:10px;
-                    margin-bottom:15px;
+                    margin-bottom:28px;
                     font-size:14px;
                 ">
 
@@ -529,32 +561,34 @@ tbody tr:hover{
             </div>
 
             <!-- TANGGAL -->
-            <label>Tanggal</label>
+            <div class="form-group">
 
-            <input 
+            <label class="form-label">
+                Tanggal
+            </label>
+
+            <input
                 type="date"
                 name="tanggal"
                 class="input"
                 required
                 value="{{ date('Y-m-d') }}"
-                style="
-                    width:100%;
-                    margin-top:5px;
-                    margin-bottom:15px;
-                ">
+                style="width:100%;">
+
+        </div>
 
             <!-- JENIS -->
-            <label>Jenis Produksi</label>
+            <div class="form-group">
 
-            <select 
+            <label class="form-label">
+                Jenis Produksi
+            </label>
+
+            <select
                 name="jenis_produksi"
                 class="input"
                 required
-                style="
-                    width:100%;
-                    margin-top:5px;
-                    margin-bottom:15px;
-                ">
+                style="width:100%;">
 
                 <option value="">
                     Pilih Jenis
@@ -569,20 +603,24 @@ tbody tr:hover{
                 </option>
 
             </select>
+            </div>
 
             <!-- PELAKSANA -->
-            <label>Pelaksana</label>
+            <div class="form-group">
 
-            <input 
+            <label class="form-label">
+                Pelaksana
+            </label>
+
+            <input
                 type="text"
                 name="pelaksana"
                 class="input"
                 placeholder="Penjahit / Vendor"
                 required
-                style="
-                    width:100%;
-                    margin-top:5px;
-                ">
+                style="width:100%;">
+
+        </div>
 
             <div 
                 style="
@@ -630,7 +668,7 @@ tbody tr:hover{
 
         <h3 style="margin-bottom:20px;">
 
-            Job Out
+            Form Surat Jalan
 
         </h3>
 
@@ -658,44 +696,57 @@ tbody tr:hover{
                 name="komponen"
                 value="{{ request('komponen') }}">
 
-            <label>Vendor</label>
+            <label>Kepada</label>
 
             <input
                 type="text"
-                name="vendor"
+                name="kepada"
                 class="input"
-                placeholder="Nama Vendor"
+                placeholder="Nama Penerima"
                 style="
                     width:100%;
                     margin-top:5px;
                     margin-bottom:15px;
                 ">
 
-            <label>Ekspedisi</label>
-
-            <input
-                type="text"
-                name="ekspedisi"
-                class="input"
-                placeholder="Ekspedisi"
-                style="
-                    width:100%;
-                    margin-top:5px;
-                    margin-bottom:15px;
-                ">
-
-            <label>Catatan</label>
+            <label>Alamat</label>
 
             <textarea
-                name="catatan"
+                name="alamat"
                 class="input"
-                placeholder="Catatan"
+                placeholder="Alamat Tujuan"
                 style="
                     width:100%;
                     margin-top:5px;
                     margin-bottom:15px;
                     height:80px;
                 "></textarea>
+
+            <label>No. Pol Kendaraan</label>
+
+            <input
+                type="text"
+                name="no_polisi"
+                class="input"
+                placeholder="N 1234 XX"
+                style="
+                    width:100%;
+                    margin-top:5px;
+                    margin-bottom:15px;
+                ">
+
+            <label>Dibuat Oleh</label>
+
+            <input
+                type="text"
+                name="dibuat_oleh"
+                class="input"
+                placeholder="Nama Pembuat"
+                style="
+                    width:100%;
+                    margin-top:5px;
+                    margin-bottom:15px;
+                ">
 
             <div
                 style="

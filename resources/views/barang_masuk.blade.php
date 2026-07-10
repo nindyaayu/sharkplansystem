@@ -31,6 +31,8 @@
     color:#e5e7eb;
 }
 
+
+
 .btn-primary{
     background:linear-gradient(90deg,#6366f1,#8b5cf6);
     border:none;
@@ -114,6 +116,10 @@ tbody tr{
     border:1px solid rgba(255,255,255,0.08);
 }
 
+.modal-content .input{
+    width:100%;
+    box-sizing:border-box;
+}
 .modal-content h3{
     color:white;
     margin-bottom:20px;

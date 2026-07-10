@@ -14,7 +14,9 @@ class BomController extends Controller
     // TAMPIL HALAMAN MASTER BOM
     // =========================
     public function index()
-    {
+{
+    if (auth()->user()->cabang == null) {
+
         $produk = Produk::all();
 
         $barang = Barang::all();
@@ -24,12 +26,36 @@ class BomController extends Controller
             'details.barang'
         ])->latest()->get();
 
-        return view('bom', compact(
+    } else {
+
+        $produk = Produk::where(
+            'cabang',
+            auth()->user()->cabang
+        )->get();
+
+        $barang = Barang::where(
+            'cabang',
+            auth()->user()->cabang
+        )->get();
+
+        $bom = Bom::with([
             'produk',
-            'barang',
-            'bom'
-        ));
+            'details.barang'
+        ])
+        ->where(
+            'cabang',
+            auth()->user()->cabang
+        )
+        ->latest()
+        ->get();
     }
+
+    return view('bom', compact(
+        'produk',
+        'barang',
+        'bom'
+    ));
+}
 // =========================
 // UPDATE HEADER BOM
 // =========================
@@ -68,7 +94,8 @@ public function update(Request $request, $id)
         Bom::create([
             'produk_id' => $request->produk_id,
             'nama_komponen' => $request->nama_komponen,
-            'tanggal' => $request->tanggal
+            'tanggal' => $request->tanggal,
+            'cabang' => auth()->user()->cabang
         ]);
 
         return redirect()
@@ -102,7 +129,9 @@ public function update(Request $request, $id)
             'qty' => $request->qty,
 
             'satuan_pakai' =>
-                $request->satuan_pakai
+                $request->satuan_pakai,
+
+            'cabang' => auth()->user()->cabang
 
         ]);
 
@@ -176,20 +205,37 @@ public function update(Request $request, $id)
     public function perhitungan(Request $request)
     {
         // produk
-        $produk = Produk::all();
+        if (auth()->user()->cabang == null) {
+
+            $produk = Produk::all();
+
+        } else {
+
+            $produk = Produk::where(
+                'cabang',
+                auth()->user()->cabang
+            )->get();
+
+        }
 
         // dropdown komponen
-        $bom = collect();
+        $queryBom = Bom::where(
+            'produk_id',
+            $request->produk_id
+        );
 
-        if($request->produk_id){
+        if (auth()->user()->cabang != null) {
 
-            $bom = Bom::where(
-                'produk_id',
-                $request->produk_id
-            )
+            $queryBom->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
+
+        $bom = $queryBom
             ->orderBy('nama_komponen')
             ->get();
-        }
 
         // hasil
         $hasil = collect();
@@ -200,6 +246,15 @@ public function update(Request $request, $id)
             // query bom
             $query = Bom::with('details.barang')
                 ->where('produk_id', $request->produk_id);
+
+            if (auth()->user()->cabang != null) {
+
+                $query->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
 
             // mode komponen
             if (

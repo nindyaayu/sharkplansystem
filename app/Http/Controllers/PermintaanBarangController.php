@@ -13,14 +13,50 @@ class PermintaanBarangController extends Controller
 {
     public function index()
 {
-    $barang = Barang::orderBy('nama')->get();
+    $barang = Barang::when(
+        auth()->user()->cabang,
+        function ($q) {
+
+            $q->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
+    )
+    ->orderBy('nama')
+    ->get();
+
+    if (auth()->user()->cabang == 'Pusat') {
 
     $produk = Produk::orderBy('nama')->get();
 
-    $permintaan = PermintaanBarang::with([
+} else {
+
+    $produk = Produk::where(
+        'cabang',
+        auth()->user()->cabang
+    )
+    ->orderBy('nama')
+    ->get();
+
+}
+
+    $query = PermintaanBarang::with([
     'produk',
     'komponen'
-])
+]);
+
+if (auth()->user()->cabang) {
+
+    $query->where(
+        'cabang',
+        auth()->user()->cabang
+    );
+
+}
+
+$permintaan = $query
     ->latest()
     ->get();
 
@@ -36,33 +72,22 @@ class PermintaanBarangController extends Controller
 
     public function store(Request $request)
         {
-            $last = PermintaanBarang::latest()->first();
+            $max = PermintaanBarang::selectRaw("
+    MAX(CAST(SUBSTRING(nomor_permintaan,4) AS UNSIGNED)) as nomor
+        ")->first();
 
-            if ($last) {
+        $nextNumber = ($max->nomor ?? 0) + 1;
 
-                $lastNumber = (int) str_replace(
-                    'PB-',
-                    '',
-                    $last->nomor_permintaan
-                );
-
-                $nextNumber = $lastNumber + 1;
-
-            } else {
-
-                $nextNumber = 1;
-            }
+        $nomorPermintaan = 'PB-' . str_pad(
+            $nextNumber,
+            4,
+            '0',
+            STR_PAD_LEFT
+        );
 
             $permintaan = PermintaanBarang::create([
 
-                'nomor_permintaan' =>
-                    'PB-' .
-                    str_pad(
-                        $nextNumber,
-                        4,
-                        '0',
-                        STR_PAD_LEFT
-                    ),
+                'nomor_permintaan' => $nomorPermintaan,
 
                 'tanggal' => now(),
 
@@ -77,7 +102,9 @@ class PermintaanBarangController extends Controller
                 'nama_penjahit' =>
                     $request->nama_penjahit,
 
-                'status' => 'Menunggu'
+                'status' => 'Menunggu',
+
+                'cabang' => auth()->user()->cabang
             ]);
 
             foreach (
@@ -114,11 +141,82 @@ return redirect()
                     return response()->json($permintaan);
                 }
 
+            public function edit($id)
+                {
+                    $permintaan = PermintaanBarang::with('details')->findOrFail($id);
+
+                    return response()->json($permintaan);
+                }
+            
+            public function updateData(Request $request, $id)
+                {
+                    $permintaan = PermintaanBarang::findOrFail($id);
+
+                    if ($permintaan->status != 'Menunggu') {
+                        return back()->with(
+                            'error',
+                            'Permintaan yang sudah diproses tidak dapat diubah.'
+                        );
+                    }
+
+                    $permintaan->update([
+                        'produk_id' => $request->produk_id,
+                        'komponen_produk_id' => $request->komponen_produk_id,
+                        'nama_peminta' => $request->nama_peminta,
+                        'nama_penjahit' => $request->nama_penjahit,
+                    ]);
+
+                    DetailPermintaanBarang::where(
+                        'permintaan_barang_id',
+                        $permintaan->id
+                    )->delete();
+
+                    foreach ($request->barang_id as $i => $barangId) {
+
+                        DetailPermintaanBarang::create([
+                            'permintaan_barang_id' => $permintaan->id,
+                            'barang_id' => $barangId,
+                            'jumlah' => $request->jumlah[$i],
+                            'status' => 'Menunggu'
+                        ]);
+
+                    }
+
+                    return redirect()
+                        ->route('permintaan-barang')
+                        ->with('success', 'Permintaan berhasil diperbarui.');
+                }
+
+            public function destroy($id)
+            {
+                // Hanya admin yang boleh menghapus
+                if (auth()->user()->role != 'admin') {
+                    abort(403, 'Anda tidak memiliki akses.');
+                }
+
+                $permintaan = PermintaanBarang::findOrFail($id);
+
+                DetailPermintaanBarang::where(
+                    'permintaan_barang_id',
+                    $permintaan->id
+                )->delete();
+
+                $permintaan->delete();
+
+                return redirect()
+                    ->route('permintaan-barang')
+                    ->with(
+                        'success',
+                        'Permintaan berhasil dihapus.'
+                    );
+            }
+
             public function update(Request $request, $id)
                 {
-                $permintaan = PermintaanBarang::with(
-                'details.barang'
-                )->findOrFail($id);
+                $permintaan = PermintaanBarang::with([
+                    'details.barang',
+                    'produk'
+                ])->findOrFail($id);
 
                 if (
                     $request->status == 'Sudah Diambil'
@@ -157,19 +255,21 @@ return redirect()
                                 'INTERNAL - ' .
                                 strtoupper($permintaan->nama_peminta) .
                                 ' - ' .
-                                strtoupper($permintaan->nama_penjahit)
+                                strtoupper($permintaan->nama_penjahit),
+
+                            'cabang' => $permintaan->cabang
 
                         ]);
 
-                        $barang->update([
+                        $stokLama = $barang->stok;
 
-                            'stok' =>
-                                max(
-                                    0,
-                                    $barang->stok - $detail->jumlah
-                                )
-
-                        ]);
+$barang->update([
+    'stok' => max(
+        0,
+        $barang->stok - $detail->jumlah
+    )
+]);
+                        $barang->refresh();
                     }
                 }
 
@@ -180,11 +280,11 @@ return redirect()
                 ]);
 
                 return redirect()
-                ->route('barang-keluar')
-                ->with(
-                    'success',
-                    'Barang berhasil dikeluarkan'
-                );
+                    ->route('barang-keluar-material-pendukung')
+                    ->with(
+                        'success',
+                        'Barang berhasil dikeluarkan'
+                    );
 
                 }
 
@@ -216,27 +316,32 @@ return redirect()
         $tolak = $details->where('status', 'Ditolak')->count();
 
         // Jika semua detail sudah diproses
-        if (($acc + $kosong + $tolak) == $total) {
+            if (($acc + $kosong + $tolak) == $total) {
 
-            if ($acc == $total) {
+                if ($acc == $total) {
 
-                $permintaan->status = 'Disetujui';
+                    $permintaan->status = 'Disetujui';
 
-            } elseif ($acc > 0) {
+                } elseif ($acc > 0) {
 
-                $permintaan->status = 'Disetujui Sebagian';
+                    $permintaan->status = 'Disetujui Sebagian';
 
-            } elseif ($kosong == $total) {
+                } elseif ($kosong == $total) {
 
-                $permintaan->status = 'Kosong';
+                    $permintaan->status = 'Kosong';
 
-            } elseif ($tolak == $total) {
+                } elseif ($tolak == $total) {
 
-                $permintaan->status = 'Ditolak';
+                    $permintaan->status = 'Ditolak';
+
+                } elseif ($kosong > 0) {
+
+                    // campuran Kosong + Ditolak
+                    $permintaan->status = 'Kosong';
+                }
+
+                $permintaan->save();
             }
-
-            $permintaan->save();
-        }
 
         return response()->json([
             'success' => true,

@@ -178,23 +178,21 @@ body{
 
         <h2>Dashboard</h2>
 
-        <p 
+        <p
             style="
                 color:#64748b;
                 font-size:13px;
             ">
 
-            Welcome back, Admin 👋
+            Welcome back, {{ Auth::user()->name }} 👋
 
         </p>
 
     </div>
 
-    <div class="admin">
-
-        👤 Admin
-
-    </div>
+        <div class="admin">
+            👤 {{ ucfirst(Auth::user()->role) }} ({{ Auth::user()->cabang }})
+        </div>
 
 </div>
 

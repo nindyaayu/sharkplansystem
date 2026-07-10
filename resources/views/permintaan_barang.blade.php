@@ -15,6 +15,43 @@
         📋 Permintaan Barang
     </h2>
 
+    <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+">
+
+    <div style="position:relative;">
+
+    <span
+        style="
+            position:absolute;
+            left:15px;
+            top:50%;
+            transform:translateY(-50%);
+            color:#94a3b8;
+        ">
+        🔍
+    </span>
+
+    <input
+        id="searchPermintaan"
+        type="text"
+        placeholder="Cari No PB, Produk, Peminta..."
+        style="
+            width:380px;
+            padding:12px 16px 12px 42px;
+            background:#0f1b3f;
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:10px;
+            color:white;
+        ">
+
+</div>
+
+</div>
+
     <button onclick="openModal()" style="
     background:#2563eb;
     color:white;
@@ -54,7 +91,7 @@
 
         </thead>
 
-        <tbody>
+        <tbody id="permintaanTable">
 
             @forelse($permintaan as $item)
 
@@ -168,56 +205,114 @@
                         style="padding:12px;text-align:center;"
                     >
 
-                    <button
-                        onclick="lihatDetail({{ $item->id }})"
-                        style="
-                            background:#10b981;
-                            color:white;
-                            border:none;
-                            padding:6px 12px;
-                            border-radius:6px;
-                            cursor:pointer;
-                            margin-right:5px;
-                        "
+                    @if(auth()->user()->role == 'admin')
+
+                <button
+                    onclick="lihatDetail({{ $item->id }})"
+                    style="
+                        background:#10b981;
+                        color:white;
+                        border:none;
+                        padding:6px 12px;
+                        border-radius:6px;
+                        cursor:pointer;
+                        margin-right:5px;
+                    ">
+                    ✉ Detail
+                </button>
+
+                <button
+                    type="button"
+                    onclick="konfirmasiHapus({{ $item->id }})"
+                    style="
+                        background:#ef4444;
+                        color:white;
+                        border:none;
+                        padding:6px 12px;
+                        border-radius:8px;
+                        cursor:pointer;
+                    ">
+                    🗑️ Delete
+                </button>
+
+                @if(
+                    $item->status == 'Disetujui' ||
+                    $item->status == 'Disetujui Sebagian'
+                )
+
+                <form
+                    action="{{ route('permintaan-barang.update',$item->id) }}"
+                    method="POST"
+                    style="display:inline;"
+                >
+                    @csrf
+                    @method('PUT')
+
+                    <input
+                        type="hidden"
+                        name="status"
+                        value="Sudah Diambil"
                     >
-                       ✉ Detail
+
+                    <button
+                        type="submit"
+                        class="btn-sudah-diambil"
+                    >
+                        ✓ Sudah Diambil
                     </button>
 
-                    
+                </form>
 
-                        @if(
-                            $item->status == 'Disetujui' ||
-                            $item->status == 'Disetujui Sebagian'
-                        )
+                @endif
 
-                            <form
-                                action="{{ route('permintaan-barang.update',$item->id) }}"
-                                method="POST"
-                                style="display:inline;"
-                            >
-                                @csrf
-                                @method('PUT')
+            @else
 
-                                <input
-                                    type="hidden"
-                                    name="status"
-                                    value="Sudah Diambil"
-                                >
+                <button
+                    onclick="lihatDetail({{ $item->id }})"
+                    style="
+                        background:#10b981;
+                        color:white;
+                        border:none;
+                        padding:6px 12px;
+                        border-radius:6px;
+                        cursor:pointer;
+                        margin-right:5px;
+                    ">
+                    ✉ Detail
+                </button>
 
-                                <button
-                                    type="submit"
-                                    class="btn-sudah-diambil"
-                                    onclick="setTimeout(() => location.reload(), 1000)"
-                                >
-                                    ✓ Sudah Diambil
-                                </button>
+                @if(
+                    $item->status == 'Disetujui' ||
+                    $item->status == 'Disetujui Sebagian'
+                )
 
-                            </form>
+                    <form
+                        action="{{ route('permintaan-barang.update',$item->id) }}"
+                        method="POST"
+                        style="display:inline;"
+                    >
+                        @csrf
+                        @method('PUT')
 
-                        @endif
+                        <input
+                            type="hidden"
+                            name="status"
+                            value="Sudah Diambil"
+                        >
 
+                        <button
+                            type="submit"
+                            class="btn-sudah-diambil">
+                            ✓ Sudah Diambil
+                        </button>
 
-                </td>
+                    </form>
+
+                @endif
+
+            @endif
+
+                    </td>
 
 
             </tr>
@@ -227,7 +322,7 @@
                 <tr>
 
                 <td
-                    colspan="7"
+                    colspan="9"
                     style="
                         text-align:center;
                         padding:30px;
@@ -463,7 +558,6 @@
     width:900px;
     max-width:95%;
 
-    height:auto;
     max-height:95vh;
 
     overflow-y:auto;
@@ -521,10 +615,19 @@
 }
 */
 .modal-header{
+    position:sticky;
+    top:-30px;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:30px;
+
+    background:#08132f;
+
+    z-index:999;
+    padding:15px 0;
+
+    margin-bottom:25px;
 }
 
 .modal-header h2{
@@ -1401,30 +1504,119 @@ function toggleKomponenPermintaan(){
 
 toggleKomponenPermintaan();
 
+function konfirmasiHapus(id){
+
+    document.getElementById('formHapus').action =
+        '/permintaan-barang/' + id;
+
+    document.getElementById('hapusModal').style.display =
+        'block';
+
+}
+
+function closeHapusModal(){
+
+    document.getElementById('hapusModal').style.display =
+        'none';
+
+}
+
+document
+.getElementById('searchPermintaan')
+.addEventListener('input', function(){
+
+    let keyword = this.value
+        .toLowerCase()
+        .trim();
+
+    let rows = document.querySelectorAll(
+        '#permintaanTable tr'
+    );
+
+    rows.forEach(function(row){
+
+        let semua = row.innerText.toLowerCase();
+
+        row.style.display =
+            semua.includes(keyword)
+            ? ''
+            : 'none';
+
+    });
+
+});
+
 </script>
 
 
         <div id="detailModal" class="modal">
 
-        <div class="modal-content">
+    <div class="modal-content">
 
-            <div class="modal-header">
+        <div class="modal-header">
 
-                <h2>📋 Detail Permintaan Barang</h2>
+            <h2>📋 Detail Permintaan Barang</h2>
+
+            <button
+                class="close-btn"
+                onclick="closeDetailModal()">
+                ✕
+            </button>
+
+        </div>
+
+        <div id="detailContent"></div>
+
+    </div>
+
+</div>
+
+
+<!-- MODAL HAPUS (DI LUAR DETAIL MODAL) -->
+<div id="hapusModal" class="modal">
+
+    <div class="modal-content" style="max-width:420px;">
+
+        <h2 style="margin-bottom:15px;">
+            🗑️ Hapus Permintaan
+        </h2>
+
+        <p style="color:#cbd5e1;">
+            Apakah Anda yakin ingin menghapus permintaan ini?
+        </p>
+
+        <form id="formHapus" method="POST">
+
+            @csrf
+            @method('DELETE')
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:flex-end;
+                    gap:10px;
+                    margin-top:30px;
+                ">
 
                 <button
-                    class="close-btn"
-                    onclick="closeDetailModal()"
-                >
-                    ✕
+                    type="button"
+                    class="btn-batal"
+                    onclick="closeHapusModal()">
+                    Batal
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-hapus">
+                    Ya, Hapus
                 </button>
 
             </div>
-            <div id="detailContent">
 
-            </div>
+        </form>
 
-        </div>
-        </div>
+    </div>
+
+</div>
 
 @endsection

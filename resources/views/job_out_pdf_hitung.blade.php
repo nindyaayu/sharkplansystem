@@ -1,93 +1,131 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
 <meta charset="utf-8">
-
-<title>Surat Jalan</title>
 
 <style>
 
-body{
-    font-family:serif;
-    font-size:13px;
-    color:#111;
-    margin:40px;
+@page{
+    margin:0.2cm;
 }
+
+body{
+    font-family: DejaVu Sans, sans-serif;
+    font-size:8px;
+    color:#000;
+    margin:0;
+    padding:0;
+}
+
+/* ================= HEADER ================= */
 
 .header{
-    text-align:center;
-    margin-bottom:30px;
+    height:2.2cm;
+    border-bottom:1px solid #000;
 }
 
-.title{
-    font-size:42px;
-    font-weight:bold;
-    margin-bottom:10px;
-}
-
-.line{
-    border-top:3px solid #000;
-    width:60%;
-    margin:0 auto 15px auto;
-}
-
-.company{
-    font-size:26px;
-    font-weight:bold;
-}
-
-.address{
-    font-size:15px;
-    margin-top:8px;
-}
-
-.info{
-    margin-top:40px;
-    margin-bottom:35px;
-}
-
-.info table{
-    width:100%;
-}
-
-.info td{
-    padding:6px 0;
-    font-size:16px;
-}
-
-.table{
+.header-table{
     width:100%;
     border-collapse:collapse;
-    margin-top:20px;
 }
 
-.table th,
-.table td{
-    border:1px solid #000;
-    padding:12px;
-    font-size:15px;
+.logo{
+    height:1.9cm;
 }
 
-.table th{
+.company-name{
     text-align:center;
+    font-size:14px;
     font-weight:bold;
 }
+
+.company-info{
+    text-align:center;
+    font-size:7px;
+    line-height:1.2;
+}
+
+.surat-jalan{
+    text-align:center;
+    font-size:9px;
+    font-weight:bold;
+}
+
+/* ================= INFO ================= */
+
+.info{
+    height:1.8cm;
+    padding-top:2px;
+}
+
+.info-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.info-table td{
+    font-size:8px;
+    padding:2px;
+    vertical-align:top;
+}
+
+/* ================= TABEL ================= */
+
+.table-barang{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.table-barang th,
+.table-barang td{
+    border:1px solid #000;
+}
+
+.table-barang th{
+    height:0.7cm;
+    font-size:8px;
+    text-align:center;
+    padding:0;
+}
+
+.table-barang td{
+    height:0.75cm;
+    padding:2px;
+    font-size:8px;
+}
+
+/* ================= TTD ================= */
 
 .ttd{
     width:100%;
-    margin-top:90px;
-    text-align:center;
+    border-collapse:collapse;
 }
 
 .ttd td{
-    width:25%;
-    font-size:16px;
+    border:1px solid #000;
 }
 
-.ttd-space{
-    height:90px;
+.ttd-head{
+    height:0.7cm;
+    text-align:center;
+    font-weight:bold;
+    font-size:8px;
+}
+
+.ttd-info{
+    height:0.45cm;
+    font-size:8px;
+    padding-left:6px;
+    padding-right:6px;
+}
+
+.ttd-body{
+    height:2.8cm;
+}
+
+.center{
+    font-size:9px;
+    vertical-align:bottom;
 }
 
 </style>
@@ -100,85 +138,45 @@ body{
 
 <div class="header">
 
-    <div class="title">
+<table class="header-table">
 
-        SURAT JALAN
+<tr>
 
-    </div>
+<td width="15%">
 
-    <div class="line"></div>
+@if(file_exists(public_path('images/logo-shark.png')))
+<img
+src="{{ public_path('images/logo-shark.png') }}"
+class="logo">
+@endif
 
-    <div class="company">
+</td>
 
-        PT. SHARK GLOBALINDO JAYA
+<td width="60%">
 
-    </div>
-
-    <div class="address">
-
-        Srigading, Kec. Lawang, Kabupaten Malang, Jawa Timur 65216
-
-    </div>
-
+<div class="company-name">
+PT. SHARK GLOBALINDO JAYA
 </div>
 
-<!-- ================= INFO ================= -->
+<div class="company-info">
+Alamat : Jl. Inspol Suwoto Krajan Sawah No.2
+</div>
 
-<div class="info">
+<div class="company-info">
+Desa Srigading - Kec. Lawang 65216
+</div>
 
-<table>
-
-<tr>
-
-<td width="20%">
-
-    Kepada
-
-</td>
-
-<td width="30%">
-
-    : {{ $vendor }}
+<div class="company-info">
+Telepon : 0812 7203 1999
+</div>
 
 </td>
 
-<td width="20%">
+<td width="25%">
 
-    Tanggal Kirim
-
-</td>
-
-<td>
-
-    : {{ date('d F Y') }}
-
-</td>
-
-</tr>
-
-<tr>
-
-<td>
-
-    Alamat
-
-</td>
-
-<td>
-
-    : -
-
-</td>
-
-<td>
-
-    No. Surat Jalan
-
-</td>
-
-<td>
-
-    : SJ-001
+<div class="surat-jalan">
+SURAT JALAN
+</div>
 
 </td>
 
@@ -188,42 +186,112 @@ body{
 
 </div>
 
-<!-- ================= TABLE ================= -->
+<!-- ================= INFO ================= -->
 
-<table class="table">
+<div class="info">
+
+<table class="info-table">
+
+<tr>
+
+<td width="12%">
+Kepada
+</td>
+
+<td width="32%">
+: {{ $job->vendor }}
+</td>
+
+<td width="20%">
+Tgl / Jam Berangkat
+</td>
+
+<td>
+: {{ date('d/m/Y', strtotime($job->tanggal)) }}
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Alamat
+</td>
+
+<td>
+:
+</td>
+
+<td>
+Tanggal Kedatangan
+</td>
+
+<td>
+:
+</td>
+
+</tr>
+
+<tr>
+
+<td></td>
+<td></td>
+
+<td>
+No. Surat Jalan
+</td>
+
+<td>
+: {{ $job->no_surat }}
+</td>
+
+</tr>
+
+<tr>
+
+<td></td>
+<td></td>
+
+<td>
+No. Pol Kendaraan
+</td>
+
+<td>
+:
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<!-- ================= TABEL ================= -->
+
+<table class="table-barang">
 
 <thead>
 
 <tr>
 
-<th width="8%">
-
-    No
-
+<th width="36%">
+Nama Barang
 </th>
 
-<th>
-
-    Nama Barang
-
+<th width="16%">
+Jumlah Pengiriman
 </th>
 
-<th width="15%">
-
-    Qty
-
+<th width="16%">
+Barang Diterima
 </th>
 
-<th width="15%">
-
-    Satuan
-
+<th width="16%">
+Barang Ditolak
 </th>
 
-<th width="20%">
-
-    Keterangan
-
+<th width="16%">
+Kurang Barang
 </th>
 
 </tr>
@@ -232,47 +300,27 @@ body{
 
 <tbody>
 
-@foreach($hasil as $item)
+@foreach($job->details as $detail)
 
 <tr>
 
-<td align="center">
-
-    {{ $loop->iteration }}
-
-</td>
-
 <td>
-
-    {{ $item['bahan'] }}
-
+{{ $detail->barang->nama }}
 </td>
 
 <td align="center">
-
-    {{ number_format($item['qty_roll'],0) }}
-
+{{ number_format($detail->qty,0) }}
 </td>
 
-<td align="center">
-
-    ROLL
-
-</td>
-
-<td align="center">
-
-    -
-
-</td>
+<td></td>
+<td></td>
+<td></td>
 
 </tr>
 
 @endforeach
 
-<!-- ROW KOSONG -->
-
-@for($i = count($hasil); $i < 4; $i++)
+@for($i = count($job->details); $i < 6; $i++)
 
 <tr>
 
@@ -296,65 +344,68 @@ body{
 
 <tr>
 
-<td>
-
-    Pengirim
-
+<td width="34%" class="ttd-head">
+Diterima Oleh,
 </td>
 
-<td>
-
-    Gudang
-
+<td width="40%" colspan="2" class="ttd-head">
+Diperiksa Oleh,
 </td>
 
-<td>
-
-    Ekspedisi
-
-</td>
-
-<td>
-
-    Penerima
-
+<td width="26%" class="ttd-head">
+Dibuat Oleh,
 </td>
 
 </tr>
 
 <tr>
 
-<td class="ttd-space"></td>
-<td class="ttd-space"></td>
-<td class="ttd-space"></td>
-<td class="ttd-space"></td>
+<td class="ttd-info">
+
+<span style="float:left">
+Tanggal:
+</span>
+
+<span style="float:right">
+Jam:
+</span>
+
+</td>
+
+<td width="36%" colspan="2"></td>
+
+<td></td>
 
 </tr>
 
 <tr>
 
-<td>
+<td class="ttd-body"></td>
 
-(.........................)
+<td class="ttd-body"></td>
 
+<td class="ttd-body"></td>
+
+<td class="ttd-body"></td>
+
+</tr>
+
+<tr>
+
+<td class="center">
+Penerima
 </td>
 
-<td>
-
-(.........................)
-
+<td class="center">
+Ekspedisi
 </td>
 
-<td>
-
-(.........................)
-
+<td class="center">
+Security
 </td>
 
-<td>
-
-(.........................)
-
+<td class="center">
+&nbsp;
 </td>
 
 </tr>
@@ -362,5 +413,4 @@ body{
 </table>
 
 </body>
-
 </html>

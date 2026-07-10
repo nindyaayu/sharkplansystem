@@ -11,7 +11,8 @@ class Produk extends Model
         'kode',
         'nama',
         'varian',
-        'satuan'
+        'satuan',
+        'cabang'
     ];
 
     public function permintaanBarangs()

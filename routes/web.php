@@ -62,6 +62,16 @@ Route::middleware('auth')->group(function () {
         ->name('dashboard');
 
     // =========================
+    // LAPORAN
+    // =========================
+
+    Route::get('/laporan', function () {
+
+        return view('laporan');
+
+    })->name('laporan');
+
+    // =========================
     // BAHAN
     // =========================
 
@@ -75,6 +85,15 @@ Route::middleware('auth')->group(function () {
         'kategori',
         'Kain'
     );
+
+    if (auth()->user()->cabang) {
+
+    $query->where(
+        'cabang',
+        auth()->user()->cabang
+    );
+
+}
 
     if(request('sort') == 'za'){
 
@@ -107,6 +126,16 @@ Route::middleware('auth')->group(function () {
         'kategori',
         'Aksesoris'
     );
+
+        if (auth()->user()->cabang) {
+
+        $query->where(
+            'cabang',
+            auth()->user()->cabang
+        );
+
+    }
+
 
     if(request('sort') == 'za'){
 
@@ -272,6 +301,16 @@ Route::middleware('auth')->group(function () {
             [PermintaanBarangController::class, 'destroy']
         )->name('permintaan-barang.destroy');
 
+        Route::get(
+            '/permintaan-barang/{id}/edit',
+            [PermintaanBarangController::class, 'edit']
+        )->name('permintaan-barang.edit');
+
+        Route::put(
+            '/permintaan-barang/{id}/update-data',
+            [PermintaanBarangController::class, 'updateData']
+        )->name('permintaan-barang.update-data');
+
 
         Route::get(
             '/permintaan-barang/{id}',
@@ -284,57 +323,60 @@ Route::middleware('auth')->group(function () {
         )->name('permintaan-barang-detail.update');
 
             // =========================
-            // ketik barang di permimntaan barang
+            // ketik barang di permintaan barang
             // =========================
 
-        Route::get('/search-barang', function () {
+            Route::get('/search-barang', function () {
 
-            return \App\Models\Barang::select(
-                'id',
-                'kode',
-                'nama',
-                'warna',
-                'stok',
-                'satuan'
-            )
-            ->where(function($q){
+                $barangs = \App\Models\Barang::query();
 
-                $q->where(
-                    'nama',
-                    'like',
-                    '%' . request('q') . '%'
-                )
-                ->orWhere(
-                    'kode',
-                    'like',
-                    '%' . request('q') . '%'
-                );
+                if (request('kategori')) {
+                    $barangs->where('kategori', request('kategori'));
+                }
 
-            })
-            ->limit(20)
-            ->get()
-            ->map(function($item){
+                if (auth()->user()->cabang) {
+                    $barangs->where('cabang', auth()->user()->cabang);
+                }
 
-                return [
+                if (request('q')) {
+                    $barangs->where(function ($q) {
+                        $q->where('nama', 'like', '%' . request('q') . '%')
+                        ->orWhere('kode', 'like', '%' . request('q') . '%');
+                    });
+                }
 
-                    'id' => $item->id,
+                return $barangs->limit(20)->get()->map(function ($item) {
 
-                    'text' =>
-                        $item->kode .
-                        ' | ' .
-                        $item->nama .
-                        ' | ' .
-                        $item->warna .
-                        ' | ' .
-                        number_format($item->stok) .
-                        ' ' .
-                        strtoupper($item->satuan)
+                    $totalMasuk = $item->barangMasuk()
+                        ->when(auth()->user()->cabang, function ($q) {
+                            $q->where('cabang', auth()->user()->cabang);
+                        })
+                        ->sum('jumlah');
 
-                ];
+                    $totalKeluar = $item->barangKeluar()
+                        ->when(auth()->user()->cabang, function ($q) {
+                            $q->where('cabang', auth()->user()->cabang);
+                        })
+                        ->sum('jumlah');
+
+                    $stok = $totalMasuk - $totalKeluar;
+
+                    return [
+                        'id' => $item->id,
+                        'text' =>
+                            $item->kode .
+                            ' | ' .
+                            $item->nama .
+                            ' | ' .
+                            $item->warna .
+                            ' | ' .
+                            number_format($stok) .
+                            ' ' .
+                            strtoupper($item->satuan)
+                    ];
+                });
 
             });
-
-        });
     // =========================
     // INVENTORI
     // =========================
@@ -360,6 +402,15 @@ Route::middleware('auth')->group(function () {
             $q->where('kategori', 'Kain');
 
         });
+
+        if (auth()->user()->cabang) {
+
+        $query->where(
+            'cabang',
+            auth()->user()->cabang
+        );
+
+    }
 
     // FILTER PERIODE
 
@@ -427,6 +478,15 @@ Route::get('/barang-masuk-material-utama-pdf', function (Request $request) {
             $q->where('kategori', 'Kain');
 
         });
+
+        if (auth()->user()->cabang) {
+
+            $query->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
 
     if (
         $request->filled('tanggal_awal')
@@ -515,6 +575,15 @@ Route::get('/barang-masuk-material-utama-pdf', function (Request $request) {
                 $q->where('kategori', 'Aksesoris');
 
             });
+
+            if (auth()->user()->cabang) {
+
+            $query->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
 
         // FILTER TANGGAL
 
@@ -607,6 +676,15 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
         });
 
+        if (auth()->user()->cabang) {
+
+            $query->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
+
     if (
     $request->filled('tanggal_awal')
     &&
@@ -696,6 +774,15 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
             });
 
+            if (auth()->user()->cabang) {
+
+                $query->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+
         if (
             $request->filled('tanggal_awal')
             &&
@@ -721,11 +808,14 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
             'Kain'
         )->get();
 
+        $produks = \App\Models\Produk::all();
+
         return view(
             'barang_keluar',
             compact(
                 'barangKeluars',
-                'barangs'
+                'barangs',
+                'produks'
             )
         );
 
@@ -743,6 +833,15 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
                     $q->where('kategori', 'Kain');
 
                 });
+
+                if (auth()->user()->cabang) {
+
+                $query->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
 
             if (
                 $request->filled('tanggal_awal')
@@ -791,6 +890,23 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
                     $q->where('kategori', 'Aksesoris');
 
                 });
+                if (auth()->user()->cabang) {
+
+                    $query->where(
+                        'cabang',
+                        auth()->user()->cabang
+                    );
+
+                }
+
+                if (auth()->user()->cabang) {
+
+                    $query->where(
+                        'cabang',
+                        auth()->user()->cabang
+                    );
+
+                }
 
             if (
                 $request->filled('tanggal_awal')
@@ -817,11 +933,14 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
                 'Aksesoris'
             )->get();
 
+            $produks = \App\Models\Produk::all();
+
             return view(
                 'barang_keluar',
                 compact(
                     'barangKeluars',
-                    'barangs'
+                    'barangs',
+                    'produks'
                 )
             );
 
@@ -839,6 +958,23 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
                     $q->where('kategori', 'Aksesoris');
 
                 });
+                if (auth()->user()->cabang) {
+
+                $query->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+
+                if (auth()->user()->cabang) {
+
+                $query->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
 
             if (
                 $request->filled('tanggal_awal')
@@ -921,6 +1057,11 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
     '/pelacakan-barang',
     [PelacakanBarangController::class, 'index']
 );
+
+Route::get(
+    '/pelacakan-barang-pdf',
+    [PelacakanBarangController::class, 'exportPdf']
+)->name('pelacakan-barang-pdf');
 // =========================
 // LAPORAN MATERIAL UTAMA
 // =========================
@@ -928,10 +1069,21 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
     $tanggal = $request->tanggal;
 
-    $data = Barang::where(
-        'kategori',
-        'Kain'
-    )->get();
+        $query = Barang::where(
+            'kategori',
+            'Kain'
+        );
+
+        if (auth()->user()->cabang) {
+
+            $query->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
+
+        $data = $query->get();
 
     // =========================
     // HITUNG STOK BERDASARKAN TANGGAL
@@ -944,30 +1096,52 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
         // =========================
 
         $totalMasukRoll =
-            $item->barangMasuk()
-                ->when($tanggal, function($q) use ($tanggal){
+    $item->barangMasuk()
+        ->when(
+            auth()->user()->cabang,
+            function ($q) {
 
-                    $q->whereDate(
-                        'tanggal_masuk',
-                        '<=',
-                        $tanggal
-                    );
+                $q->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
 
-                })
-                ->sum('jumlah_roll');
+            }
+        )
+        ->when($tanggal, function($q) use ($tanggal){
 
-        $totalMasukMeter =
-            $item->barangMasuk()
-                ->when($tanggal, function($q) use ($tanggal){
+            $q->whereDate(
+                'tanggal_masuk',
+                '<=',
+                $tanggal
+            );
 
-                    $q->whereDate(
-                        'tanggal_masuk',
-                        '<=',
-                        $tanggal
-                    );
+        })
+        ->sum('jumlah_roll');
 
-                })
-                ->sum('jumlah');
+$totalMasukMeter =
+    $item->barangMasuk()
+        ->when(
+            auth()->user()->cabang,
+            function ($q) {
+
+                $q->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+        )
+        ->when($tanggal, function($q) use ($tanggal){
+
+            $q->whereDate(
+                'tanggal_masuk',
+                '<=',
+                $tanggal
+            );
+
+        })
+        ->sum('jumlah');
 
         // =========================
         // TOTAL KELUAR
@@ -975,6 +1149,18 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
         $totalKeluarRoll =
             $item->barangKeluar()
+
+            ->when(
+                auth()->user()->cabang,
+                function ($q) {
+
+                    $q->where(
+                        'cabang',
+                        auth()->user()->cabang
+                    );
+
+                }
+            )
                 ->when($tanggal, function($q) use ($tanggal){
 
                     $q->whereDate(
@@ -988,6 +1174,17 @@ Route::get('/barang-masuk-material-pendukung-pdf', function (\Illuminate\Http\Re
 
         $totalKeluarMeter =
             $item->barangKeluar()
+            ->when(
+                auth()->user()->cabang,
+                function ($q) {
+
+                    $q->where(
+                        'cabang',
+                        auth()->user()->cabang
+                    );
+
+                }
+            )
                 ->when($tanggal, function($q) use ($tanggal){
 
                     $q->whereDate(
@@ -1035,6 +1232,15 @@ Route::get('/laporan-material-utama-pdf', function (Request $request) {
         'Kain'
     );
 
+    if (auth()->user()->cabang) {
+
+    $query->where(
+        'cabang',
+        auth()->user()->cabang
+    );
+
+}
+
     if ($kode) {
         $query->where(
             'kode',
@@ -1067,6 +1273,19 @@ Route::get('/laporan-material-utama-pdf', function (Request $request) {
 
         $totalMasukRoll =
             $item->barangMasuk()
+
+            ->when(
+            auth()->user()->cabang,
+            function ($q) {
+
+                $q->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+        )
+
                 ->when($tanggal, function($q) use ($tanggal){
 
                     $q->whereDate(
@@ -1080,6 +1299,19 @@ Route::get('/laporan-material-utama-pdf', function (Request $request) {
 
         $totalMasukMeter =
             $item->barangMasuk()
+
+            ->when(
+            auth()->user()->cabang,
+            function ($q) {
+
+                $q->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+        )
+
                 ->when($tanggal, function($q) use ($tanggal){
 
                     $q->whereDate(
@@ -1095,6 +1327,19 @@ Route::get('/laporan-material-utama-pdf', function (Request $request) {
 
         $totalKeluarRoll =
             $item->barangKeluar()
+
+            ->when(
+            auth()->user()->cabang,
+            function ($q) {
+
+                $q->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+        )
+
                 ->when($tanggal, function($q) use ($tanggal){
 
                     $q->whereDate(
@@ -1108,6 +1353,18 @@ Route::get('/laporan-material-utama-pdf', function (Request $request) {
 
         $totalKeluarMeter =
             $item->barangKeluar()
+
+            ->when(
+            auth()->user()->cabang,
+            function ($q) {
+
+                $q->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+        )
                 ->when($tanggal, function($q) use ($tanggal){
 
                     $q->whereDate(
@@ -1181,6 +1438,15 @@ $query = Barang::where(
     'Aksesoris'
 );
 
+if (auth()->user()->cabang) {
+
+    $query->where(
+        'cabang',
+        auth()->user()->cabang
+    );
+
+}
+
 if ($kode) {
     $query->where('kode','like',"%{$kode}%");
 }
@@ -1207,6 +1473,17 @@ $data = $query->get();
 
         $totalMasuk =
             $item->barangMasuk()
+            ->when(
+            auth()->user()->cabang,
+            function ($q) {
+
+                $q->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+        )
                 ->when($tanggal, function($q) use ($tanggal){
 
                     $q->whereDate(
@@ -1224,6 +1501,17 @@ $data = $query->get();
 
         $totalKeluar =
             $item->barangKeluar()
+            ->when(
+            auth()->user()->cabang,
+            function ($q) {
+
+                $q->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+        )
                 ->when($tanggal, function($q) use ($tanggal){
 
                     $q->whereDate(
@@ -1269,6 +1557,15 @@ $query = Barang::where(
     'Aksesoris'
 );
 
+if (auth()->user()->cabang) {
+
+    $query->where(
+        'cabang',
+        auth()->user()->cabang
+    );
+
+}
+
 if ($kode) {
     $query->where(
         'kode',
@@ -1307,6 +1604,17 @@ $data = $query->get();
 
         $totalMasuk =
             $item->barangMasuk()
+                ->when(
+                    auth()->user()->cabang,
+                    function ($q) {
+
+                        $q->where(
+                            'cabang',
+                            auth()->user()->cabang
+                        );
+
+                    }
+                )
                 ->when($tanggal, function($q) use ($tanggal){
 
                     $q->whereDate(
@@ -1320,6 +1628,19 @@ $data = $query->get();
 
         $totalKeluar =
             $item->barangKeluar()
+
+            ->when(
+            auth()->user()->cabang,
+            function ($q) {
+
+                $q->where(
+                    'cabang',
+                    auth()->user()->cabang
+                );
+
+            }
+        )
+
                 ->when($tanggal, function($q) use ($tanggal){
 
                     $q->whereDate(

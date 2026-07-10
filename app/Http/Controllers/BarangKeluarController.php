@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\BarangKeluar;
+use App\Models\Produk;
 use Illuminate\Http\Request;
 
 class BarangKeluarController extends Controller
@@ -14,14 +15,27 @@ class BarangKeluarController extends Controller
 
     public function index()
     {
-        $barangKeluars = BarangKeluar::with([
+        $query = BarangKeluar::with([
             'barang',
             'produk'
-        ])
-        ->latest()
-        ->get();
+        ]);
+
+        if (auth()->user()->cabang) {
+
+            $query->where(
+                'cabang',
+                auth()->user()->cabang
+            );
+
+        }
+
+        $barangKeluars = $query
+            ->latest()
+            ->get();
 
         $barangs = Barang::all();
+
+        $produks = Produk::all();
 
         return view('barang_keluar', compact(
             'barangKeluars',
@@ -41,8 +55,6 @@ class BarangKeluarController extends Controller
 
             'tanggal_keluar' => 'required',
 
-            'tujuan' => 'required'
-
         ]);
 
         // =========================
@@ -50,6 +62,28 @@ class BarangKeluarController extends Controller
         // =========================
 
         $barang = Barang::find($request->barang_id);
+
+        $tujuan = $request->tujuan;
+
+            if (
+                $request->filled('mode')
+                &&
+                $request->filled('nama_peminta')
+            ) {
+
+                $tujuan =
+                    strtoupper($request->mode)
+                    . ' - ' .
+                    strtoupper($request->nama_peminta);
+
+                if ($request->filled('nama_penjahit')) {
+
+                    $tujuan .=
+                        ' - ' .
+                        strtoupper($request->nama_penjahit);
+
+                }
+            }
 
         // =========================
         // MATERIAL UTAMA
@@ -72,6 +106,12 @@ class BarangKeluarController extends Controller
 
                 'barang_id' => $request->barang_id,
 
+                'nama_peminta' =>
+                    $request->nama_peminta,
+
+                'nama_penjahit' =>
+                    $request->nama_penjahit,
+
                 'jumlah_roll' =>
                     $request->jumlah_roll,
 
@@ -81,8 +121,9 @@ class BarangKeluarController extends Controller
                 'tanggal_keluar' =>
                     $request->tanggal_keluar,
 
-                'tujuan' =>
-                    $request->tujuan,
+                'tujuan' => $tujuan,
+
+                'cabang' => auth()->user()->cabang,
 
             ]);
 
@@ -115,14 +156,24 @@ class BarangKeluarController extends Controller
 
                 'barang_id' => $request->barang_id,
 
+                'produk_id' =>
+                    $request->produk_id,
+
+                'nama_peminta' =>
+                    $request->nama_peminta,
+
+                'nama_penjahit' =>
+                    $request->nama_penjahit,
+
                 'jumlah' =>
                     $request->jumlah,
 
                 'tanggal_keluar' =>
                     $request->tanggal_keluar,
 
-                'tujuan' =>
-                    $request->tujuan,
+                'tujuan' => $tujuan,
+
+                'cabang' => auth()->user()->cabang,
 
             ]);
 

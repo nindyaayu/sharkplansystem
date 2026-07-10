@@ -9,34 +9,48 @@ use Illuminate\Http\Request;
 class ProdukController extends Controller
 {
     public function index()
-{
-    $data = Produk::latest()->get();
+        {
+            $data = Produk::when(
+                auth()->user()->cabang,
+                function ($q) {
 
-    $komponen =
-    KomponenProduk::whereNull(
-        'parent_id'
-    )
-    ->latest()
-    ->get();
+                    $q->where(
+                        'cabang',
+                        auth()->user()->cabang
+                    );
 
-    return view(
-        'produk',
-        compact(
-            'data',
-            'komponen'
-        )
-    );
-}
+                }
+            )
+            ->latest()
+            ->get();
+
+            $komponen =
+            KomponenProduk::whereNull(
+                'parent_id'
+            )
+            ->latest()
+            ->get();
+
+            return view(
+                'produk',
+                compact(
+                    'data',
+                    'komponen'
+                )
+            );
+        }
 
     public function store(Request $request)
     {
-        $prefix = strtoupper($request->prefix);
+        $prefix = strtoupper(substr($request->nama, 0, 1));
 
         $lastProduk = Produk::where(
             'kode',
             'like',
             $prefix . '%'
-        )->latest()->first();
+        )
+        ->orderBy('kode', 'desc')
+        ->first();
 
         if ($lastProduk) {
 
@@ -68,7 +82,9 @@ class ProdukController extends Controller
 
             'varian' => $request->varian,
 
-            'satuan' => $request->satuan
+            'satuan' => $request->satuan,
+
+            'cabang' => auth()->user()->cabang
 
         ]);
 
@@ -89,7 +105,9 @@ class ProdukController extends Controller
 
             'varian' => $request->varian,
 
-            'satuan' => $request->satuan
+            'satuan' => $request->satuan,
+
+            'cabang' => auth()->user()->cabang
 
         ]);
 

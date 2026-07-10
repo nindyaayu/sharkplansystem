@@ -19,7 +19,9 @@ class BarangMasuk extends Model
         'supplier',
 
         // TAMBAHAN
-        'asal'
+        'asal',
+        
+        'cabang'
 
     ];
 

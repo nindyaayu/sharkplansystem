@@ -13,7 +13,9 @@ class Bom extends Model
         // TAMBAHAN BARU
         'nama_komponen',
 
-        'tanggal'
+        'tanggal',
+
+        'cabang'
     ];
 
     // ===== RELASI DETAIL BOM =====

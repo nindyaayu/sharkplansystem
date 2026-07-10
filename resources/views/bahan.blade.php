@@ -297,7 +297,7 @@ tbody tr:hover{
 
 <td>
 
-    {{ $d->created_at->format('d/m/Y') }}
+    {{ \Carbon\Carbon::parse($d->tanggal)->format('d/m/Y') }}
 
 </td>
 
@@ -469,7 +469,7 @@ name="isi_per_satuan"
 placeholder="Isi per satuan">
 <input 
 type="date"
-name="created_at"
+name="tanggal_input"
 value="{{ date('Y-m-d') }}">
 <input 
 name="satuan_konversi"

@@ -255,8 +255,22 @@ href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
     <div class="sidebar">
 
         <div class="logo">
-
             SHARKPLAN
+
+            <div style="
+                margin-top:10px;
+                padding:8px 10px;
+                background:rgba(255,255,255,0.05);
+                border-radius:8px;
+                font-size:12px;
+                color:#94a3b8;
+                width:fit-content;
+            ">
+                Cabang :
+                <span style="color:#fff;font-weight:600;">
+                    {{ auth()->user()->cabang }}
+                </span>
+            </div>
 
         </div>
 
@@ -525,11 +539,11 @@ href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 
         </a>
 
-        <a href="/hasil-cutting">
+        <!-- <a href="/hasil-cutting">
 
             ✂️ Hasil Cutting
 
-        </a>
+        </a> -->
 
     </div>
 
@@ -764,11 +778,11 @@ href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 
                 </a>
 
-                <a href="/hasil-cutting">
+                <!-- <a href="/hasil-cutting">
 
                     ✂️ Hasil Cutting
 
-                </a>
+                </a> -->
 
             </div>
 
@@ -942,46 +956,21 @@ window.onload = function(){
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 
 <script src="https://cdn.datatables.net/searchpanes/2.3.0/js/dataTables.searchPanes.min.js"></script>
-<script>
-
-document.addEventListener('DOMContentLoaded', function(){
-
-    if(document.getElementById('laporanTable')){
-
-        $('#laporanTable').DataTable({
-
-            pageLength: 25,
-
-            dom: 'Plfrtip',
-
-            searchPanes: {
-                cascadePanes: true
-            }
-
-        });
-
-    }
-
-});
-
-</script>
 
 <script>
 
 document.addEventListener('DOMContentLoaded', function(){
 
-    if(document.getElementById('laporanTable')){
+    const table =
+        document.getElementById('laporanTable');
+
+    if(
+        table &&
+        !table.querySelector('.filter-row')
+    ){
 
         $('#laporanTable').DataTable({
-
-            pageLength: 25,
-
-            dom: 'Plfrtip',
-
-            searchPanes: {
-                cascadePanes: true
-            }
-
+            pageLength: 25
         });
 
     }

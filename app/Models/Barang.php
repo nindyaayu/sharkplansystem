@@ -14,11 +14,15 @@ class Barang extends Model
 
         'kategori',
 
+        'cabang',
+
         'warna',
 
         'satuan',
 
         'stok',
+
+        'tanggal',
 
         'isi_per_satuan',
 
