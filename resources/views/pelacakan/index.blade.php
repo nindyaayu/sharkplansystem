@@ -141,7 +141,7 @@
 
         <tr>
             <td>Stok Saat Ini</td>
-            <td>{{ number_format($barangDipilih->stok,0) }}</td>
+            <td>{{ number_format($stokSaatIni,0) }}</td>
         </tr>
 
         <tr>
