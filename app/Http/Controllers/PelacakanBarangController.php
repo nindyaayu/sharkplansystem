@@ -43,6 +43,9 @@ class PelacakanBarangController extends Controller
         $rekapPenjahit = collect();
 
 
+        $stokSaatIni = 0;
+
+
 
         if ($request->barang_id) {
 
@@ -448,6 +451,11 @@ class PelacakanBarangController extends Controller
     $riwayatMasuk = $queryMasuk
         ->latest('tanggal_masuk')
         ->get();
+
+    // =========================
+    // HITUNG STOK SAAT INI
+    // =========================
+    $stokSaatIni = $riwayatMasuk->sum('jumlah') - $riwayatKeluar->sum('jumlah');
 
     $rekapProduk = $riwayatKeluar
         ->groupBy('produk_id')
