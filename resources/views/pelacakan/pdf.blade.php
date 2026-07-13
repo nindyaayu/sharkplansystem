@@ -134,6 +134,11 @@
             </tr>
 
             <tr>
+                <td>Stok Saat Ini</td>
+                <td>{{ number_format($stokSaatIni,0) }}</td>
+            </tr>
+
+            <tr>
                 <td>Total Masuk</td>
                 <td>{{ number_format($riwayatMasuk->sum('jumlah'),0) }}</td>
             </tr>
