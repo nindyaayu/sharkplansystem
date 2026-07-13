@@ -212,6 +212,12 @@ class PelacakanBarangController extends Controller
 
                 ->get();
 
+            // =========================
+            // HITUNG STOK SAAT INI
+            // =========================
+
+            $stokSaatIni = $riwayatMasuk->sum('jumlah') - $riwayatKeluar->sum('jumlah');
+
 
 
             // =========================
@@ -347,19 +353,16 @@ class PelacakanBarangController extends Controller
 
 
         return view(
-
             'pelacakan.index',
-
             compact(
-
                 'barangs',
-
                 'barangDipilih',
                 'riwayatKeluar',
                 'riwayatMasuk',
                 'rekapProduk',
                 'rekapPeminta',
-                'rekapPenjahit'
+                'rekapPenjahit',
+                'stokSaatIni'
             )
         );
     }

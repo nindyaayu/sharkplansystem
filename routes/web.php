@@ -17,6 +17,7 @@ use App\Http\Controllers\SuratJalanController;
 use App\Http\Controllers\PermintaanBarangController;
 use App\Http\Controllers\PelacakanBarangController;
 use App\Http\Controllers\KomponenProdukController;
+use App\Http\Controllers\BatchProductionController;
 use App\Models\Barang;
 use App\Models\BarangMasuk;
 use App\Models\HasilCutting;
@@ -377,6 +378,24 @@ Route::middleware('auth')->group(function () {
                 });
 
             });
+
+            /*
+|--------------------------------------------------------------------------
+| PRODUCTION
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('production')
+    ->middleware(['auth'])
+    ->group(function () {
+
+        Route::resource(
+            'batch-production',
+            BatchProductionController::class
+        );
+
+    });
+
     // =========================
     // INVENTORI
     // =========================
