@@ -505,7 +505,8 @@ class PelacakanBarangController extends Controller
             'riwayatKeluar',
             'rekapProduk',
             'rekapPeminta',
-            'rekapPenjahit'
+            'rekapPenjahit',
+            'stokSaatIni'
         )
     );
 
