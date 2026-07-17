@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="card" style="padding:24px">
+<div class="form-box">
 
 <div style="
     display:flex;
@@ -11,9 +11,9 @@
     margin-bottom:20px;
 ">
 
-    <h2 style="color:white;margin:0;">
-        📋 Permintaan Barang
-    </h2>
+    <div class="page-header">
+    <h2>Permintaan Barang</h2>
+    </div>
 
     <div style="
     display:flex;
@@ -36,32 +36,30 @@
     </span>
 
     <input
-        id="searchPermintaan"
-        type="text"
-        placeholder="Cari No PB, Produk, Peminta..."
-        style="
-            width:380px;
-            padding:12px 16px 12px 42px;
-            background:#0f1b3f;
-            border:1px solid rgba(255,255,255,.08);
-            border-radius:10px;
-            color:white;
-        ">
+    id="searchPermintaan"
+    type="text"
+    class="search-box"
+    placeholder="Cari No PB, Produk, Peminta...">
 
 </div>
 
 </div>
 
-    <button onclick="openModal()" style="
-    background:#2563eb;
-    color:white;
-    border:none;
-    padding:10px 18px;
-    border-radius:8px;
-    cursor:pointer;
+    <button
+    type="button"
+    onclick="openModal()"
+    style="
+        background:#C62828;
+        color:#FFFFFF;
+        border:none;
+        padding:12px 20px;
+        border-radius:10px;
+        cursor:pointer;
+        font-weight:600;
+        transition:.2s;
 ">
     + Buat Permintaan
-        </button>
+</button>
 
 </div>
 
@@ -70,12 +68,10 @@
     <table style="
         width:100%;
         border-collapse:collapse;
-        color:white;
+        color:#374151;
     ">
 
         <thead>
-
-            <tr style="background:#1e293b;">
 
                 <th style="padding:12px;">No Permintaan</th>
                 <th style="padding:12px;">Tanggal</th>
@@ -497,16 +493,7 @@
             </table>
 
             <div
-                class="footer-button"
-                style="
-                    position:sticky;
-                    bottom:0;
-                    background:#07153d;
-                    padding:15px 0;
-                    margin-top:20px;
-                    z-index:10;
-                "
-            >
+                class="footer-button">
 
                 <button
                     type="button"
@@ -532,6 +519,97 @@
 </div>
 
 <style>
+
+tbody td{
+    color:#374151;
+    padding:16px;
+    border-top:1px solid #E5E7EB;
+}
+
+.table-dark tbody tr:hover{
+    background:transparent;
+}
+
+.table-dark tbody tr:hover td{
+    background:transparent;
+    color:#374151;
+}
+
+#detailModal tbody tr:hover{
+    background:#556B5D;
+}
+
+#detailModal tbody tr:hover td{
+    color:#FFFFFF;
+}
+
+.modal-content{
+    background:#3F4F44;
+    border-radius:18px;
+    color:white;
+}
+
+.btn-primary{
+    background:#C62828;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    font-weight:600;
+}
+
+.btn-primary:hover{
+    background:#9F1D1D;
+}
+
+.search-box{
+    width:380px;
+    padding:12px 16px 12px 42px;
+
+    background:#FFFFFF;
+    color:#374151;
+
+    border:1px solid #D1D5DB;
+    border-radius:12px;
+
+    outline:none;
+}
+
+.search-box::placeholder{
+    color:#9CA3AF;
+}
+
+.search-box:focus{
+    border-color:#3F4F44;
+    box-shadow:0 0 0 3px rgba(63,79,68,.15);
+}
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:20px 30px;
+    margin-bottom:22px;
+
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+    border-radius:20px;
+}
+
+.page-header h2{
+    margin:0;
+    color:#fff;
+    font-size:42px;
+    font-weight:700;
+}
+
+.form-box{
+    background:#FFFFFF;
+    border:1px solid #E5E7EB;
+    border-radius:18px;
+    padding:24px;
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
 
 .select2-search--dropdown{
     display:block !important;
@@ -565,7 +643,6 @@
 
     margin:10px auto;
 
-    background:#08132f;
     border-radius:20px;
     padding:30px;
 
@@ -622,7 +699,7 @@
     justify-content:space-between;
     align-items:center;
 
-    background:#08132f;
+    background:#3F4F44;
 
     z-index:999;
     padding:15px 0;
@@ -645,19 +722,30 @@
 
 label{
     display:block;
-    margin-bottom:10px;
+    margin:18px 0 8px;
+    color:#FFFFFF;
+    font-size:15px;
     font-weight:600;
 }
 
 .input-dark{
     width:100%;
-    padding:16px;
-    margin-bottom:25px;
-    background:#0f1b3f;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:12px;
-    color:white;
+    padding:13px 16px;
     box-sizing:border-box;
+
+    background:#FFFFFF;
+    color:#374151;
+
+    border:1px solid #D1D5DB;
+    border-radius:12px;
+
+    font-size:15px;
+    outline:none;
+}
+
+.input-dark:focus{
+    border-color:#3F4F44;
+    box-shadow:0 0 0 3px rgba(63,79,68,.15);
 }
 
 .input-dark::placeholder{
@@ -672,20 +760,37 @@ label{
     width:100%;
     border-collapse:collapse;
     margin-bottom:20px;
+    margin-top:15px;
+}
+
+.table-dark th:first-child{
+    border-top-left-radius:12px;
+    border-bottom-left-radius:12px;
+}
+
+.table-dark th:last-child{
+    border-top-right-radius:12px;
+    border-bottom-right-radius:12px;
 }
 
 .table-dark thead{
-    background:#0d1b3c;
+    background:transparent;
 }
 
 .table-dark th{
+    background:#ECEFEC;
+
+    color:#374151;
+    font-weight:700;
+
     padding:16px;
-    text-align:left;
+
+    border-bottom:1px solid #D1D5DB;
 }
 
 .table-dark td{
-    padding:12px;
-    border-top:1px solid rgba(255,255,255,.05);
+    padding:14px;
+    border-top:1px solid rgba(255,255,255,.08);
 }
 
 .select-dark{
@@ -699,30 +804,54 @@ label{
 
 .qty-input{
     width:100%;
-    padding:14px;
-    background:#0f1b3f;
-    border:1px solid rgba(255,255,255,.08);
+    padding:13px 16px;
+
+    background:#FFFFFF;
+    color:#374151;
+
+    border:1px solid #D1D5DB;
     border-radius:12px;
-    color:white;
+
     box-sizing:border-box;
 }
 
+.qty-input:focus{
+    border-color:#3F4F44;
+    box-shadow:0 0 0 3px rgba(63,79,68,.15);
+}
+
 .btn-add{
-    background:transparent;
-    color:#22c55e;
-    border:1px solid #22c55e;
-    padding:12px 20px;
-    border-radius:12px;
+    background:#C62828;
+    color:white;
+
+    border:none;
+
+    padding:11px 18px;
+    border-radius:10px;
+
+    font-weight:600;
     cursor:pointer;
 }
 
+.btn-add:hover{
+    background:#9F1D1D;
+}
+
 .btn-hapus{
-    background:#ef4444;
+    background:#EF4444;
     color:white;
+
     border:none;
-    padding:12px 18px;
+
+    height:44px;
+
+    padding:0 18px;
+
     border-radius:10px;
+
     cursor:pointer;
+
+    font-weight:600;
 }
 
 .footer-button{
@@ -736,7 +865,7 @@ label{
     margin-top:20px;
     padding:15px;
 
-    background:#08132f;
+    background:#3F4F44;
 
     border-top:1px solid rgba(255,255,255,.08);
 
@@ -744,7 +873,7 @@ label{
 }
 
 .btn-batal{
-    background:#111827;
+    background:#6B7280;
     color:white;
     border:none;
     padding:14px 25px;
@@ -753,7 +882,7 @@ label{
 }
 
 .btn-simpan{
-    background:#5b5bf7;
+    background:#C62828;
     color:white;
     border:none;
     padding:14px 25px;
@@ -773,49 +902,53 @@ label{
 }
 
 .select2-container--default .select2-selection--single{
-    background:#0f1b3f !important;
-    border:1px solid rgba(255,255,255,.08) !important;
+    background:#FFFFFF !important;
+    border:1px solid #D1D5DB !important;
     border-radius:12px !important;
     height:50px !important;
 }
 
 .select2-container--default .select2-selection__rendered{
-    color:white !important;
+    color:#374151 !important;
     line-height:48px !important;
 }
 
 .select2-dropdown{
-    background:#0f1b3f !important;
-    border:1px solid rgba(255,255,255,.08) !important;
+    background:#FFFFFF !important;
+    border:1px solid #D1D5DB !important;
 }
 
 .select2-results__option{
-    color:white !important;
+    color:#374151 !important;
 }
 
 .select2-search__field{
-    background:#08132f !important;
-    color:white !important;
+    background:#FFFFFF !important;
+    color:#374151 !important;
+    border:1px solid #D1D5DB !important;
 }
 
 .barang-search{
     width:100%;
-    padding:14px;
-    background:#0f1b3f;
-    border:1px solid rgba(255,255,255,.08);
+    padding:13px 16px;
+
+    background:#FFFFFF;
+    color:#374151;
+
+    border:1px solid #D1D5DB;
     border-radius:12px;
-    color:white;
+
     outline:none;
     box-sizing:border-box;
 }
 
 .barang-search::placeholder{
-    color:#94a3b8;
+    color:#9CA3AF;
 }
 
 .barang-search:focus{
-    border-color:#3b82f6;
-    box-shadow:0 0 0 3px rgba(59,130,246,.15);
+    border-color:#3F4F44;
+    box-shadow:0 0 0 3px rgba(63,79,68,.15);
 }
 
 @media (max-width:1024px){
@@ -846,7 +979,7 @@ label{
         padding:15px;
         margin-top:20px;
 
-        background:#08132f;
+        background:#3F4F44;
         z-index:999;
     }
 
@@ -985,7 +1118,8 @@ function tambahBaris(){
                 let html = `
 
                 <div style="
-                    background:#0f1b3f;
+                    background:#556B5D;
+                    border:1px solid rgba(255,255,255,.08);
                     border-radius:12px;
                     padding:20px;
                     margin-bottom:20px;
@@ -997,16 +1131,16 @@ function tambahBaris(){
                         row-gap:12px;
                     ">
 
-                        <div style="color:#94a3b8;">No Permintaan</div>
-                        <div>${data.nomor_permintaan}</div>
+                        <div style="color:#D1D5DB;font-weight:600;">No Permintaan</div>
+                        <div style="color:#FFFFFF;">${data.nomor_permintaan}</div>
 
-                        <div style="color:#94a3b8;">Peminta</div>
-                        <div>${data.nama_peminta}</div>
+                        <div style="color:#D1D5DB;font-weight:600;">Peminta</div>
+                        <div style="color:#FFFFFF;">${data.nama_peminta}</div>
 
-                        <div style="color:#94a3b8;">Penjahit</div>
-                        <div>${data.nama_penjahit}</div>
+                        <div style="color:#D1D5DB;font-weight:600;">Penjahit</div>
+                        <div style="color:#FFFFFF;">${data.nama_penjahit}</div>
 
-                        <div style="color:#94a3b8;">Status</div>
+                        <div style="color:#D1D5DB;font-weight:600;">Status</div>
 
                         <div>
                             <span style="
@@ -1036,23 +1170,63 @@ function tambahBaris(){
                     width:100%;
                     border-collapse:collapse;
                     color:white;
-                    overflow:hidden;
-                    border-radius:12px;
                 ">
 
                     <thead>
 
                         <tr style="
-                            background:#0f1b3f;
+                            background:#F3F4F6;
                         ">
 
-                            <th style="padding:14px;">Kode</th>
-                            <th style="padding:14px;">Nama Barang</th>
-                            <th style="padding:14px;">Warna</th>
-                            <th style="padding:14px;">Jumlah</th>
-                            <th style="padding:14px;">Satuan</th>
-                            <th style="padding:14px;">Status</th>
-                            <th style="padding:14px;">Aksi</th>
+                            <th style="
+                                padding:14px;
+                                color:#374151;
+                                font-weight:700;
+                            ">
+                                Kode
+                            </th>
+                            <th style="
+                                padding:14px;
+                                color:#374151;
+                                font-weight:700;
+                            ">
+                                Nama Barang
+                            </th>
+                            <th style="
+                                padding:14px;
+                                color:#374151;
+                                font-weight:700;
+                            ">
+                                Warna
+                            </th>
+                            <th style="
+                                padding:14px;
+                                color:#374151;
+                                font-weight:700;
+                            ">
+                                Jumlah
+                            </th>
+                            <th style="
+                                padding:14px;
+                                color:#374151;
+                                font-weight:700;
+                            ">
+                                Satuan
+                            </th>
+                            <th style="
+                                padding:14px;
+                                color:#374151;
+                                font-weight:700;
+                            ">
+                                Status
+                            </th>
+                            <th style="
+                                padding:14px;
+                                color:#374151;
+                                font-weight:700;
+                            ">
+                                Aksi
+                            </th>
 
                         </tr>
 
@@ -1073,6 +1247,7 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
+                                color:#FFFFFF;
                                 text-align:center;
                                 border-bottom:1px solid rgba(255,255,255,.08);
                             ">
@@ -1081,6 +1256,8 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
+                                color:#FFFFFF;
+                                text-align:center;
                                 border-bottom:1px solid rgba(255,255,255,.08);
                             ">
                                 ${item.barang.nama}
@@ -1088,6 +1265,7 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
+                                color:#FFFFFF;
                                 text-align:center;
                                 border-bottom:1px solid rgba(255,255,255,.08);
                             ">
@@ -1096,6 +1274,7 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
+                                color:#FFFFFF;
                                 text-align:center;
                                 border-bottom:1px solid rgba(255,255,255,.08);
                             ">
@@ -1104,6 +1283,7 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
+                                color:#FFFFFF;
                                 text-align:center;
                                 border-bottom:1px solid rgba(255,255,255,.08);
                             ">
@@ -1112,6 +1292,7 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
+                                color:#FFFFFF;
                                 text-align:center;
                                 border-bottom:1px solid rgba(255,255,255,.08);
                             ">

@@ -3,36 +3,100 @@
 @section('content')
 
 <style>
-
-.page-title{
-    color:white;
-    font-size:32px;
-    font-weight:bold;
-    margin-bottom:25px;
+.filter-card input[type="date"]{
+    width:130px;
+    height:40px;
+    padding:0 12px;
+    border:1px solid #D1D5DB;
+    border-radius:10px;
+    box-sizing:border-box;
 }
 
-.top-bar{
+.btn-edit,
+.btn-delete{
+
+    min-width:90px;
+
+}
+
+.form-group{
+
+    margin-bottom:16px;
+
+}
+
+.modal-content{
+
+    width:650px;
+    max-width:95%;
+}
+
+.filter-card{
+    background:#fff;
+    border:1px solid #E5E7EB;
+    border-radius:20px;
+    padding:20px;
+    margin-bottom:24px;
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
+
+.page-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:25px;
+    padding:20px 30px;
+    margin-bottom:22px;
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+    border-radius:20px;
 }
 
-.btn{
-    background:linear-gradient(90deg,#6366f1,#8b5cf6);
+.page-header h2{
+    margin:0;
+    color:#fff;
+    font-size:42px;
+    font-weight:700;
+}
+
+.filter-bar{
+    display:flex;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.btn-primary{
+    background:#C62828;
     color:white;
     border:none;
-    padding:12px 20px;
+    padding:12px 18px;
+    border-radius:10px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn-primary:hover{
+    background:#9F1D1D;
+}
+
+.btn-secondary{
+    background:#6B7280;
+    color:#fff;
+    border:none;
+    padding:12px 18px;
     border-radius:10px;
     cursor:pointer;
-    font-weight:600;
+}
+
+.btn-secondary:hover{
+    background:#4B5563;
 }
 
 .table-box{
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.05);
-    border-radius:20px;
+    background:#fff;
+    border:1px solid #E5E7EB;
+    border-radius:16px;
     overflow:hidden;
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
 }
 
 table{
@@ -40,19 +104,30 @@ table{
     border-collapse:collapse;
 }
 
-th{
-    background:rgba(255,255,255,0.04);
-    color:#cbd5e1;
-    padding:16px;
-    text-align:left;
-    font-size:14px;
+thead{
+    background:#F3F4F6;
 }
 
-td{
+thead th{
     padding:16px;
-    border-top:1px solid rgba(255,255,255,0.05);
-    color:white;
-    font-size:14px;
+    text-align:center;
+    color:#374151;
+    font-weight:700;
+    border-bottom:1px solid #E5E7EB;
+}
+
+tbody td{
+    padding:16px;
+    color:#374151;
+    text-align:center;
+}
+
+tbody tr{
+    border-top:1px solid #E5E7EB;
+}
+
+tbody tr:hover{
+    background:#F8FAFC;
 }
 
 .badge{
@@ -64,31 +139,42 @@ td{
 }
 
 .badge-danger{
-    background:rgba(239,68,68,0.2);
-    color:#f87171;
+    background:#FEE2E2;
+    color:#DC2626;
+    padding:6px 10px;
+    border-radius:8px;
 }
 
 .action{
     display:flex;
+    justify-content:center;
     gap:8px;
 }
 
 .btn-edit{
-    background:#1e293b;
-    color:#f97316;
+    background:#F59E0B;
+    color:#fff;
     border:none;
-    padding:8px 12px;
+    padding:8px 14px;
     border-radius:8px;
-    cursor:pointer;
+    font-weight:600;
+}
+
+.btn-edit:hover{
+    background:#D97706;
 }
 
 .btn-delete{
-    background:#1e293b;
-    color:#ef4444;
+    background:#EF4444;
+    color:#fff;
     border:none;
-    padding:8px 12px;
+    padding:8px 14px;
     border-radius:8px;
-    cursor:pointer;
+    font-weight:600;
+}
+
+.btn-delete:hover{
+    background:#DC2626;
 }
 
 .modal{
@@ -102,28 +188,40 @@ td{
 }
 
 .modal-content{
-    background:#0f172a;
-    padding:30px;
-    border-radius:20px;
-    width:420px;
-    border:1px solid rgba(255,255,255,0.08);
+    background:#3F4F44;
+    border:1px solid #556B5D;
+    border-radius:18px;
+    padding:28px;
+    box-shadow:0 20px 45px rgba(0,0,0,.30);
 }
 
 .modal-title{
     color:white;
-    font-size:22px;
-    font-weight:bold;
-    margin-bottom:20px;
+    font-size:28px;
+    font-weight:700;
 }
 
 .input{
-    width:100%;
-    padding:12px;
-    margin-bottom:15px;
+    background:#fff;
+    color:#374151;
+    border:1px solid #D1D5DB;
     border-radius:10px;
-    border:1px solid rgba(255,255,255,0.1);
-    background:#111827;
-    color:white;
+}
+.modal-content .input{
+
+    width:100%;
+    height:44px;
+    margin-bottom:14px;
+    padding:0 14px;
+    border-radius:10px;
+    border:1px solid #D1D5DB;
+    box-sizing:border-box;
+
+}
+
+.input:focus{
+    border-color:#3F4F44;
+    box-shadow:0 0 0 3px rgba(63,79,68,.15);
 }
 
 .input,
@@ -139,26 +237,16 @@ input.input{
     gap:10px;
 }
 
-.btn-secondary{
-    background:#1e293b;
-    color:white;
-    border:none;
-    padding:10px 16px;
-    border-radius:10px;
-    cursor:pointer;
-}
 
 </style>
 
-<div class="page-title">
-
-    Barang Keluar
-
+<div class="page-header">
+    <h2>Barang Keluar</h2>
 </div>
 
-    <div class="top-bar">
+    <div class="filter-bar">
 
-        <button class="btn" onclick="openModal()">
+        <button class="btn-primary" onclick="openModal()">
 
             + Barang Keluar
 
@@ -166,6 +254,8 @@ input.input{
 
     </div>
 
+    <div class="card filter-card">
+        
     <form
         method="GET"
         style="
@@ -181,25 +271,17 @@ input.input{
             type="date"
             name="tanggal_awal"
             value="{{ request('tanggal_awal') }}"
-            class="input"
-            style="width:auto;"
-        >
-
-        <span style="color:white;">
-            s/d
-        </span>
+            class="input">
 
         <input
             type="date"
             name="tanggal_akhir"
             value="{{ request('tanggal_akhir') }}"
-            class="input"
-            style="width:auto;"
-        >
+            class="input">
 
         <button
             type="submit"
-            class="btn"
+            class="btn-primary"
         >
             🔍 Tampilkan
         </button>
@@ -233,6 +315,7 @@ input.input{
         </a>
 
     </form>
+    </div> 
 
 <div class="table-box">
 
@@ -372,7 +455,7 @@ input.input{
                                     '{{ $item->tujuan }}'
                                 )">
 
-                                ✏️
+                                ✏️ Edit
 
                             </button>
 
@@ -387,7 +470,7 @@ input.input{
                                     class="btn-delete"
                                     onclick="return confirm('Hapus data?')">
 
-                                    🗑️
+                                    🗑 Hapus
 
                                 </button>
 
@@ -539,7 +622,7 @@ input.input{
 
                 </button>
 
-                <button type="submit" class="btn">
+                <button type="submit" class="btn-primary">
 
                     Simpan
 
@@ -641,7 +724,7 @@ input.input{
 
                 </button>
 
-                <button type="submit" class="btn">
+                <button type="submit" class="btn-primary">
 
                     Update
 
