@@ -5,8 +5,8 @@
 <style>
 
 body{
-    background:#0f172a;
-    color:#e5e7eb;
+    background:transparent;
+    color:#263238;
 }
 
 .page-header{
@@ -17,7 +17,9 @@ body{
 }
 
 .page-header h2{
-    color:white;
+    color:#263238;
+    font-size:34px;
+    font-weight:700;
 }
 
 .action-bar{
@@ -25,19 +27,26 @@ body{
 }
 
 .btn-primary{
-    background:linear-gradient(90deg,#6366f1,#8b5cf6);
+    background:#C62828;
     border:none;
     padding:10px 16px;
     border-radius:10px;
     color:white;
     cursor:pointer;
+    font-weight:600;
+}
+
+.btn-primary:hover{
+    background:#8E1C1C;
 }
 
 .table-box{
-    background:rgba(17,24,39,0.7);
+    background:#FFFFFF;
+    border:1px solid #E5E7EB;
     border-radius:16px;
     padding:15px;
     overflow:auto;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
 }
 
 table{
@@ -45,20 +54,57 @@ table{
     border-collapse:collapse;
 }
 
-thead th{
+.table-box thead th{
+    color:#374151;
+    background:#F3F4F6;
     padding:12px;
-    color:#94a3b8;
     text-align:left;
     font-size:13px;
 }
 
-tbody td{
+.table-box tbody td{
     padding:12px;
-    border-top:1px solid rgba(255,255,255,0.05);
+    border-top:1px solid #E5E7EB;
+    color:#374151;
+}
+
+.modal-content table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.modal-content thead th{
+    background:#F3F4F6;
+    color:#374151;
+    padding:12px;
+}
+
+.modal-content tbody td{
+    background:white;
+    color:#374151;
+    padding:12px;
+    border-top:1px solid #E5E7EB;
+}
+
+/* Modal Komponen */
+#listKomponen td{
+    color:#FFFFFF !important;
+}
+
+/* Modal Sub Komponen */
+#listKomponen td{
+    color:#374151 !important;
+}
+
+#listSubKomponen td{
+    color:#374151 !important;
 }
 
 tbody tr:hover{
-    background:rgba(99,102,241,0.05);
+    background:#F9FAFB;
 }
 
 .badge-status{
@@ -89,21 +135,29 @@ tbody tr:hover{
 }
 
 .btn-edit{
-    background:rgba(99,102,241,0.2);
-    color:#a5b4fc;
+    background:#3F4F44;
+    color:white;
     border:none;
     padding:6px 12px;
     border-radius:8px;
     cursor:pointer;
 }
 
+.btn-edit:hover{
+    background:#324038;
+}
+
 .btn-delete{
-    background:rgba(239,68,68,0.2);
-    color:#ef4444;
+    background:#C62828;
+    color:white;
     border:none;
     padding:6px 12px;
     border-radius:8px;
     cursor:pointer;
+}
+
+.btn-delete:hover{
+    background:#8E1C1C;
 }
 
 .modal{
@@ -120,10 +174,11 @@ tbody tr:hover{
 }
 
 .modal-content{
-    background:#111827;
+    background:#3F4F44;
     padding:25px;
     border-radius:16px;
     width:420px;
+    border:1px solid #4B5D51;
 }
 
 .modal-content h3{
@@ -137,8 +192,9 @@ tbody tr:hover{
     padding:12px;
     border-radius:10px;
     border:1px solid rgba(255,255,255,0.08);
-    background:rgba(255,255,255,0.03);
-    color:white;
+    background:white;
+    color:#263238;
+    border:1px solid #D1D5DB;
     margin-bottom:12px;
     box-sizing:border-box;
 }
@@ -396,7 +452,7 @@ style="
 width:900px;
 max-width:95%;
 height:80vh;
-background:#04143d;
+background:#3F4F44;
 border:1px solid rgba(255,255,255,.08);
 display:flex;
 flex-direction:column;
@@ -424,7 +480,7 @@ style="
 background:none;
 border:none;
 font-size:30px;
-color:#94a3b8;
+color:white;
 cursor:pointer;
 ">
 ×
@@ -466,7 +522,10 @@ margin-top:15px;
 <table
 style="
 width:100%;
-color:white;
+background:white;
+color:#263238;
+border-radius:10px;
+overflow:hidden;
 ">
 
 <thead>
@@ -501,7 +560,7 @@ style="
 width:700px;
 max-width:95%;
 height:70vh;
-background:#04143d;
+background:#3F4F44;
 display:flex;
 flex-direction:column;
 ">
@@ -524,7 +583,7 @@ style="
 background:none;
 border:none;
 font-size:30px;
-color:white;
+color:#F8FAFC;
 cursor:pointer;
 ">
 ×
@@ -597,11 +656,10 @@ style="display:none;">
 
 <div class="modal-content"
 style="
-width:500px;
-max-width:95%;
-background:#04143d;
-padding:20px;
-border-radius:12px;
+color:white;
+margin:0;
+font-size:22px;
+font-weight:700;
 ">
 
 <div style="
@@ -642,7 +700,11 @@ placeholder="Nama Komponen"
 style="
 width:100%;
 margin-top:20px;
-">
+padding:12px;
+border-radius:10px;
+border:1px solid #D1D5DB;
+background:white;
+"
 
 <div style="
 margin-top:20px;
@@ -770,7 +832,9 @@ tbody.insertAdjacentHTML(
 
 <td>${index + 1}</td>
 
-<td>${item.nama_komponen}</td>
+<td style="color:white;font-weight:500;">
+    ${item.nama_komponen}
+</td>
 
 <td>
 
@@ -823,78 +887,58 @@ document.getElementById(
 
 }
 
-function openSubKomponenModal(
-id,
-nama
-){
+function openSubKomponenModal(id, nama){
 
-document.getElementById(
-'subKomponenModal'
-).style.display='flex';
+    document.getElementById('subKomponenModal').style.display = 'flex';
 
-document.getElementById(
-'judulSubKomponen'
-).innerHTML =
-'Sub Komponen - ' + nama;
+    document.getElementById('judulSubKomponen').innerHTML =
+        'Sub Komponen - ' + nama;
 
-document.getElementById(
-'parent_id'
-).value = id;
+    document.getElementById('parent_id').value = id;
 
-fetch('/sub-komponen/' + id)
+    fetch('/sub-komponen/' + id)
+    .then(response => response.json())
+    .then(data => {
 
-.then(response => response.json())
+        let tbody = document.getElementById('listSubKomponen');
 
-.then(data => {
+        tbody.innerHTML = '';
 
-let tbody =
-document.getElementById(
-'listSubKomponen'
-);
+        data.forEach((item,index)=>{
 
-tbody.innerHTML = '';
+            tbody.insertAdjacentHTML(
+                'beforeend',
+                `
+                <tr>
+                    <td>${index + 1}</td>
 
-data.forEach((item,index)=>{
+                    <td style="color:white;font-weight:500;">
+                        ${item.nama_komponen}
+                    </td>
 
-tbody.insertAdjacentHTML(
-'beforeend',
-`
-<tr>
+                    <td>
 
-<td>${index + 1}</td>
+                        <button
+                        class="btn-edit"
+                        onclick="editSubKomponen('${item.id}','${item.nama_komponen}',this)">
+                        Edit
+                        </button>
 
-<td>${item.nama_komponen}</td>
+                        <button
+                        class="btn-delete"
+                        onclick="hapusSubKomponen('${item.id}',this)">
+                        Hapus
+                        </button>
 
-    <td>
+                    </td>
 
-    <button
-    class="btn-edit"
-    onclick="editSubKomponen(
-    '${item.id}',
-    '${item.nama_komponen}',
-    this
-    )">
-    Edit
-    </button>
+                </tr>
+                `
+            );
 
-    <button
-    class="btn-delete"
-    onclick="hapusSubKomponen(
-    '${item.id}',
-    this
-    )">
-    Hapus
-    </button>
+        });
 
-    </td>
-
-    </tr>
-    `
-    );
-
-});
-
-});
+    });
 
 }
 

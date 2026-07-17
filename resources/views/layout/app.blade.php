@@ -15,7 +15,7 @@
 body{
     margin:0;
     font-family:'Segoe UI', sans-serif;
-    background:#0f172a;
+    background:#F5F5F5;
 }
 
 /* ================= LAYOUT ================= */
@@ -29,7 +29,7 @@ body{
 .sidebar{
     width:240px;
     height:100vh;
-    background:linear-gradient(180deg,#020617,#0f172a);
+    background:#3F4F44;
     color:white;
     padding:20px;
     position:fixed;
@@ -42,6 +42,8 @@ body{
     margin-left:260px;
     padding:40px;
     width:100%;
+    background:#F5F5F5;
+    min-height:100vh;
 }
 
 /* ================= LOGO ================= */
@@ -60,24 +62,25 @@ body{
     gap:10px;
     padding:12px;
     border-radius:10px;
-    color:#94a3b8;
+    color:#E2E8F0;
     text-decoration:none;
     margin-bottom:6px;
     font-size:14px;
+    font-weight:600;
     transition:0.2s;
 }
 
 /* ================= HOVER ================= */
 
 .menu a:hover{
-    background:rgba(99,102,241,0.1);
+    background:rgba(198,40,40,.18);
     color:white;
 }
 
 /* ================= ACTIVE ================= */
 
 .menu a.active{
-    background:linear-gradient(90deg,#6366f1,#8b5cf6);
+    background:#C62828;
     color:white;
     font-weight:600;
 }
@@ -99,12 +102,13 @@ body{
     cursor:pointer;
     padding:12px;
     border-radius:10px;
-    color:#94a3b8;
+    color:#E2E8F0;
+    font-weight:600;
     transition:0.2s;
 }
 
 .menu-link:hover{
-    background:rgba(99,102,241,0.1);
+    background:rgba(198,40,40,.18);
     color:white;
 }
 
@@ -137,14 +141,15 @@ body{
 .submenu a{
     padding:10px;
     font-size:13px;
-    color:#94a3b8;
+    font-weight:500;
+    color:#E2E8F0;
     border-radius:8px;
     text-decoration:none;
     transition:0.2s;
 }
 
 .submenu a:hover{
-    background:rgba(99,102,241,0.1);
+    background:rgba(198,40,40,.18);
     color:white;
 }
 
@@ -157,10 +162,10 @@ body{
 /* ================= CARD ================= */
 
 .card{
-    background:rgba(17,24,39,.7);
-    backdrop-filter:blur(10px);
-    border:1px solid rgba(255,255,255,.05);
+    background:#FFFFFF;
+    border:1px solid #E5E7EB;
     border-radius:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
 }
 
 /* ================= FILTER CARD ================= */
@@ -214,7 +219,7 @@ body{
 /* ================= BUTTON ================= */
 
 .btn-secondary{
-    background:#374151;
+    background:#C62828;
     color:white;
     border:none;
     border-radius:10px;
@@ -224,8 +229,7 @@ body{
 }
 
 .btn-secondary:hover{
-    background:#4b5563;
-}
+    background:#8E1C1C;
 
 input[type="text"],
 input[type="search"],
@@ -267,7 +271,7 @@ href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
                 width:fit-content;
             ">
                 Cabang :
-                <span style="color:#fff;font-weight:600;">
+                <span style="color:#fff;font-weight:700;">
                     {{ auth()->user()->cabang }}
                 </span>
             </div>

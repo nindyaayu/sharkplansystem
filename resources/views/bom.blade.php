@@ -5,21 +5,27 @@
 <style>
 
 body{
-    background:#0f172a;
-    color:#e5e7eb;
+    background:#F5F7F5;
+    color:#374151;
 }
 
 .page-header{
     position: sticky;
-    top: 0;
+    top: 15px;
     z-index: 999;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
 
-    padding:20px 0;
+    padding:22px 30px;
+    margin-bottom:20px;
 
-    background:#071633; /* samakan dengan background halaman */
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+
+    border-radius:20px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.10);
 }
 
 .form-box{
@@ -41,10 +47,10 @@ body{
     top:90px;
     z-index:998;
 
-    background:rgba(17,24,39,0.95);
+    background:white;
     backdrop-filter:blur(10px);
 
-    border:1px solid rgba(255,255,255,0.05);
+    border:1px solid #E5E7EB;
     border-radius:16px;
 
     padding:20px;
@@ -59,46 +65,45 @@ body{
 }
 
 .input{
-    background:#111827;
-    border:1px solid rgba(255,255,255,0.1);
+    background:white;
+    color:#374151;
+    border:1px solid #D1D5DB;
     padding:10px 12px;
     border-radius:10px;
-    color:white;
     min-width:180px;
 }
 
 select.input option{
-    background:#111827;
+    background:white;
+    color:#374151;
 }
 
 /* ================= BUTTON ================= */
 
 .btn-primary{
-    background:linear-gradient(90deg,#6366f1,#8b5cf6);
-    border:none;
-    padding:10px 16px;
-    border-radius:10px;
+    background:#C62828;
     color:white;
-    cursor:pointer;
-    transition:0.3s;
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    font-weight:600;
 }
 
 .btn-primary:hover{
-    box-shadow:0 0 12px rgba(99,102,241,0.6);
+    background:#9F1D1D;
 }
 
 .action-btn{
-    background:rgba(255,255,255,0.05);
-    border:none;
-    padding:6px 10px;
-    border-radius:8px;
+    background:#3F4F44;
     color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:8px;
     cursor:pointer;
-    transition:0.2s;
 }
 
 .action-btn:hover{
-    background:rgba(99,102,241,0.3);
+    background:#556B5D;
 }
 
 .btn-delete{
@@ -113,11 +118,11 @@ select.input option{
 /* ================= TABLE ================= */
 
 .table-box{
-    background:rgba(17,24,39,0.7);
-    backdrop-filter:blur(10px);
+    background:white;
+    border:1px solid #E5E7EB;
     border-radius:16px;
+    backdrop-filter:blur(10px);
     overflow:hidden;
-    border:1px solid rgba(255,255,255,0.05);
     margin-bottom:20px;
 }
 
@@ -127,7 +132,7 @@ table{
 }
 
 thead{
-    background:rgba(255,255,255,0.03);
+    background:#F3F4F6;
 }
 
 thead th{
@@ -143,22 +148,21 @@ tbody td{
 }
 
 tbody tr:hover{
-    background:rgba(99,102,241,0.05);
+    background:#F5F7F5;
 }
 
 .badge{
-    background:rgba(99,102,241,0.15);
-    color:#a5b4fc;
+    background:#E8F5E9;
+    color:#2E7D32;
     padding:5px 10px;
     border-radius:8px;
     font-size:13px;
 }
 
 .title-section{
-    margin-bottom:15px;
-    font-size:16px;
-    font-weight:600;
-    color:white;
+    color:#2C3E33;
+    font-size:18px;
+    font-weight:700;
 }
 
 .component-header{
@@ -171,12 +175,13 @@ tbody tr:hover{
 
 .component-title{
     font-size:18px;
+    color:#2C3E33;
     font-weight:600;
     margin-bottom:5px;
 }
 
 .component-subtitle{
-    color:#94a3b8;
+    color:#6B7280;
 }
 
 .select2-container{
@@ -186,39 +191,37 @@ tbody tr:hover{
 .select2-container--default
 .select2-selection--single{
 
-    background:#111827 !important;
-    border:1px solid rgba(255,255,255,0.1) !important;
+    background:white !important;
+    border:1px solid #D1D5DB !important;
     border-radius:10px !important;
     height:45px !important;
 
 }
 
-.select2-container--default
-.select2-selection--single
 .select2-selection__rendered{
 
-    color:white !important;
+    color:#374151 !important;
     line-height:45px !important;
 
 }
 
 .select2-dropdown{
 
-    background:#111827 !important;
-    border:1px solid rgba(255,255,255,0.1) !important;
+    background:white !important;
+    border:1px solid #D1D5DB !important;
 
 }
 
 .select2-results__option{
 
-    color:white !important;
+    color:#374151 !important;
 
 }
 
 .select2-search__field{
 
-    background:#111827 !important;
-    color:white !important;
+    background:white !important;
+    color:#374151 !important;
 
 }
 
@@ -239,11 +242,11 @@ tbody tr:hover{
 }
 
 .modal-content{
-    background:#111827;
+    background:#3F4F44;
     padding:25px;
     border-radius:16px;
     width:400px;
-    border:1px solid rgba(255,255,255,0.05);
+    border:1px solid #E5E7EB;
 }
 
 .modal-title{
@@ -268,9 +271,14 @@ tbody tr:hover{
 }
 
 .search-box{
-    background:#1e293b;
-    padding:4px;
+    width:320px;
+    padding:12px 18px;
     border-radius:12px;
+    border:1px solid #D1D5DB;
+    background:white;
+    color:#374151;
+    outline:none;
+    font-size:14px;
 }
 
 .search-box input{
@@ -283,14 +291,13 @@ tbody tr:hover{
 }
 
 .barang-search{
+    background:white;
+    border:1px solid #D1D5DB;
+    color:#374151;
     width:280px;
     min-width:280px;
-
     padding:14px;
-    background:#0f1b3f;
-    border:2px solid #3b82f6;
     border-radius:12px;
-    color:white;
     outline:none;
 }
 
@@ -311,20 +318,11 @@ tbody tr:hover{
 
     <h2>Master BOM</h2>
 
-    <input
+<input
     type="text"
     id="searchBom"
+    class="search-box"
     placeholder="🔍 Cari produk atau komponen..."
-    style="
-        width:320px;
-        padding:12px 18px;
-        border:none;
-        border-radius:12px;
-        background:#1e293b;
-        color:white;
-        outline:none;
-        font-size:14px;
-    "
 >
 
 </div>

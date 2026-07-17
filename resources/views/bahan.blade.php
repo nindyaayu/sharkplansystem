@@ -5,8 +5,8 @@
 <style>
 
 body{
-    background:#0f172a;
-    color:#e5e7eb;
+    background:transparent;
+    color:#263238;
 }
 
 .page-header{
@@ -17,7 +17,7 @@ body{
 }
 
 .page-header h2{
-    color:white;
+    color:#263238;
 }
 
 .action-bar{
@@ -27,7 +27,7 @@ body{
 }
 
 .btn-primary{
-    background:linear-gradient(90deg,#6366f1,#8b5cf6);
+    background:#C62828;
     border:none;
     padding:10px 16px;
     border-radius:10px;
@@ -36,9 +36,11 @@ body{
 }
 
 .table-box{
-    background:rgba(17,24,39,0.7);
+    background:#FFFFFF;
+    border:1px solid #E5E7EB;
     border-radius:16px;
     padding:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
 }
 
 table{
@@ -47,18 +49,18 @@ table{
 }
 
 thead th{
-    padding:12px;
-    color:#94a3b8;
-    text-align:left;
+    color:#374151;
+    background:#F3F4F6;
 }
 
 tbody td{
     padding:12px;
-    border-top:1px solid rgba(255,255,255,0.05);
+    border-top:1px solid #E5E7EB;
+    color:#374151;
 }
 
 tbody tr:hover{
-    background:rgba(99,102,241,0.05);
+    background:#F9FAFB;
 }
 
 .badge-color{
@@ -121,16 +123,18 @@ tbody tr:hover{
 }
 
 .modal-content{
-    background:linear-gradient(180deg,#0f172a,#020617);
+    background:#3F4F44;
     padding:25px;
     border-radius:16px;
-    width:360px;
-    border:1px solid rgba(255,255,255,0.05);
+    width:420px;
+    border:1px solid #4B5D51;
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
 }
 
 .modal-content h3{
     color:white;
-    margin-bottom:15px;
+    font-size:30px;
+    font-weight:700;
 }
 
 .modal-content input,
@@ -138,9 +142,9 @@ tbody tr:hover{
     width:100%;
     padding:12px;
     border-radius:10px;
-    border:1px solid rgba(255,255,255,0.08);
-    background:rgba(255,255,255,0.03);
-    color:white;
+    border:1px solid #D1D5DB;
+    background:#FFFFFF;
+    color:#263238;
     margin-bottom:12px;
     box-sizing:border-box;
 }
@@ -151,20 +155,24 @@ tbody tr:hover{
 }
 
 .btn-save{
-    background:linear-gradient(90deg,#6366f1,#8b5cf6);
+    background:#C62828;
     border:none;
-    padding:10px 16px;
+    padding:10px 18px;
     border-radius:10px;
     color:white;
     cursor:pointer;
 }
 
+.btn-save:hover{
+    background:#8E1C1C;
+}
+
 .btn-cancel{
-    background:rgba(255,255,255,0.05);
+    background:#6B7280;
+    color:white;
     border:none;
-    padding:10px 16px;
+    padding:10px 18px;
     border-radius:10px;
-    color:#94a3b8;
     cursor:pointer;
 }
 
@@ -198,8 +206,8 @@ tbody tr:hover{
             style="
                 padding:10px;
                 border-radius:8px;
-                background:#1e293b;
-                color:white;
+                background:white;
+                color:#263238;
                 border:none;
             "
         >
@@ -237,8 +245,8 @@ tbody tr:hover{
         width:300px;
         border:none;
         border-radius:8px;
-        background:#1e293b;
-        color:white;
+        background:white;
+        color:#263238;
         margin-left:15px;
     "
 >
