@@ -136,7 +136,7 @@ thead th{
     background:#F3F4F6;
     color:#374151;
     font-weight:700;
-    white-space:nowrap;
+    white-space:normal;
 }
 
 tbody td{
@@ -145,7 +145,7 @@ tbody td{
     vertical-align:middle;
     border-top:1px solid #E5E7EB;
     color:#374151;
-    white-space:nowrap;
+    white-space:normal;
 }
 
 tbody tr:hover{
@@ -606,31 +606,20 @@ thead th:nth-child(3){
                 value="{{ request('qty_produksi') }}">
 
             <!-- INFO -->
-            <div 
-                style="
-                    background:rgba(99,102,241,0.1);
-                    padding:12px;
-                    border-radius:10px;
-                    margin-bottom:28px;
-                    font-size:14px;
-                ">
-
                 <div class="info-produksi">
 
-            @if(request('mode') == 'komponen')
+                    @if(request('mode') == 'komponen')
 
-                Produksi Komponen :
-                <strong>{{ request('komponen') }}</strong>
+                        Produksi Komponen :
+                        <strong>{{ request('komponen') }}</strong>
 
-            @else
+                    @else
 
-                Produksi Full Set
+                        Produksi Full Set
 
-            @endif
+                    @endif
 
-            </div>
-
-            </div>
+                </div>
 
             <!-- TANGGAL -->
             <div class="form-group">
