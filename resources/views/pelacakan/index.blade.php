@@ -4,7 +4,6 @@
 
 <div class="card" style="padding:30px;">
 
-```
 <h1 style="color:white;margin-bottom:20px;">
     Pelacakan Barang
 </h1>
@@ -359,7 +358,6 @@
 </div>
 
 @endif
-```
 
 </div>
 

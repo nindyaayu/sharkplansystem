@@ -12,7 +12,7 @@ html{
 
 body{
     background:#0f172a;
-    color:#e5e7eb;
+    color:#1f2937;
 }
 
 /* ===== TOPBAR ===== */
@@ -26,7 +26,7 @@ body{
 
 .topbar h2{
     font-weight:600;
-    color:white;
+    color:#111827;
 }
 
 .admin{
@@ -54,7 +54,7 @@ body{
     color:inherit;
     display:block;
 
-    background:rgba(17,24,39,0.7);
+    background:#ffffff;
     backdrop-filter:blur(10px);
     border-radius:16px;
     padding:20px;
@@ -84,13 +84,13 @@ body{
 
 .card-box h4{
     font-size:14px;
-    color:#94a3b8;
+    color:#6b7280;
 }
 
 .card-box h1{
     margin:10px 0;
     font-size:30px;
-    color:white;
+    color:#111827;
 }
 
 .card-box p{
@@ -138,8 +138,8 @@ body{
 /* ===== CHART ===== */
 
 .chart-box{
-    background:rgba(17,24,39,0.7);
-    backdrop-filter:blur(10px);
+    background:#ffffff;
+    /*backdrop-filter:blur(10px); */
     border-radius:16px;
     padding:20px;
     border:1px solid rgba(255,255,255,0.05);
@@ -148,7 +148,7 @@ body{
 .chart-title{
     margin-bottom:15px;
     font-weight:500;
-    color:#cbd5f5;
+    color:#111827;
 }
 
 /* ===== RESPONSIVE ===== */

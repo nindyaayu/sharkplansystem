@@ -5,30 +5,46 @@
 <style>
 
 body{
-    background:#0f172a;
-    color:#e5e7eb;
+    background:#F5F7F5;
+    color:#374151;
 }
 
 .page-header{
+    position: sticky;
+    top:15px;
+    z-index:999;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:25px;
+
+    padding:20px 30px;
+    margin-bottom:22px;
+
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+
+    border-radius:20px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
 .page-header h2{
+    margin:0;
     color:white;
+    font-size:44px;
+    font-weight:700;
 }
 
 /* ================= FORM ================= */
 
 .form-box{
-    background:rgba(17,24,39,0.7);
-    backdrop-filter:blur(10px);
-    border:1px solid rgba(255,255,255,0.05);
-    border-radius:16px;
-    padding:20px;
+    background:white;
+    border:1px solid #E5E7EB;
+    border-radius:18px;
+    padding:22px;
     margin-bottom:20px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
 }
 
 .form-row{
@@ -39,11 +55,14 @@ body{
 }
 
 .input{
-    background:#111827;
-    border:1px solid rgba(255,255,255,0.1);
-    padding:10px 12px;
+    background:white;
+    color:#374151;
+
+    border:1px solid #D1D5DB;
+
+    padding:12px 14px;
     border-radius:10px;
-    color:white;
+
     min-width:220px;
 }
 
@@ -57,38 +76,53 @@ body{
     width:100%;
 }
 
-.modal-content input{
+.modal-content input,
+.modal-content select,
+.modal-content textarea{
+
     width:100%;
+    padding:13px 16px;
+
+    border:1px solid #D1D5DB;
+    border-radius:12px;
+
+    background:#FFFFFF;
+    color:#374151;
+
+    font-size:15px;
+    box-sizing:border-box;
 }
 
 select.input option{
-    background:#111827;
+    background:white;
+    color:#374151;
 }
 
 /* ================= BUTTON ================= */
 
 .btn-primary{
-    background:linear-gradient(90deg,#6366f1,#8b5cf6);
-    border:none;
-    padding:10px 16px;
-    border-radius:10px;
+    background:#C62828;
     color:white;
-    cursor:pointer;
-    transition:0.3s;
+    border:none;
+
+    padding:12px 18px;
+    border-radius:10px;
+
+    font-weight:600;
 }
 
 .btn-primary:hover{
-    box-shadow:0 0 12px rgba(99,102,241,0.6);
+
+    background:#9F1D1D;
+
 }
 
 /* ================= TABLE ================= */
 
 .table-box{
-    background:rgba(17,24,39,0.7);
-    backdrop-filter:blur(10px);
+    overflow-x:auto;
     border-radius:16px;
-    overflow:hidden;
-    border:1px solid rgba(255,255,255,0.05);
+    border:1px solid #E5E7EB;
 }
 
 table{
@@ -96,58 +130,62 @@ table{
     border-collapse:collapse;
 }
 
-thead{
-    background:rgba(255,255,255,0.03);
-}
-
 thead th{
-    padding:14px;
-    text-align:left;
-    color:#94a3b8;
-    font-size:13px;
+    padding:16px;
+    text-align:center;
+    background:#F3F4F6;
+    color:#374151;
+    font-weight:700;
+    white-space:nowrap;
 }
 
 tbody td{
-    padding:14px;
-    border-top:1px solid rgba(255,255,255,0.05);
+    padding:16px;
+    text-align:center;
+    vertical-align:middle;
+    border-top:1px solid #E5E7EB;
+    color:#374151;
+    white-space:nowrap;
 }
 
 tbody tr:hover{
-    background:rgba(99,102,241,0.05);
+    background:#F8FAFC;
+}
+tbody td:nth-child(2),
+tbody td:nth-child(3),
+thead th:nth-child(2),
+thead th:nth-child(3){
+    text-align:left;
 }
 
 /* ================= BADGE ================= */
 
 .badge{
-    background:rgba(99,102,241,0.15);
-    color:#a5b4fc;
-    padding:5px 10px;
-    border-radius:8px;
-    font-size:13px;
+
+    background:#EEF2FF;
+    color:#4338CA;
+
 }
 
 .badge-success{
-    background:rgba(34,197,94,0.2);
-    color:#22c55e;
-    padding:5px 10px;
-    border-radius:8px;
-    font-size:13px;
+
+    background:#DCFCE7;
+    color:#166534;
+
 }
 
 .badge-danger{
-    background:rgba(239,68,68,0.2);
-    color:#ef4444;
-    padding:5px 10px;
-    border-radius:8px;
-    font-size:13px;
+
+    background:#FEE2E2;
+    color:#B91C1C;
+
 }
 
 .badge-warning{
-    background:rgba(250,204,21,0.2);
-    color:#facc15;
-    padding:5px 10px;
-    border-radius:8px;
-    font-size:13px;
+
+    background:#FEF3C7;
+    color:#92400E;
+
 }
 
 /* ================= MODAL ================= */
@@ -167,25 +205,55 @@ tbody tr:hover{
 }
 
 .modal-content{
-    background:#111827;
-    padding:25px;
-    border-radius:16px;
-    width:400px;
-    border:1px solid rgba(255,255,255,0.05);
+    background:#3F4F44;
+    width:560px;
+    max-width:90%;
+    border-radius:18px;
+    padding:32px;
+    border:1px solid #556B5D;
+    box-shadow:0 18px 45px rgba(0,0,0,.25);
+}
+
+.modal-content h2,
+.modal-content h3{
+    color:#FFFFFF;
+    font-size:32px;
+    font-weight:700;
+    margin-bottom:28px;
 }
 
 .form-label{
     display:block;
-    margin-bottom:10px;
-    color:#e5e7eb;
-    font-size:16px;
-    font-weight:500;
+    margin-bottom:8px;
+    color:#F8FAFC;
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:.3px;
 }
 
 .form-group{
     margin-bottom:24px;
 }
 
+.form-group label{
+    color:#FFFFFF !important;
+    font-weight:600;
+}
+
+.info-produksi{
+    background:#556B5D;
+    color:#FFFFFF;
+    padding:14px 18px;
+    border-radius:12px;
+    margin-bottom:24px;
+    font-size:15px;
+    font-weight:500;
+}
+
+.info-produksi strong{
+    color:#FFD166;
+    font-weight:700;
+}
 
 </style>
 
@@ -547,16 +615,20 @@ tbody tr:hover{
                     font-size:14px;
                 ">
 
-                @if(request('mode') == 'komponen')
+                <div class="info-produksi">
 
-                    Produksi Komponen:
-                    <b>{{ request('komponen') }}</b>
+            @if(request('mode') == 'komponen')
 
-                @else
+                Produksi Komponen :
+                <strong>{{ request('komponen') }}</strong>
 
-                    Produksi Full Set
+            @else
 
-                @endif
+                Produksi Full Set
+
+            @endif
+
+            </div>
 
             </div>
 
@@ -696,7 +768,7 @@ tbody tr:hover{
                 name="komponen"
                 value="{{ request('komponen') }}">
 
-            <label>Kepada</label>
+            <label class="form-label">Kepada</label>
 
             <input
                 type="text"
@@ -709,7 +781,7 @@ tbody tr:hover{
                     margin-bottom:15px;
                 ">
 
-            <label>Alamat</label>
+            <label class="form-label">Alamat</label>
 
             <textarea
                 name="alamat"
@@ -722,7 +794,7 @@ tbody tr:hover{
                     height:80px;
                 "></textarea>
 
-            <label>No. Pol Kendaraan</label>
+            <label class="form-label">No. Pol Kendaraan</label>
 
             <input
                 type="text"
@@ -735,7 +807,7 @@ tbody tr:hover{
                     margin-bottom:15px;
                 ">
 
-            <label>Dibuat Oleh</label>
+            <label class="form-label">Dibuat Oleh</label>
 
             <input
                 type="text"
