@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="card" style="padding:24px">
+<div class="card filter-card" style="padding:24px">
 
 <div style="
     display:flex;
@@ -11,9 +11,9 @@
     margin-bottom:20px;
 ">
 
-    <h2 style="color:white;margin:0;">
-        📋 Permintaan Barang
-    </h2>
+    <div class="page-header">
+    <h2>Permintaan Barang</h2>
+</div>
 
     <div style="
     display:flex;
@@ -22,46 +22,32 @@
     margin-bottom:20px;
 ">
 
-    <div style="position:relative;">
+    <div class="search-wrapper">
 
-    <span
-        style="
-            position:absolute;
-            left:15px;
-            top:50%;
-            transform:translateY(-50%);
-            color:#94a3b8;
-        ">
-        🔍
-    </span>
+    <span class="search-icon">🔍</span>
 
     <input
         id="searchPermintaan"
         type="text"
-        placeholder="Cari No PB, Produk, Peminta..."
-        style="
-            width:380px;
-            padding:12px 16px 12px 42px;
-            background:#0f1b3f;
-            border:1px solid rgba(255,255,255,.08);
-            border-radius:10px;
-            color:white;
-        ">
+        class="search-box"
+        placeholder="Cari No PB, Produk, Peminta...">
 
-</div>
+    </div>
 
 </div>
 
     <button onclick="openModal()" style="
-    background:#2563eb;
+    background:#C62828;
     color:white;
     border:none;
     padding:10px 18px;
-    border-radius:8px;
+    border-radius:10px;
     cursor:pointer;
+    font-weight:600;
+    margin-top:-25px;
 ">
     + Buat Permintaan
-        </button>
+</button>
 
 </div>
 
@@ -75,19 +61,19 @@
 
         <thead>
 
-            <tr style="background:#1e293b;">
+        <tr>
 
-                <th style="padding:12px;">No Permintaan</th>
-                <th style="padding:12px;">Tanggal</th>
-                <th style="padding:12px;">Produk</th>
-                <th style="padding:12px;">Komponen</th>
-                <th style="padding:12px;">Nama Peminta</th>
-                <th style="padding:12px;">Nama Penjahit</th>
-                <th style="padding:12px;">Jumlah Item</th>
-                <th style="padding:12px;">Status</th>
-                <th style="padding:12px;">Aksi</th>
+            <th>No Permintaan</th>
+            <th>Tanggal</th>
+            <th>Produk</th>
+            <th>Komponen</th>
+            <th>Nama Peminta</th>
+            <th>Nama Penjahit</th>
+            <th>Jumlah Item</th>
+            <th>Status</th>
+            <th>Aksi</th>
 
-            </tr>
+        </tr>
 
         </thead>
 
@@ -138,7 +124,7 @@
                         padding:5px 12px;
                         border-radius:20px;
                     ">
-                        ⟳ Menunggu
+                        ⟳
                     </span>
 
                 @elseif($item->status == 'Disetujui')
@@ -496,17 +482,7 @@
 
             </table>
 
-            <div
-                class="footer-button"
-                style="
-                    position:sticky;
-                    bottom:0;
-                    background:#07153d;
-                    padding:15px 0;
-                    margin-top:20px;
-                    z-index:10;
-                "
-            >
+            <div class="footer-button">
 
                 <button
                     type="button"
@@ -532,6 +508,113 @@
 </div>
 
 <style>
+
+.page-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+    border-radius:20px;
+    padding:20px 30px;
+    margin-bottom:20px;
+
+    position: sticky;
+    top: 20px;
+    z-index: 999;
+    box-shadow: 0 5px 15px rgba(0,0,0,.15);
+}
+
+.page-header h2{
+    margin:0;
+    color:#fff;
+    font-size:42px;
+    font-weight:700;
+}
+
+.search-wrapper{
+    position:relative;
+}
+
+.search-icon{
+    position:absolute;
+    left:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#6B7280;
+}
+
+.search-box{
+    width:380px;
+    height:44px;
+    padding:0 16px 0 42px;
+    background:#fff;
+    border:1px solid #D1D5DB;
+    border-radius:10px;
+    color:#374151;
+    outline:none;
+    transition:.2s;
+}
+
+.search-box:focus{
+    border-color:#3F4F44;
+    box-shadow:0 0 0 3px rgba(63,79,68,.15);
+}
+
+.btn-primary{
+    background:#C62828;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+}
+
+.btn-primary:hover{
+    background:#B71C1C;
+}
+
+.table-box{
+    background:#fff;
+    border:1px solid #E5E7EB;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead{
+    background:#F3F4F6;
+}
+
+thead th{
+    padding:16px;
+    text-align:center;
+    color:#374151;
+    font-weight:700;
+    border-bottom:1px solid #E5E7EB;
+}
+
+tbody td{
+    padding:16px;
+    text-align:center;
+    color:#374151;
+    border-top:1px solid #E5E7EB;
+}
+
+tbody tr:hover{
+    background:#F9FAFB;
+}
+
+.filter-card{
+    background:#fff;
+    border:1px solid #E5E7EB;
+    border-radius:20px;
+    padding:24px;
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
 
 .select2-search--dropdown{
     display:block !important;
@@ -565,7 +648,7 @@
 
     margin:10px auto;
 
-    background:#08132f;
+    background:#465649;
     border-radius:20px;
     padding:30px;
 
@@ -622,7 +705,7 @@
     justify-content:space-between;
     align-items:center;
 
-    background:#08132f;
+    background:#465649;
 
     z-index:999;
     padding:15px 0;
@@ -651,17 +734,20 @@ label{
 
 .input-dark{
     width:100%;
-    padding:16px;
-    margin-bottom:25px;
-    background:#0f1b3f;
-    border:1px solid rgba(255,255,255,.08);
+    padding:14px 16px;
+    margin-bottom:20px;
+
+    background:#fff;
+    color:#374151;
+
+    border:1px solid #D1D5DB;
     border-radius:12px;
-    color:white;
+
     box-sizing:border-box;
 }
 
 .input-dark::placeholder{
-    color:#94a3b8;
+    color:#9CA3AF;
 }
 
 .section-title{
@@ -674,18 +760,23 @@ label{
     margin-bottom:20px;
 }
 
-.table-dark thead{
-    background:#0d1b3c;
+.table-dark{
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
 }
 
-.table-dark th{
-    padding:16px;
-    text-align:left;
+.table-dark tbody td{
+    color:#F8FAFC;
+    border-bottom:1px solid rgba(255,255,255,.12);
 }
 
-.table-dark td{
-    padding:12px;
-    border-top:1px solid rgba(255,255,255,.05);
+.table-dark tbody tr:hover{
+    background:#6A564B;
+}
+
+.table-dark tbody tr:hover td{
+    color:#FFFFFF;
 }
 
 .select-dark{
@@ -700,20 +791,25 @@ label{
 .qty-input{
     width:100%;
     padding:14px;
-    background:#0f1b3f;
-    border:1px solid rgba(255,255,255,.08);
+    background:#fff;
+    border:1px solid #D1D5DB;
     border-radius:12px;
-    color:white;
+    color:#374151;
     box-sizing:border-box;
 }
 
 .btn-add{
-    background:transparent;
-    color:#22c55e;
-    border:1px solid #22c55e;
+    background:#16A34A;
+    color:white;
+    border:none;
     padding:12px 20px;
     border-radius:12px;
     cursor:pointer;
+}
+
+
+.btn-add:hover{
+    background:#15803D;
 }
 
 .btn-hapus{
@@ -736,7 +832,7 @@ label{
     margin-top:20px;
     padding:15px;
 
-    background:#08132f;
+    background:#465649;
 
     border-top:1px solid rgba(255,255,255,.08);
 
@@ -744,7 +840,7 @@ label{
 }
 
 .btn-batal{
-    background:#111827;
+    background:#6B7280;
     color:white;
     border:none;
     padding:14px 25px;
@@ -753,7 +849,7 @@ label{
 }
 
 .btn-simpan{
-    background:#5b5bf7;
+    background:#C62828;
     color:white;
     border:none;
     padding:14px 25px;
@@ -773,24 +869,24 @@ label{
 }
 
 .select2-container--default .select2-selection--single{
-    background:#0f1b3f !important;
-    border:1px solid rgba(255,255,255,.08) !important;
+    background:#fff !important;
+    border:1px solid #D1D5DB !important;
     border-radius:12px !important;
-    height:50px !important;
+    height:52px !important;
 }
 
 .select2-container--default .select2-selection__rendered{
-    color:white !important;
-    line-height:48px !important;
+    color:#374151 !important;
+    line-height:50px !important;
 }
 
 .select2-dropdown{
-    background:#0f1b3f !important;
-    border:1px solid rgba(255,255,255,.08) !important;
+    background:#fff !important;
+    border:1px solid #D1D5DB !important;
 }
 
 .select2-results__option{
-    color:white !important;
+    color:#374151 !important;
 }
 
 .select2-search__field{
@@ -801,16 +897,16 @@ label{
 .barang-search{
     width:100%;
     padding:14px;
-    background:#0f1b3f;
-    border:1px solid rgba(255,255,255,.08);
+    background:#fff;
+    border:1px solid #D1D5DB;
     border-radius:12px;
-    color:white;
+    color:#374151;
     outline:none;
     box-sizing:border-box;
 }
 
 .barang-search::placeholder{
-    color:#94a3b8;
+    color:#9CA3AF;
 }
 
 .barang-search:focus{
@@ -846,7 +942,7 @@ label{
         padding:15px;
         margin-top:20px;
 
-        background:#08132f;
+        background:#465649;
         z-index:999;
     }
 
@@ -856,6 +952,14 @@ label{
         padding:14px 20px;
     }
 
+}
+
+#detailModal table tbody tr:hover{
+    background:rgba(34, 197, 94, 0.12) !important;
+}
+
+#detailModal table tbody tr:hover td{
+    color:#FFFFFF !important;
 }
 </style>
 
@@ -964,6 +1068,8 @@ function tambahBaris(){
 
             .then(data => {
 
+
+
                 let badgeColor = '#f59e0b';
 
                     if(data.status == 'Disetujui'){
@@ -985,11 +1091,12 @@ function tambahBaris(){
                 let html = `
 
                 <div style="
-                    background:#0f1b3f;
-                    border-radius:12px;
-                    padding:20px;
-                    margin-bottom:20px;
-                ">
+                            background:#ffffff;
+                            border:1px solid #E5E7EB;
+                            border-radius:16px;
+                            padding:24px;
+                            margin-bottom:20px;
+                        ">
 
                     <div style="
                         display:grid;
@@ -997,16 +1104,22 @@ function tambahBaris(){
                         row-gap:12px;
                     ">
 
-                        <div style="color:#94a3b8;">No Permintaan</div>
-                        <div>${data.nomor_permintaan}</div>
+                        <div style="color:#6B7280;">No Permintaan</div>
+                        <div style="color:#374151;font-weight:600;">
+                            ${data.nomor_permintaan}
+                        </div>
 
-                        <div style="color:#94a3b8;">Peminta</div>
-                        <div>${data.nama_peminta}</div>
+                        <div style="color:#6B7280;">Peminta</div>
+                        <div style="color:#374151;font-weight:600;">
+                            ${data.nama_peminta}
+                        </div>
 
-                        <div style="color:#94a3b8;">Penjahit</div>
-                        <div>${data.nama_penjahit}</div>
+                        <div style="color:#6B7280;">Penjahit</div>
+                        <div style="color:#374151;font-weight:600;">
+                            ${data.nama_penjahit}
+                        </div>
 
-                        <div style="color:#94a3b8;">Status</div>
+                        <div style="color:#6B7280;">Status</div>
 
                         <div>
                             <span style="
@@ -1043,16 +1156,22 @@ function tambahBaris(){
                     <thead>
 
                         <tr style="
-                            background:#0f1b3f;
+                            background:#F3F4F6;
                         ">
 
-                            <th style="padding:14px;">Kode</th>
-                            <th style="padding:14px;">Nama Barang</th>
-                            <th style="padding:14px;">Warna</th>
-                            <th style="padding:14px;">Jumlah</th>
-                            <th style="padding:14px;">Satuan</th>
-                            <th style="padding:14px;">Status</th>
-                            <th style="padding:14px;">Aksi</th>
+                            <th style="
+                                padding:14px;
+                                color:#374151;
+                                font-weight:700;
+                            ">
+                            Kode
+                            </th>
+                            <th style="padding:14px; color:#374151; font-weight:700;">Nama Barang</th>
+                            <th style="padding:14px; color:#374151; font-weight:700;">Warna</th>
+                            <th style="padding:14px; color:#374151; font-weight:700;">Jumlah</th>
+                            <th style="padding:14px; color:#374151; font-weight:700;">Satuan</th>
+                            <th style="padding:14px; color:#374151; font-weight:700;">Status</th>
+                            <th style="padding:14px; color:#374151; font-weight:700;">Aksi</th>
 
                         </tr>
 
@@ -1074,14 +1193,17 @@ function tambahBaris(){
                             <td style="
                                 padding:14px;
                                 text-align:center;
-                                border-bottom:1px solid rgba(255,255,255,.08);
+                                color:#F8FAFC;
+                                border-bottom:1px solid #E5E7EB;
                             ">
                                 ${item.barang.kode}
                             </td>
 
                             <td style="
                                 padding:14px;
-                                border-bottom:1px solid rgba(255,255,255,.08);
+                                text-align:center;
+                                color:#F8FAFC;
+                                border-bottom:1px solid #E5E7EB;
                             ">
                                 ${item.barang.nama}
                             </td>
@@ -1089,7 +1211,8 @@ function tambahBaris(){
                             <td style="
                                 padding:14px;
                                 text-align:center;
-                                border-bottom:1px solid rgba(255,255,255,.08);
+                                color:#F8FAFC;
+                                border-bottom:1px solid #E5E7EB;
                             ">
                                 ${item.barang.warna}
                             </td>
@@ -1097,7 +1220,8 @@ function tambahBaris(){
                             <td style="
                                 padding:14px;
                                 text-align:center;
-                                border-bottom:1px solid rgba(255,255,255,.08);
+                                color:#F8FAFC;
+                                border-bottom:1px solid #E5E7EB;
                             ">
                                 ${item.jumlah}
                             </td>
@@ -1105,7 +1229,8 @@ function tambahBaris(){
                             <td style="
                                 padding:14px;
                                 text-align:center;
-                                border-bottom:1px solid rgba(255,255,255,.08);
+                                color:#F8FAFC;
+                                border-bottom:1px solid #E5E7EB;
                             ">
                                 ${item.barang.satuan}
                             </td>
@@ -1113,7 +1238,8 @@ function tambahBaris(){
                             <td style="
                                 padding:14px;
                                 text-align:center;
-                                border-bottom:1px solid rgba(255,255,255,.08);
+                                color:#F8FAFC;
+                                border-bottom:1px solid #E5E7EB;
                             ">
 
                                 ${
@@ -1135,7 +1261,8 @@ function tambahBaris(){
                             <td style="
                                 padding:14px;
                                 text-align:center;
-                                border-bottom:1px solid rgba(255,255,255,.08);
+                                border-bottom:1px solid #E5E7EB;
+                                color:#374151;
                             ">
 
                                 ${
