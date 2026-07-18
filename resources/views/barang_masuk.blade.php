@@ -4,17 +4,77 @@
 
 <style>
 
+.btn-edit{
+    background:#F59E0B;
+    color:#FFFFFF;
+
+    border:none;
+
+    padding:8px 14px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.2s;
+}
+
+.btn-edit:hover{
+    background:#D97706;
+}
+
+.btn-delete{
+    background:#EF4444;
+    color:#FFFFFF;
+
+    border:none;
+
+    padding:8px 14px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.2s;
+}
+
+.btn-delete:hover{
+    background:#DC2626;
+}
+
+.action-group{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+}
+
+.action-group form{
+    margin:0;
+}
+
 .page-header{
     display:flex;
     justify-content:space-between;
-    margin-bottom:25px;
+    align-items:center;
+
+    padding:20px 30px;
+    margin-bottom:22px;
+
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+    border-radius:20px;
 }
 
 .page-header h2{
-    color:white;
-    font-weight:600;
+    margin:0;
+    color:#FFFFFF;
+    font-size:42px;
+    font-weight:700;
 }
-
 .filter-bar{
     display:flex;
     gap:15px;
@@ -24,31 +84,43 @@
 }
 
 .input{
-    background:#111827;
-    border:1px solid rgba(255,255,255,0.1);
-    padding:10px 12px;
+    background:#FFFFFF;
+    color:#374151;
+
+    border:1px solid #D1D5DB;
+
+    padding:12px 14px;
     border-radius:10px;
-    color:#e5e7eb;
 }
 
-
+.input:focus{
+    outline:none;
+    border-color:#3F4F44;
+    box-shadow:0 0 0 3px rgba(63,79,68,.15);
+}
 
 .btn-primary{
-    background:linear-gradient(90deg,#6366f1,#8b5cf6);
-    border:none;
-    padding:10px 16px;
-    border-radius:10px;
+    background:#C62828;
     color:white;
-    font-weight:500;
-    cursor:pointer;
+    border:none;
+
+    padding:12px 18px;
+    border-radius:10px;
+
+    font-weight:600;
+}
+
+.btn-primary:hover{
+    background:#9F1D1D;
 }
 
 .table-box{
-    background:rgba(17,24,39,0.7);
-    backdrop-filter:blur(10px);
+    background:#FFFFFF;
+    border:1px solid #E5E7EB;
     border-radius:16px;
     overflow:hidden;
-    border:1px solid rgba(255,255,255,0.05);
+
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
 }
 
 table{
@@ -57,42 +129,60 @@ table{
 }
 
 thead{
-    background:rgba(255,255,255,0.03);
+    background:#F3F4F6;
 }
 
 thead th{
-    padding:14px;
-    text-align:left;
-    font-size:13px;
-    color:#e2e8f0;
-    border-bottom:1px solid rgba(255,255,255,0.08);
+    padding:16px;
+    text-align:center;
+
+    background:#F3F4F6;
+    color:#374151;
+
+    font-weight:700;
+
+    border-bottom:1px solid #E5E7EB;
 }
 
 tbody td{
-    padding:14px;
-    color:#f1f5f9;
-    font-size:14px;
+    padding:16px;
+    color:#374151;
+    vertical-align:middle;
 }
 
 tbody tr{
-    border-top:1px solid rgba(255,255,255,0.05);
+    border-top:1px solid #E5E7EB;
+}
+
+tbody tr:hover{
+    background:#F8FAFC;
 }
 
 .badge-in{
-    background:rgba(34,197,94,0.2);
-    color:#22c55e;
-    padding:5px 10px;
-    border-radius:8px;
-    font-size:13px;
-}
+    background:#DCFCE7;
+    color:#166534;
 
-.action-btn{
-    background:rgba(255,255,255,0.05);
-    border:none;
     padding:6px 10px;
     border-radius:8px;
-    color:#e5e7eb;
+}
+
+.btn-secondary{
+    background:#6B7280;
+    color:#FFFFFF;
+
+    border:none;
+
+    padding:12px 18px;
+    border-radius:10px;
+
+    font-weight:600;
     cursor:pointer;
+
+    transition:.2s;
+}
+
+.btn-secondary:hover{
+    background:#4B5563;
 }
 
 .modal{
@@ -109,11 +199,13 @@ tbody tr{
 }
 
 .modal-content{
-    background:#111827;
-    padding:25px;
-    border-radius:16px;
-    width:400px;
-    border:1px solid rgba(255,255,255,0.08);
+    background:#3F4F44;
+
+    border-radius:18px;
+    border:1px solid #556B5D;
+
+    padding:28px;
+    box-shadow:0 20px 45px rgba(0,0,0,.30);
 }
 
 .modal-content .input{
@@ -130,9 +222,8 @@ tbody tr{
 }
 
 .form-group label{
-    color:#cbd5e1;
-    display:block;
-    margin-bottom:6px;
+    color:#FFFFFF;
+    font-weight:600;
 }
 
 .form-actions{
@@ -140,6 +231,17 @@ tbody tr{
     justify-content:end;
     gap:10px;
     margin-top:20px;
+}
+
+.stat-value{
+    color:#3F4F44 !important;
+    font-size:42px;
+    font-weight:700;
+    line-height:1.2;
+
+    background:transparent !important;
+    padding:0;
+    margin-top:8px;
 }
 
 </style>
@@ -266,6 +368,7 @@ tbody tr{
 <div class="filter-bar">
 
     <button
+        type="button"
         class="btn-primary"
         onclick="document.getElementById('modalInput').style.display='flex'">
 
@@ -363,30 +466,39 @@ tbody tr{
 
 <td>{{ $item->barang->satuan }}</td>
 
-<td style="display:flex; gap:8px;">
+<td>
 
-<button
-    class="action-btn"
-    onclick="document.getElementById('editModal{{ $item->id }}').style.display='flex'">
+    <div class="action-group">
 
-    ✏️
+        <button
+            type="button"
+            class="btn-edit"
+            onclick="document.getElementById('editModal{{ $item->id }}').style.display='flex'">
 
-</button>
+            ✏️ Edit
 
-<form
-    action="{{ route('barang-masuk.destroy', $item->id) }}"
-    method="POST">
+        </button>
 
-    @csrf
-    @method('DELETE')
+        <form
+            action="{{ route('barang-masuk.destroy', $item->id) }}"
+            method="POST"
+            style="display:inline;">
 
-    <button class="action-btn">
+            @csrf
+            @method('DELETE')
 
-        🗑
+            <button
+                type="button"
+                class="btn-delete"
+                onclick="openDeleteModal({{ $item->id }})">
 
-    </button>
+                🗑 Hapus
 
-</form>
+            </button>
+
+        </form>
+
+    </div>
 
 </td>
 
@@ -524,7 +636,7 @@ tbody tr{
 
 <button
     type="button"
-    class="action-btn"
+    class="btn-secondary"
     onclick="document.getElementById('editModal{{ $item->id }}').style.display='none'">
 
     Batal
@@ -545,6 +657,50 @@ tbody tr{
 </div>
 
 @endforeach
+
+<div id="deleteModal" class="modal">
+
+    <div class="modal-content" style="max-width:420px;">
+
+        <h3>Hapus Data</h3>
+
+        <p style="color:white;line-height:1.7;">
+            Apakah Anda yakin ingin menghapus data ini?
+        </p>
+
+        <div class="form-actions">
+
+            <button
+                type="button"
+                class="btn-secondary"
+                onclick="closeDeleteModal()">
+
+                Batal
+
+            </button>
+
+            <form
+                id="deleteForm"
+                method="POST">
+
+                @csrf
+                @method('DELETE')
+
+                <button
+                    type="submit"
+                    class="btn-primary">
+
+                    Hapus
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
 
 <!-- ================= MODAL INPUT ================= -->
 
@@ -655,7 +811,7 @@ tbody tr{
 
 <button
     type="button"
-    class="action-btn"
+    class="btn-secondary"
     onclick="document.getElementById('modalInput').style.display='none'">
 
     Batal
@@ -762,6 +918,21 @@ document.addEventListener('DOMContentLoaded', function(){
     );
 
 });
+
+function openDeleteModal(id){
+
+    document.getElementById('deleteForm').action =
+        "{{ url('barang-masuk') }}/" + id;
+
+    document.getElementById('deleteModal').style.display='flex';
+
+}
+
+function closeDeleteModal(){
+
+    document.getElementById('deleteModal').style.display='none';
+
+}
 
 </script>
 
