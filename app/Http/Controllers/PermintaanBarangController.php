@@ -349,12 +349,13 @@ $barang->update([
             'permintaan_id' => $permintaan->id
         ]);
 
-    } catch (\Exception $e) {
+        } catch (\Exception $e) {
 
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage()
-        ], 500);
-    }
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+
+        }
 }
 }
