@@ -97,6 +97,22 @@
 
             <br><br>
 
+            <b>Periode</b><br>
+
+            @if(request('tgl_awal') && request('tgl_akhir'))
+                {{ \Carbon\Carbon::parse(request('tgl_awal'))->format('d/m/Y') }}
+                s/d
+                {{ \Carbon\Carbon::parse(request('tgl_akhir'))->format('d/m/Y') }}
+            @elseif(request('tgl_awal'))
+                Mulai {{ \Carbon\Carbon::parse(request('tgl_awal'))->format('d/m/Y') }}
+            @elseif(request('tgl_akhir'))
+                Sampai {{ \Carbon\Carbon::parse(request('tgl_akhir'))->format('d/m/Y') }}
+            @else
+                Semua Periode
+            @endif
+
+            <br><br>
+
             <b>Cabang</b><br>
 
             {{ auth()->user()->cabang ?? 'PUSAT' }}
