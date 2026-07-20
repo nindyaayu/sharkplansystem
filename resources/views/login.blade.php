@@ -31,7 +31,10 @@ body {
     color: white;
 }
 
-.overlay { position: absolute; inset: 0; background: rgba(5, 15, 40, 0.9); display: flex; flex-direction: column; justify-content: center; padding: 240px; } /* TEXT */ .brand { margin-top: -200px; } .brand h1 { font-size: 50px; font-weight: bold; letter-spacing: 2px; margin-bottom: 10px; } .brand h2 { font-size: 20px; margin-bottom: 10px; } .brand span { color: #4da3ff; font-weight: bold; } .brand p { font-size: 14px; opacity: 0.9; line-height: 1.5; } /* LOGO */ .logo-shark { position: absolute; bottom: 180px; left: 260px; width: 170px; opacity: 0.9; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+.overlay { position: absolute; inset: 0; background: linear-gradient(
+    rgba(63,79,68,.88),
+    rgba(85,107,93,.88)
+); display: flex; flex-direction: column; justify-content: center; padding: 240px; } /* TEXT */ .brand { margin-top: -200px; } .brand h1 { font-size: 50px; font-weight: bold; letter-spacing: 2px; margin-bottom: 10px; } .brand h2 { font-size: 20px; margin-bottom: 10px; } .brand span { color: #4da3ff; font-weight: bold; } .brand p { font-size: 14px; opacity: 0.9; line-height: 1.5; } /* LOGO */ .logo-shark { position: absolute; bottom: 180px; left: 260px; width: 170px; opacity: 0.9; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
 
 /* RIGHT */
 .right {
@@ -111,7 +114,7 @@ body {
 .login-btn {
     width: 100%;
     padding: 14px;
-    background: linear-gradient(to right, #2563eb, #3b82f6);
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
     border: none;
     color: white;
     border-radius: 10px;

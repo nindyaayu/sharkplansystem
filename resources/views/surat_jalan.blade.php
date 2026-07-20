@@ -4,32 +4,38 @@
 
 <style>
 
-body{
-    background:#0f172a;
-    color:#e5e7eb;
-}
-
-/* ================= HEADER ================= */
-
 .page-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+    border-radius:22px;
+    padding:28px 32px;
     margin-bottom:25px;
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
 }
 
-.page-header h2{
-    color:white;
+.page-title h1{
+    margin:0;
+    color:#fff;
+    font-size:46px;
+    font-weight:700;
+}
+
+.page-title p{
+    margin-top:8px;
+    color:rgba(255,255,255,.85);
+    font-size:15px;
 }
 
 /* ================= TABLE ================= */
 
 .table-box{
-    background:rgba(17,24,39,0.7);
-    backdrop-filter:blur(10px);
-    border-radius:16px;
+    background:#fff;
+    border:1px solid #E5E7EB;
+    border-radius:18px;
     overflow:hidden;
-    border:1px solid rgba(255,255,255,0.05);
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
 }
 
 table{
@@ -38,43 +44,54 @@ table{
 }
 
 thead{
-    background:rgba(255,255,255,0.03);
+    background:#F8FAFC;
 }
 
 thead th{
-    padding:14px;
+    padding:16px;
+    color:#3F4F44;
     text-align:left;
-    color:#94a3b8;
     font-size:13px;
+    font-weight:600;
+    border-bottom:1px solid #E5E7EB;
 }
 
 tbody td{
-    padding:14px;
-    border-top:1px solid rgba(255,255,255,0.05);
+    padding:16px;
+    color:#374151;
+    border-top:1px solid #E5E7EB;
 }
 
 tbody tr:hover{
-    background:rgba(99,102,241,0.05);
+    background:#F9FAFB;
+}
+
+/* ================= BADGE ================= */
+
+.badge{
+    background:#DCFCE7;
+    color:#15803D;
+    padding:7px 14px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
 }
 
 /* ================= BUTTON ================= */
 
 .btn-download{
-    background:linear-gradient(90deg,#22c55e,#16a34a);
-    border:none;
-    padding:8px 14px;
-    border-radius:10px;
-    color:white;
+    background:#3F4F44;
+    color:#fff;
     text-decoration:none;
+    padding:8px 16px;
+    border-radius:10px;
     font-size:13px;
+    font-weight:600;
+    transition:.25s;
 }
 
-.badge{
-    background:rgba(34,197,94,0.2);
-    color:#22c55e;
-    padding:5px 10px;
-    border-radius:8px;
-    font-size:13px;
+.btn-download:hover{
+    background:#556B5D;
 }
 
 </style>
@@ -83,11 +100,10 @@ tbody tr:hover{
 
 <div class="page-header">
 
-    <h2>
-
-        Riwayat Surat Jalan
-
-    </h2>
+    <div class="page-title">
+        <h1>Riwayat Surat Jalan</h1>
+        <p>Daftar seluruh surat jalan yang telah dibuat</p>
+    </div>
 
 </div>
 

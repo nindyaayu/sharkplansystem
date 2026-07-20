@@ -4,46 +4,38 @@
 
 <div class="card" style="padding:24px">
 
-<div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-">
+    <div class="page-header">
 
-    <h2 style="color:white;margin:0;">
-        📋 Permintaan Barang
-    </h2>
+        <div class="page-title">
+            <h1>Permintaan Barang</h1>
+            <p>Kelola seluruh permintaan barang produksi.</p>
+        </div>
 
-    <div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-">
+        <div class="header-action">
 
-    <div class="search-wrapper">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
 
-    <span class="search-icon">🔍</span>
+                <input
+                    id="searchPermintaan"
+                    type="text"
+                    placeholder="Cari No PB, Produk, Peminta...">
+            </div>
 
-    <input
-        id="searchPermintaan"
-        type="text"
-        placeholder="Cari No PB, Produk, Peminta..."
-        style="
-            width:380px;
-            padding:12px 16px 12px 42px;
-            background:#0f1b3f;
-            border:1px solid rgba(255,255,255,.08);
-            border-radius:10px;
-            color:white;
-        ">
+            <button
+                type="button"
+                class="btn-primary"
+                onclick="openModal()">
+
+                <i class="fas fa-plus"></i>
+                Buat Permintaan
+
+            </button>
 
     </div>
 
 </div>
-
-    <button onclick="openModal()" style="
+    <!-- <button onclick="openModal()" style="
     background:#2563eb;
     color:white;
     border:none;
@@ -52,21 +44,19 @@
     cursor:pointer;
 ">
     + Buat Permintaan
-</button>
+</button> -->
 
 </div>
 
+<div class="table-box">
+
 <div style="overflow-x:auto;">
 
-    <table style="
-        width:100%;
-        border-collapse:collapse;
-        color:#374151;
-    ">
+<table class="modern-table">
 
         <thead>
 
-            <tr style="background:#1e293b;">
+            <tr>
 
             <th>No Permintaan</th>
             <th>Tanggal</th>
@@ -88,31 +78,31 @@
 
             <tr>
 
-                <td style="padding:12px;text-align:center;">
+                <td class="text-center">
                     {{ $item->nomor_permintaan }}
                 </td>
 
-                <td style="padding:12px;text-align:center;">
+                <td class="text-center">
                     {{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}
                 </td>
 
-                <td style="padding:12px;text-align:center;">
+                <td class="text-center">
                     {{ $item->produk->nama ?? '-' }}
                 </td>
 
-                <td style="padding:12px;text-align:center;">
+                <td class="text-center">
                     {{ $item->komponen->nama_komponen ?? '-' }}
                 </td>
 
-                <td style="padding:12px;text-align:center;">
+                <td class="text-center">
                     {{ $item->nama_peminta }}
                 </td>
 
-                <td style="padding:12px;text-align:center;">
+                <td class="text-center">
                     {{ $item->nama_penjahit }}
                 </td>
 
-                <td style="padding:12px;text-align:center;">
+                <td class="text-center">
                     {{ $item->details->count() }} Barang
                 </td>
 
@@ -492,10 +482,8 @@
                 style="
                     position:sticky;
                     bottom:0;
-                    background:#07153d;
-                    padding:15px 0;
-                    margin-top:20px;
-                    z-index:10;
+                    background:#FFFFFF;
+                    border-top:1px solid #E5E7EB;
                 "
             >
 
@@ -524,6 +512,118 @@
 
 <style>
 
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:22px 30px;
+    margin-bottom:20px;
+
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+
+    border-radius:20px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.10);
+}
+
+.page-title h1{
+    margin:0;
+    font-size:52px;
+    font-weight:700;
+    color:#FFFFFF;
+}
+
+.page-title p{
+    margin-top:15px;
+    color:rgba(255,255,255,.85);
+    font-size:17px;
+}
+
+.header-action{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:15px;
+
+    width:360px;
+    flex-shrink:0;
+}
+
+.search-box{
+    position:relative;
+    width:100%;
+}
+
+.search-box input{
+    width:100%;
+    height:48px;
+    padding:0 16px 0 42px;
+    border:1px solid #d1d5db;
+    border-radius:12px;
+    box-sizing:border-box;  
+    background:#FFFFFF;
+    color:#374151;
+}
+
+.btn-primary{
+    background:#3F4F44;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    padding:12px 22px;
+    font-weight:600;
+}
+
+.btn-primary:hover{
+    background:#5A6C60;
+}
+
+.toolbar{
+    display:flex;
+    justify-content:center;
+    margin:25px 0;
+}
+
+.search-box i{
+    position:absolute;
+    left:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#9CA3AF;
+}
+
+.table-box{
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+}
+
+.modern-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.modern-table thead{
+    background:#F9FAFB;
+}
+
+.modern-table th{
+    padding:16px;
+    text-align:left;
+    border-bottom:1px solid #E5E7EB;
+}
+
+.modern-table td{
+    padding:16px;
+    border-bottom:1px solid #E5E7EB;
+}
+
+.text-center{
+    text-align:center;
+}
+
 .select2-search--dropdown{
     display:block !important;
 }
@@ -548,20 +648,18 @@
 .modal-content{
     width:900px;
     max-width:95%;
-
     max-height:95vh;
-
     overflow-y:auto;
-    overflow-x:hidden;
+    margin:20px auto;
 
-    margin:10px auto;
+    background:#FFFFFF;
+    color:#374151;
 
-    background:#08132f;
-    border-radius:20px;
+    border-radius:18px;
+    border:1px solid #E5E7EB;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+
     padding:30px;
-
-    color:white;
-    border:1px solid rgba(255,255,255,.08);
 }
 
 #detailModal .modal-content{
@@ -607,23 +705,22 @@
 */
 .modal-header{
     position:sticky;
-    top:-30px;
-
     display:flex;
     justify-content:space-between;
     align-items:center;
 
-    background:#08132f;
+    background:#FFFFFF;
 
-    z-index:999;
-    padding:15px 0;
+    border-bottom:1px solid #E5E7EB;
 
-    margin-bottom:25px;
+    margin:-30px -30px 25px;
+    padding:20px 30px;
 }
-
 .modal-header h2{
     margin:0;
-    font-size:38px;
+    color:#111827;
+    font-size:32px;
+    font-weight:700;
 }
 
 .close-btn{
@@ -637,7 +734,7 @@
 label{
     display:block;
     margin:18px 0 8px;
-    color:#FFFFFF;
+    color:#374151;
     font-size:15px;
     font-weight:600;
 }
@@ -646,10 +743,8 @@ label{
     width:100%;
     padding:16px;
     margin-bottom:25px;
-    background:#0f1b3f;
     border:1px solid rgba(255,255,255,.08);
     border-radius:12px;
-    color:white;
     box-sizing:border-box;
 
     background:#FFFFFF;
@@ -693,12 +788,14 @@ label{
 }
 
 .table-dark thead{
-    background:#0d1b3c;
+    background:#3F4F44;
 }
 
 .table-dark th{
     padding:16px;
     text-align:left;
+    color:#FFFFFF;
+    font-weight:600;
 }
 
 .table-dark td{
@@ -709,19 +806,19 @@ label{
 .select-dark{
     width:100%;
     padding:14px;
-    background:#0f1b3f;
-    border:1px solid rgba(255,255,255,.08);
+    background:#FFFFFF;
+    color:#374151;
+    border:1px solid #D1D5DB;
     border-radius:12px;
-    color:white;
 }
 
 .qty-input{
     width:100%;
     padding:14px;
-    background:#0f1b3f;
-    border:1px solid rgba(255,255,255,.08);
+    background:#FFFFFF;
+    color:#374151;
+    border:1px solid #D1D5DB;
     border-radius:12px;
-    color:white;
     box-sizing:border-box;
 }
 
@@ -766,10 +863,8 @@ label{
 
     margin-top:20px;
     padding:15px;
-
-    background:#08132f;
-
-    border-top:1px solid rgba(255,255,255,.08);
+    background:#FFFFFF;
+    border-top:1px solid #E5E7EB;
 
     z-index:9999;
 }
@@ -804,14 +899,15 @@ label{
 }
 
 .select2-container--default .select2-selection--single{
-    background:#0f1b3f !important;
-    border:1px solid rgba(255,255,255,.08) !important;
+    background:#FFFFFF !important;
+    color:#374151 !important;
+    border:1px solid #D1D5DB !important;
     border-radius:12px !important;
     height:52px !important;
 }
 
 .select2-container--default .select2-selection__rendered{
-    color:white !important;
+    color:#374151 !important;
     line-height:48px !important;
 }
 
@@ -833,10 +929,10 @@ label{
 .barang-search{
     width:100%;
     padding:14px;
-    background:#0f1b3f;
-    border:1px solid rgba(255,255,255,.08);
+    background:#F9FAFB;
+    border:1px solid #D1D5DB;
+    color:#374151;
     border-radius:12px;
-    color:white;
     outline:none;
     box-sizing:border-box;
 }

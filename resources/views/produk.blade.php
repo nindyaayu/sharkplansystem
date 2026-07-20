@@ -10,16 +10,35 @@ body{
 }
 
 .page-header{
+    position:sticky;
+    top:20px;
+    z-index:100;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:20px;
+
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+    border-radius:22px;
+
+    padding:28px 32px;
+    margin-bottom:25px;
+
+    box-shadow:0 8px 24px rgba(0,0,0,.12);
 }
 
-.page-header h2{
-    color:#263238;
-    font-size:34px;
+.page-title h1{
+    margin:0;
+    color:#ffffff;
+    font-size:46px;
     font-weight:700;
+}
+
+.page-title p{
+    margin-top:8px;
+    color:rgba(255,255,255,.85);
+    font-size:15px;
+    line-height:1.5;
 }
 
 .action-bar{
@@ -227,7 +246,9 @@ tbody tr:hover{
 
 <div class="page-header">
 
-    <h2>Produk</h2>
+    <div class="page-title">
+        <h1>Produk</h1>
+    </div>
 
 </div>
 

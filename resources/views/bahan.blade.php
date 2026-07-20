@@ -10,29 +10,62 @@ body{
 }
 
 .page-header{
+    position:sticky;
+    top:20px;
+    z-index:100;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:20px;
+
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+    border-radius:22px;
+    padding:28px 32px;
+    margin-bottom:25px;
+
+    box-shadow:0 8px 24px rgba(0,0,0,.12);
 }
 
-.page-header h2{
-    color:#263238;
+.page-title h1{
+    margin:0;
+    color:#ffffff;
+    font-size:46px;
+    font-weight:700;
+}
+
+.page-title p{
+    margin-top:8px;
+    color:rgba(255,255,255,.85);
+    font-size:15px;
 }
 
 .action-bar{
     display:flex;
     justify-content:space-between;
-    margin-bottom:15px;
+    align-items:center;
+
+    background:#ffffff;
+    border:1px solid #E5E7EB;
+    border-radius:18px;
+
+    padding:18px 22px;
+    margin-bottom:22px;
+
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
 }
 
 .btn-primary{
-    background:#C62828;
+    background:linear-gradient(135deg,#C62828,#E53935);
+    color:#fff;
     border:none;
-    padding:10px 16px;
-    border-radius:10px;
-    color:white;
-    cursor:pointer;
+    border-radius:12px;
+    padding:11px 20px;
+    font-weight:600;
+    transition:.25s;
+}
+
+.btn-primary:hover{
+    transform:translateY(-2px);
 }
 
 .table-box{
@@ -180,19 +213,22 @@ tbody tr:hover{
 
 <div class="page-header">
 
-@if(request()->is('material-utama'))
+    <div class="page-title">
 
-<h2>Material Utama</h2>
+        @if(request()->is('material-utama'))
+            <h1>Material Utama</h1>
+            <p>Kelola data bahan baku utama yang digunakan dalam proses produksi.</p>
 
-@elseif(request()->is('material-pendukung'))
+        @elseif(request()->is('material-pendukung'))
+            <h1>Material Pendukung</h1>
+            <p>Kelola data bahan pendukung dan perlengkapan produksi.</p>
 
-<h2>Material Pendukung</h2>
+        @else
+            <h1>Bahan Baku</h1>
+            <p>Kelola seluruh data bahan baku.</p>
+        @endif
 
-@else
-
-<h2>Bahan Baku</h2>
-
-@endif
+    </div>
 
 </div>
 

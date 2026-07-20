@@ -18,26 +18,43 @@ body{
 /* ===== TOPBAR ===== */
 
 .topbar{
+    position:sticky;
+    top:20px;
+    z-index:999;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:25px;
+
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+    border-radius:22px;
+    padding:28px 32px;
+    margin-bottom:28px;
+
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
 }
 
-.topbar h2{
-    font-weight:600;
-    color:#111827;
+.topbar-left h1{
+    margin:0;
+    color:#ffffff;
+    font-size:42px;
+    font-weight:700;
+}
+
+.topbar-left p{
+    margin-top:8px;
+    color:rgba(255,255,255,.85);
+    font-size:15px;
 }
 
 .admin{
-    display:flex;
-    align-items:center;
-    gap:10px;
+    background:rgba(255,255,255,.15);
+    color:#ffffff;
+    padding:12px 18px;
+    border-radius:999px;
     font-size:14px;
-    color:#94a3b8;
-    background:rgba(255,255,255,0.05);
-    padding:8px 12px;
-    border-radius:10px;
+    font-weight:600;
+    backdrop-filter:blur(8px);
 }
 
 /* ===== CARDS ===== */
@@ -174,25 +191,14 @@ body{
 
 <div class="topbar">
 
-    <div>
-
-        <h2>Dashboard</h2>
-
-        <p
-            style="
-                color:#64748b;
-                font-size:13px;
-            ">
-
-            Welcome back, {{ Auth::user()->name }} 👋
-
-        </p>
-
+    <div class="topbar-left">
+        <h1>Dashboard</h1>
+        <p>Welcome back, {{ Auth::user()->name }} 👋</p>
     </div>
 
-        <div class="admin">
-            👤 {{ ucfirst(Auth::user()->role) }} ({{ Auth::user()->cabang }})
-        </div>
+    <div class="admin">
+        👤 {{ ucfirst(Auth::user()->role) }} ({{ Auth::user()->cabang }})
+    </div>
 
 </div>
 
