@@ -5,14 +5,30 @@
 <style>
 
 .page-title{
-    color:white;
-    font-size:32px;
+    margin:0;
+    color:#3F4F44;   
+    font-size:52px;
     font-weight:700;
-    margin-bottom:25px;
+    line-height:1.2;
+    text-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.page-title h1{
+    margin:0;
+    color:#FFFFFF;
+    font-size:52px;
+    font-weight:700;
+}
+
+.page-title p{
+    margin-top:15px;
+    color:rgba(255,255,255,.85);
+    font-size:17px;
 }
 
 .top-box{
-    background:rgba(17,24,39,0.7);
+    background:linear-gradient(135deg,#3F4F44,#556B5D);
+    box-shadow:0 8px 20px rgba(0,0,0,.10);
     border:1px solid rgba(255,255,255,0.05);
     border-radius:18px;
     padding:20px;
@@ -27,11 +43,11 @@
 }
 
 .input{
-    background:#111827;
-    border:1px solid rgba(255,255,255,0.08);
+    background:#FFFFFF;
+    border:1px solid #D1D5DB;
+    color:#374151;
     padding:12px 14px;
     border-radius:12px;
-    color:white;
     min-width:220px;
 }
 
@@ -45,11 +61,19 @@
 }
 
 .btn-primary{
-    background:linear-gradient(90deg,#6366f1,#8b5cf6);
+    background:#3F4F44;
+}
+
+.btn-primary:hover{
+    background:#556B5D;
 }
 
 .btn-dark{
-    background:#374151;
+    background:#6B7280;
+}
+
+.btn-dark:hover{
+    background:#4B5563;
 }
 
 .stats-grid{
@@ -60,29 +84,29 @@
 }
 
 .stat-card{
-    background:rgba(17,24,39,0.7);
-    border:1px solid rgba(255,255,255,0.05);
+    background:#fff;
+    border:1px solid #E5E7EB;
     border-radius:18px;
     padding:22px;
 }
 
 .stat-title{
-    color:#94a3b8;
+    color:#6B7280;
     font-size:14px;
     margin-bottom:10px;
 }
 
 .stat-value{
-    color:white;
+    color:#3F4F44;
     font-size:40px;
     font-weight:700;
 }
 
 .table-box{
-    background:rgba(17,24,39,0.7);
+    background:#fff;
     border-radius:18px;
     overflow:hidden;
-    border:1px solid rgba(255,255,255,0.05);
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
 }
 
 table{
@@ -91,25 +115,25 @@ table{
 }
 
 thead{
-    background:rgba(255,255,255,0.03);
+    background:#3F4F44;
 }
 
 thead th{
     padding:16px;
-    color:#94a3b8;
+    color:#fff;
     text-align:left;
     font-size:13px;
 }
 
 tbody td{
     padding:16px;
-    border-top:1px solid rgba(255,255,255,0.05);
-    color:#f8fafc;
+    color:#374151;
+    border-top:1px solid #E5E7EB;
 }
 
 .badge-stock{
-    background:rgba(99,102,241,0.2);
-    color:#c4b5fd;
+    background:#EEF2FF;
+    color:#4F46E5;
     padding:7px 12px;
     border-radius:10px;
     display:inline-block;
@@ -117,8 +141,8 @@ tbody td{
 }
 
 .badge-safe{
-    background:rgba(34,197,94,0.2);
-    color:#22c55e;
+    background:#DCFCE7;
+    color:#166534;
     padding:6px 12px;
     border-radius:10px;
     font-size:12px;
@@ -126,8 +150,8 @@ tbody td{
 }
 
 .badge-warning{
-    background:rgba(250,204,21,0.2);
-    color:#facc15;
+    background:#FEF3C7;
+    color:#B45309;
     padding:6px 12px;
     border-radius:10px;
     font-size:12px;
@@ -135,8 +159,8 @@ tbody td{
 }
 
 .badge-danger{
-    background:rgba(239,68,68,0.2);
-    color:#ef4444;
+    background:#FEE2E2;
+    color:#B91C1C;
     padding:6px 12px;
     border-radius:10px;
     font-size:12px;
@@ -146,9 +170,9 @@ tbody td{
     width:100%;
     padding:6px;
     border-radius:6px;
-    border:1px solid #334155;
-    background:#0f172a;
-    color:white;
+    border:1px solid #D1D5DB;
+    background:#FFFFFF;
+    color:#374151;
     box-sizing:border-box;
 }
 
@@ -158,9 +182,7 @@ tbody td{
 </style>
 
 <div class="page-title">
-
-    Laporan Material Pendukung
-
+    <div class="title">Laporan Material Pendukung</div>
 </div>
 
 <!-- FILTER -->
