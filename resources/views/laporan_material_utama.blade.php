@@ -5,11 +5,12 @@
 <style>
 
 .page-title{
-    color:#3F4F44;
-    font-size:34px;
+    margin:0;
+    color:#3F4F44;   
+    font-size:52px;
     font-weight:700;
-    margin-bottom:25px;
-    letter-spacing:.5px;
+    line-height:1.2;
+    text-shadow:0 2px 8px rgba(0,0,0,.15);
 }
 
 .top-box{
