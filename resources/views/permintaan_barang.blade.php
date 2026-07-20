@@ -518,13 +518,18 @@
     align-items:center;
 
     padding:22px 30px;
-    margin-bottom:20px;
 
     background:linear-gradient(135deg,#3F4F44,#556B5D);
 
     border-radius:20px;
+}
 
-    box-shadow:0 8px 20px rgba(0,0,0,.10);
+.card:first-of-type{
+    position: sticky;
+    top: 15px;
+    z-index: 1000;
+
+    background: #fff;
 }
 
 .page-title h1{
