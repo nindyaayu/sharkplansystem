@@ -992,11 +992,12 @@ label{
 }
 
 #detailModal table tbody tr:hover{
-    background:rgba(34, 197, 94, 0.12) !important;
+    background:#EEF4F0 !important;
+    transition:.2s;
 }
 
 #detailModal table tbody tr:hover td{
-    color:#FFFFFF !important;
+    color:#374151 !important;
 }
 </style>
 
@@ -1128,7 +1129,8 @@ function tambahBaris(){
                 let html = `
 
                 <div style="
-                    background:#0f1b3f;
+                    background:linear-gradient(135deg,#3F4F44,#556B5D);
+                    color:white;
                     border-radius:12px;
                     padding:20px;
                     margin-bottom:20px;
@@ -1170,7 +1172,9 @@ function tambahBaris(){
 
                 <h3 style="
                     margin-bottom:15px;
-                    color:white;
+                    color:#374151;
+                    font-size:22px;
+                    font-weight:700;
                 ">
                     Daftar Barang
                 </h3>
@@ -1184,7 +1188,8 @@ function tambahBaris(){
                     <thead>
 
                         <tr style="
-                            background:#F3F4F6;
+                            background:#3F4F44;
+                            color:white;
                         ">
 
                             <th style="padding:14px;">Kode</th>
@@ -1214,9 +1219,9 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
-                                color:#FFFFFF;
+                                color:#374151;
                                 text-align:center;
-                                color:#F8FAFC;
+                                color:#374151;
                                 border-bottom:1px solid #E5E7EB;
                             ">
                                 ${item.barang.kode}
@@ -1224,16 +1229,18 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
-                                border-bottom:1px solid rgba(255,255,255,.08);
+                                color:#374151;
+                                text-align:left;
+                                border-bottom:1px solid #E5E7EB;
                             ">
                                 ${item.barang.nama}
                             </td>
 
                             <td style="
                                 padding:14px;
-                                color:#FFFFFF;
+                                color:#374151;
                                 text-align:center;
-                                color:#F8FAFC;
+                                color:#374151;
                                 border-bottom:1px solid #E5E7EB;
                             ">
                                 ${item.barang.warna}
@@ -1241,9 +1248,9 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
-                                color:#FFFFFF;
+                               color:#374151;
                                 text-align:center;
-                                color:#F8FAFC;
+                                color:#374151;
                                 border-bottom:1px solid #E5E7EB;
                             ">
                                 ${item.jumlah}
@@ -1251,9 +1258,9 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
-                                color:#FFFFFF;
+                               color:#374151;
                                 text-align:center;
-                                color:#F8FAFC;
+                                color:#374151;
                                 border-bottom:1px solid #E5E7EB;
                             ">
                                 ${item.barang.satuan}
@@ -1261,9 +1268,9 @@ function tambahBaris(){
 
                             <td style="
                                 padding:14px;
-                                color:#FFFFFF;
+                                color:#374151;
                                 text-align:center;
-                                color:#F8FAFC;
+                                color:#374151;
                                 border-bottom:1px solid #E5E7EB;
                             ">
 
